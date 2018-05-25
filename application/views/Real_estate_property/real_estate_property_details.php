@@ -159,7 +159,7 @@
 <?php $this->load->view('templates/main_header');?>
 <div class="page-content-wrapper ">
 <div class="content">
-    <form id="form_purchase" role="form" method ="post" action="<?php if(isset($p_txn)) { echo base_url().'index.php/real_estate_property/updaterecord/'.$p_id; } else { echo base_url().'index.php/real_estate_property/saverecord'; } ?>"  enctype="multipart/form-data">
+    <form id="form_real_estate_property" role="form" method ="post" action="<?php if(isset($p_txn)) { echo base_url().'index.php/real_estate_property/updaterecord/'.$p_id; } else { echo base_url().'index.php/real_estate_property/saverecord'; } ?>"  enctype="multipart/form-data">
     <div class=" container-fluid   container-fixed-lg ">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
@@ -255,18 +255,18 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default form-group-default-select2 required">
                                         <label class="">Type </label>
-                                        <select class="form-control full-width" name="unit_type" id="unit_type" data-error="#unit_type" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
+                                        <select class="form-control full-width" name="unit_type" id="unit_type" data-error="#error_unit_type" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                             <option value="">Select</option>
                                             <option value="Shop" <?=(isset($p_txn[0]->unit_type) && $p_txn[0]->unit_type=='Shop'?'selected':'')?>>Shop</option>
                                             <option value="Basement"  <?=(isset($p_txn[0]->unit_type) && $p_txn[0]->unit_type=='Basement'?'selected':'')?>>Basement</option>   
                                         </select>
-                                        <div id="err_purchase_mode"></div>
+                                        <div id="error_unit_type"></div>
                                     </div>
                                 </div>
                             </div>
 							
 							
-							  <div class="row clearfix">
+							<div class="row clearfix">
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default required">
                                         <label>Unit No.</label>
@@ -299,13 +299,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default form-group-default-select2 required">
                                         <label class="">Area Unit </label>
-                                        <select class="form-control full-width" id="area_unit" name="area_unit" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity"  data-error="#area_unit1" >
+                                        <select class="form-control full-width" id="area_unit" name="area_unit" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity"  data-error="#error_area_unit" >
                                             <option value="">Select</option>
                                             <option value="Sqft" <?=(isset($p_txn[0]->area_unit) && $p_txn[0]->area_unit=='Sqft'?'selected':'')?>>Sqft</option>
                                             <option value="Sqm" <?=(isset($p_txn[0]->area_unit) && $p_txn[0]->area_unit=='Sqm'?'selected':'')?>>Sqm</option>
                                            
                                         </select>
-                                      
+                                        <div id="error_area_unit"></div>
                                     </div>
                                 </div>
                             
@@ -313,8 +313,8 @@
                           
                              <div class="row clearfix">
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-default required">
-                                        <label>Allocated Cost.</label>
+                                    <div class="form-group form-group-default ">
+                                        <label>Allocated Cost(&#x20B9;)</label>
                                         <input type="text" class="form-control" id="allocated_cost" name="allocated_cost"  placeholder="Enter Here" value="<?php if(isset($p_txn)) { echo $p_txn[0]->allocated_cost; } ?>" />
                                     </div>
                                 </div>
@@ -322,8 +322,8 @@
 							
 							
 							    <div class="col-md-6">
-                                    <div class="form-group form-group-default required">
-                                        <label>Allocated Maintenance </label>
+                                    <div class="form-group form-group-default ">
+                                        <label>Allocated Maintenance(&#x20B9;)</label>
                                         <input type="text" class="form-control" id="allocated_maintenance" name="allocated_maintenance"  placeholder="Enter Here" value="<?php if(isset($p_txn)) { echo $p_txn[0]->allocated_maintenance; } ?>" />
                                     </div>
                                 </div>
@@ -333,14 +333,11 @@
 							
                         </div>
                       
-                     
-             
-
                     <div class="form-footer" style="padding-bottom: 60px;">
                         <input type="hidden" id="submitVal" value="1" />
                         <a href="<?php echo base_url(); ?>index.php/real_estate_property" class="btn btn-default-danger pull-left" >Cancel</a>
-                        <input type="submit" class="btn btn-default pull-right submit-form" name="submit" value="Submit" style="margin-right: 10px;" />
-                        <input formnovalidate="formnovalidate" type="submit" class="btn btn-default pull-right save-form m-r-10" name="submit" value="Save" style="<?php// if($maker_checker!='yes' && isset($p_txn)) echo 'display:none'; ?>" />
+                                                  <input type="submit" class="btn btn-default pull-right submit-form" name="submit" value="<?php if($maker_checker=='yes') echo 'Submit For Approval'; else echo 'Submit'; ?>" style="margin-right: 10px;" />
+                            <input formnovalidate="formnovalidate" type="submit" class="btn btn-default pull-right save-form m-r-10" name="submit" value="Save" style="<?php if($maker_checker!='yes' && isset($p_txn)) echo 'display:none'; ?>" />
                     </div>
                 </div>
             </div>
@@ -360,8 +357,10 @@
 
     <?php
         $owner_details = '<option value="">Select</option>';
-        if(isset($owner)) {
-            for($i=0; $i<count($owner); $i++) {
+        if(isset($owner)) 
+		{
+            for($i=0; $i<count($owner); $i++) 
+			{
                 $owner_details = $owner_details . '<option value="'.$owner[$i]->c_id.'">'.$owner[$i]->contact_name.'</option>';
             }
         }

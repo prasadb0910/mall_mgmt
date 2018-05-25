@@ -10,16 +10,16 @@
 
     <style>
         <?php// if($maker_checker!='yes') { ?>
-            // .approved {
+          // .approved {
                 // display: none !important;
-            // }
+           // }
             // .pending {
-                // display: none !important;
-            // }
+                 // display: none !important;
+             // }
             // .rejected {
                 // display: none !important;
-            // }
-        <?php //} ?>
+             // }
+        <?php// } ?>
     </style>
 </head>
 <body class="fixed-header">
@@ -38,19 +38,19 @@
             <div id="rootwizard">
                 <ul class="nav nav-tabs nav-tabs-linetriangle nav-tabs-separator nav-stack-sm" role="tablist" data-init-reponsive-tabs="dropdownfx">
                    <li class="nav-item all">
-                        <a class="" href="<?=base_url('index.php/Non_real_estate_property/checkstatus/ALL/2')?>">ALL()</a>
+                        <a class="<?php if($checkstatus=='All') echo 'active'; ?>" href="<?=base_url('index.php/Non_real_estate_property/checkstatus/All/2')?>">ALL(<?php echo $all?>)</a>
                     </li>
                     <li class="nav-item approved">
-                        <a class=""  href="<?=base_url('index.php/Non_real_estate_property/checkstatus/Approved/2')?>">Approved()</a>
+                        <a class="<?php if($checkstatus=='Approved') echo 'active'; ?>"  href="<?=base_url('index.php/Non_real_estate_property/checkstatus/Approved/2')?>">Approved(<?php echo $approved?>)</a>
                     </li>
                     <li class="nav-item pending">
-                        <a class="" href="<?=base_url('index.php/Non_real_estate_property/checkstatus/Pending/2')?>">Pending()</a>
+                        <a class="<?php if($checkstatus=='Pending') echo 'active'; ?>" href="<?=base_url('index.php/Non_real_estate_property/checkstatus/Pending/2')?>">Pending(<?php echo $pending?>)</a>
                     </li>
                     <li class="nav-item rejected">
-                        <a class="" href="<?=base_url('index.php/Non_real_estate_property/checkstatus/Rejected/2')?>">Rejected()</a>
+                        <a class="<?php if($checkstatus=='Rejected') echo 'active'; ?>" href="<?=base_url('index.php/Non_real_estate_property/checkstatus/Rejected/2')?>">Rejected(<?php echo $rejected?>)</a>
                     </li>
                     <li class="nav-item inprocess">
-                        <a class=""  href="<?=base_url('index.php/Non_real_estate_property/checkstatus/InProcess/2')?>">Draft()</a>
+                        <a class="<?php if($checkstatus=='InProcess') echo 'active'; ?>"  href="<?=base_url('index.php/Non_real_estate_property/checkstatus/InProcess/2')?>">Draft(<?php echo $inprocess?>)</a>
                     </li>
                 </ul>
                 <br>
@@ -109,30 +109,25 @@
                                                         </div>
                                                         <br>
                                                         <div class="row" style="padding-left:15px;padding-right:15px;">
-                                                            <div class="col-md-3 rent">
+                                                            <div class="col-md-4 rent">
                                                                  <a href="<?php echo base_url() . 'index.php/contacts/checkstatus/All/Tenants/' . $property[$i]->property_txn_id; ?>"><i style="font-size:22px;" class="fa fa-group"></i><br>
                                                                 Tenants
                                                                     </a>
                                                             </div>
-                                                            <div class=" col-md-3 leases">
+                                                            <div class=" col-md-4 leases">
                                                                  <a href="<?php echo base_url().'index.php/Accounting/checkstatus/All/'.$property[$i]->property_txn_id; ?>">
                                                                 <i style="font-size:22px;" class="fa fa-inr "></i><br>
                                                                 Accounting
                                                                     </a>
                                                             </div>
                                                        
-                                                            <div class=" col-md-3 leases" style="border-left: 2px solid #edf0f5;">
+                                                            <div class=" col-md-4 leases" style="border-left: 2px solid #edf0f5;">
                                                              <a href="<?php echo base_url().'index.php/task/checkstatus/'.$property[$i]->property_txn_id; ?>">
                                                                 <i style="font-size:22px;" class="fa fa-file-text-o"></i><br>
                                                                 Maintenance
                                                                 </a>
                                                             </div>
-                                                            <div class=" col-md-3 leases" style="border-left: 2px solid #edf0f5;">
-                                                                <a href="<?php echo base_url().'index.php/Allocation/checkstatus/All/'.$property[$i]->property_txn_id; ?>">
-                                                                    <i style="font-size:22px;" class="fa fa-file-text-o"></i><br>
-                                                                    Sub Property
-                                                                </a>
-                                                            </div>
+                                                         
                                                         </div> 
                                                         <div class="col-md-12">
                                                             <a href="<?php echo base_url().'index.php/Non_real_estate_property/view/'.$property[$i]->property_txn_id; ?>" class=" pull-right invoice p-b-5 p-t-5" style="color:#5cb85c;">View <i class="fa fa-angle-right tab-icon"></i> </a>
