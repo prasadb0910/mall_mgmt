@@ -38,19 +38,19 @@
             <div id="rootwizard">
                 <ul class="nav nav-tabs nav-tabs-linetriangle nav-tabs-separator nav-stack-sm" role="tablist" data-init-reponsive-tabs="dropdownfx">
                     <li class="nav-item all">
-                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/ALL/1')?>">ALL()</a>
+                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/ALL/1')?>">ALL(<?php echo $all?>)</a>
                     </li>
                     <li class="nav-item approved">
-                        <a class=""  href="<?=base_url('index.php/Real_estate_property/checkstatus/Approved/1')?>">Approved()</a>
+                        <a class=""  href="<?=base_url('index.php/Real_estate_property/checkstatus/Approved/1')?>">Approved(<?php echo $approved?>)</a>
                     </li>
                     <li class="nav-item pending">
-                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/Pending/1')?>">Pending()</a>
+                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/Pending/1')?>">Pending(<?php echo $pending?>)</a>
                     </li>
                     <li class="nav-item rejected">
-                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/Rejected/1')?>">Rejected()</a>
+                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/Rejected/1')?>">Rejected(<?php echo $rejected?>)</a>
                     </li>
                     <li class="nav-item inprocess">
-                        <a class=""  href="<?=base_url('index.php/Real_estate_property/checkstatus/InProcess/1')?>">Draft()</a>
+                        <a class=""  href="<?=base_url('index.php/Real_estate_property/checkstatus/InProcess/1')?>">Draft(<?php echo $inprocess?>)</a>
                     </li>
                 </ul>
                 <br>
@@ -115,30 +115,25 @@
                                                         </div>
                                                         <br>
                                                         <div class="row" style="padding-left:15px;padding-right:15px;">
-                                                            <div class="col-md-3 rent">
+                                                            <div class="col-md-4 rent">
                                                                  <a href="<?php echo base_url() . 'index.php/contacts/checkstatus/All/Tenants/' . $property[$i]->property_txn_id; ?>"><i style="font-size:22px;" class="fa fa-group"></i><br>
                                                                 Tenants
                                                                     </a>
                                                             </div>
-                                                            <div class=" col-md-3 leases">
+                                                            <div class=" col-md-4 leases">
                                                                  <a href="<?php echo base_url().'index.php/Accounting/checkstatus/All/'.$property[$i]->property_txn_id; ?>">
                                                                 <i style="font-size:22px;" class="fa fa-inr "></i><br>
                                                                 Accounting
                                                                     </a>
                                                             </div>
                                                        
-                                                            <div class=" col-md-3 leases" style="border-left: 2px solid #edf0f5;">
+                                                            <div class=" col-md-4 leases" style="border-left: 2px solid #edf0f5;">
                                                              <a href="<?php echo base_url().'index.php/task/checkstatus/'.$property[$i]->property_txn_id; ?>">
                                                                 <i style="font-size:22px;" class="fa fa-file-text-o"></i><br>
                                                                 Maintenance
                                                                 </a>
                                                             </div>
-                                                            <div class=" col-md-3 leases" style="border-left: 2px solid #edf0f5;">
-                                                                <a href="<?php echo base_url().'index.php/Allocation/checkstatus/All/'.$property[$i]->property_txn_id; ?>">
-                                                                    <i style="font-size:22px;" class="fa fa-file-text-o"></i><br>
-                                                                    Sub Property
-                                                                </a>
-                                                            </div>
+                                                            
                                                         </div> 
                                                         <div class="col-md-12">
                                                             <a href="<?php echo base_url().'index.php/real_estate_property/view/'.$property[$i]->property_txn_id; ?>" class=" pull-right invoice p-b-5 p-t-5" style="color:#5cb85c;">View <i class="fa fa-angle-right tab-icon"></i> </a>
@@ -156,7 +151,12 @@
                                                         <img src="<?php echo base_url().$property[$i]->p_image; ?>" alt="Paris" class="prop_img" style="max-width:100%;max-height:100%;height:100px; width:100px;border:none;padding: 8px;" onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
                                                         <div class="info pull-left p-l-10" style="margin-top: 20px;text-align:left;width:40%">
                                                             <div class="building_name"><?php echo $property[$i]->unit_name; ?></div>
-                                                            <div class="owner_name"><H4 class="m-t-0 m-b-0"><?php echo $property[$i]->owner_name; ?></H4></div>
+                                                            <div class="owner_name"><H4 class="m-t-0 m-b-0">
+																	<?php foreach($owner_name as $name)
+                                                                        {
+                                                                            echo $name->owner_name;
+                                                                        }
+                                                                    ?> </H4></div>
                                                             <!--<div class="address"><i class="fa fa-map-marker"></i>  
                                                             <?php if(isset($property)) { echo $property[$i]->p_apartment . ' ' . $property[$i]->p_address . ' ' . $property[$i]->p_landmark . ' ' . $property[$i]->p_state . ' ' . $property[$i]->p_city . ' ' . $property[$i]->p_pincode . ' ' . $property[$i]->p_country; } ?></div>
                                                              -->
@@ -174,9 +174,7 @@
                                                             <div class="pull-left" style="margin-top: 40px;padding-left: 20px;">
                                                                 <a href="<?php echo base_url().'index.php/task/checkstatus/'.$property[$i]->property_txn_id; ?>" data-toggle="tooltip" data-placement="bottom" title="Maintenance"><i style="font-size:22px;" class="fa fa-file-text-o"></i></a>
                                                             </div>
-                                                            <div class="pull-left" style="margin-top: 40px;padding-left: 20px;">
-                                                                <a href="<?php echo base_url().'index.php/Allocation/checkstatus/All/'.$property[$i]->property_txn_id; ?>" data-toggle="tooltip" data-placement="bottom" title="Sub Property"><i style="font-size:22px;" class="fa fa-building-o"></i></a>
-                                                            </div>
+                                                          
                                                         </div>
                                                         <a href="<?php echo base_url().'index.php/Purchase/view/'.$property[$i]->property_txn_id; ?>" class=" pull-right invoice" style="color:#5cb85c;margin-top: 37px;padding-left: 30px;">View <i class="   fa fa-angle-right tab-icon"></i> </a>
                                                     </div>
