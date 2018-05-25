@@ -655,6 +655,8 @@
                                                 </div>
                                             </div>
                                      </div>
+                                     </div>
+								 <div class="row clearfix">
     								 <div class="col-md-3">
                                             <div class="form-group form-group-default form-group-default-select2 required">
                                                 <label>  Due Day</label>
