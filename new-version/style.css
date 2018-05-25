@@ -1,0 +1,108 @@
+/*
+Theme Name: Prodo
+Theme URI: http://themeforest.net/user/Axminenko/portfolio
+Author: Alexander Axminenko
+Author URI: https://www.facebook.com/a.axminenko
+Description: Is a modern and elegant WordPress theme, perfect for corporate, suitable for any type of business, built for any needs. Every single detail is carefully designed and crafted, in order to create a seamless and wonderful user experience.
+Version: 2.1
+License: GNU General Public License v2
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: white, gray, light, one-column, two-columns, left-sidebar, right-sidebar, fixed-layout, responsive-layout, featured-images, flexible-header, full-width-template, post-formats, theme-options, translation-ready, accessibility-ready
+Text Domain: prodo
+*/
+
+/*
+ * WordPress Core
+ */
+
+.alignnone {
+	margin: 5px 20px 5px 0 !important;
+}
+.aligncenter, div.aligncenter {
+	display: block;
+	margin: 25px auto 25px auto !important;
+}
+.alignright {
+	float:right;
+	margin: 5px 0 20px 20px !important;
+}
+.alignleft {
+	float: left;
+	margin: 5px 20px 20px 0 !important;
+}
+.aligncenter {
+	display: block;
+	margin: 25px auto 25px auto !important;
+}
+a img.alignright {
+	float: right;
+	margin: 5px 0 20px 20px;
+}
+a img.alignnone {
+	margin: 5px 20px 20px 0;
+}
+a img.alignleft {
+	float: left;
+	margin: 5px 20px 20px 0;
+}
+a img.aligncenter {
+	display: block;
+	margin-left: auto;
+	margin-right: auto
+}
+.wp-caption {
+	background: #fff;
+	border: 1px solid #f0f0f0;
+	border-radius: 3px;
+	max-width: 96%;
+	padding: 10px 10px 5px;
+	text-align: center;
+}
+.wp-caption.alignnone {
+	margin: 5px 20px 20px 0;
+}
+.wp-caption.alignleft {
+	margin: 5px 20px 20px 0;
+}
+.wp-caption.alignright {
+	margin: 5px 0 20px 20px;
+}
+.wp-caption img {
+	border: 0 none;
+	height: auto;
+	margin: 0;
+	padding: 0;
+	border-radius: 0;
+}
+.wp-caption p.wp-caption-text {
+	font-size: 13px;
+	line-height: 1em;
+	font-style: italic;
+	margin-top: 10px;
+	padding: 0;
+}
+
+/*
+ * Some Fixes
+ */
+
+.touch .section.parallax,
+.touch .section.video {
+	background-attachment: scroll;
+	background-position: center top;
+}
+
+.slider.fullscreen.callback {
+	height: 700px !important;
+	min-height: 100% !important;
+}
+
+.slider.fullscreen.callback .image {
+	width: 100%;
+	height: 100%;
+}
+
+.intro.callback {
+	height: auto !important;
+	min-height: 100%;
+}

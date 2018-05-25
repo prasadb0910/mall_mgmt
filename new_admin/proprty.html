@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>TenantCloud</title>
+
+<meta name="robots" content="NOODP">
+<meta name="robots" content="noindex, nofollow"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+
+
+
+<link media="all" type="text/css" rel="stylesheet" href="https://home.tenantcloud.com/fonts/font-awesome/css/font-awesome.min.css">
+
+<link media="all" type="text/css" rel="stylesheet" href="https://home.tenantcloud.com/fonts/font-fontello/css/font-fontello.css">
+
+<link media="all" type="text/css" rel="stylesheet" href="https://home.tenantcloud.com/fonts/fontello-line/css/fontello-line.css">
+
+
+<!-- inject vendor.css -->
+<link media="all" type="text/css" rel="stylesheet" href="https://home.tenantcloud.com/build/auth-ae2340d3d9.min.css">
+
+
+    <script type="text/javascript">
+	    setTimeout(function(){var a=document.createElement("script");
+		    var b=document.getElementsByTagName("script")[0];
+		    a.src=document.location.protocol+"//script.crazyegg.com/pages/scripts/0032/5015.js?"+Math.floor(new Date().getTime()/3600000);
+		    a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1);
+    </script>
+
+<script src="https://js.stripe.com/v2/"></script>
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAM_Ufoj0_UoYsG8KEISftrMI3sC1QjeIE&libraries=places&amp;language=en"></script>
+
+<!-- inject vendor.js -->
+<script src="js/auth-vendor-c3d1d011f7.min.js"></script>
+
+
+<!-- inject app.js -->
+<script src="js/auth-app-5f2aaef043.min.js"></script>
+
+
+		<script type="text/javascript">
+		(function (i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r;
+			i[r] = i[r] || function () {
+						(i[r].q = i[r].q || []).push(arguments)
+					}, i[r].l = 1 * new Date();
+			a = s.createElement(o),
+					m = s.getElementsByTagName(o)[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+		ga('create', 'UA-57333247-1', 'auto', {'allowLinker': true});
+		ga('require', 'displayfeatures');
+		ga('send', 'pageview');
+	</script>
+	<script>
+		!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+				n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+			n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+			t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+				document,'script','//connect.facebook.net/en_US/fbevents.js');
+
+		fbq('init', '1615987175338447');
+	</script>
+
+	<!-- Facebook Pixel Code -->
+	<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1615987175338447&ev=PageView&noscript=1"/></noscript>
+	<!-- End Facebook Pixel Code -->
+	
+	<noscript>
+		<div class="noscript">
+			<div id="div100">
+				For full functionality of this page it is necessary to enable JavaScript.
+				Here are the <a href="http://www.enable-javascript.com" target="_blank"> instructions how to enable JavaScript in your web browser</a>
+			</div>
+		</div>
+	</noscript>
+</head>
+
+<body class="l-body fixed-header">
+
+<app class="full-height-width"></app>
+
+<script>
+	deferredBootstrapper.bootstrap({
+		element: document.body,
+		module: 'app',
+		injectorModules: ['LocalStorageModule'],
+		resolve: {
+			APP_CONFIG: ['$http', '$q', function ($http, $q) {
+				var deferred = $q.defer();
+				// GET api cfg token from auth subdomain and use it in future requests.
+				$http.get('https://home.tenantcloud.com/api_config')
+					.then(function (resp) {
+						deferred.resolve(resp);
+					}, function () {
+						deferred.reject();
+					});
+				return deferred.promise;
+			}]
+		}
+	});
+</script>
+
+</body>
+</html>

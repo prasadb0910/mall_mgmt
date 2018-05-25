@@ -1,0 +1,20 @@
+Select pt.property_txn_id,pt.property_typ_id,pt.gp_id,pt.unit_name,pt.unit_type,pt.unit_no,pt.floor,pt.area,pt.area_unit,pt.allocated_cost,pt.allocated_maintenance,pt.txn_status,
+case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
+                    case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
+                    case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
+                    case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
+                    case when A.c_owner_type='individual' 
+                    then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
+                    else concat(ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name ,rt.property_id,max(termination_date) as termination_dates ,
+case when st.property_id is null then 'Vacant' else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale
+ from property_txn pt 
+left JOIN purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
+left join contact_master A on pd.pr_client_id=A.c_id
+left join contact_master B on (A.c_contact_id=B.c_id)
+left join property_type prt on pt.property_typ_id=prt.property_type_id
+left join rent_txn rt on pt.property_txn_id=rt.property_id
+left join sales_txn st on pt.property_txn_id=st.property_id
+where A.c_status='Approved' and A.c_gid='64'
+GROUP BY  
+pt.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,owner_name,rt.property_id;
+

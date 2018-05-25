@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>        
+        <!-- META SECTION -->
+        <title>Portfolio Management</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <!-- END META SECTION -->
+        
+        <!-- CSS INCLUDE -->        
+        <link rel="stylesheet" type="text/css" id="theme" href="css/theme-blue.css"/>
+        <!-- EOF CSS INCLUDE -->                                      
+		<style>
+		.addschedule td{
+	border:1px solid;
+	padding:0px !important;
+	    vertical-align: middle !important;
+}
+.addschedule th{
+	border:1px solid;
+}
+.addsummary td{
+	border:1px solid;
+	    vertical-align: middle;
+	padding:0px !important;
+}
+.addsummary th{
+	border:1px solid;
+}
+.addtax td{
+	border:1px solid;
+	
+	padding:0px !important;
+}
+.addtax th{
+	border:1px solid;
+}
+		</style>
+    </head>
+    <body>								
+        <!-- START PAGE CONTAINER -->
+        <div class="page-container page-navigation-top">            
+            <!-- PAGE CONTENT -->
+             <div class="page-content1 page-overflow wrapper wrapper__minify" style="height:auto!important;">
+                
+                <!-- START X-NAVIGATION VERTICAL -->
+                <ul class="x-navigation x-navigation-horizontal">
+                    <li class="xn-logo">
+                        <a href="index.html"><img src="img/pecan.png" style="height: 32px;margin-top: -5px;" /></a>
+                        <a href="#" class="x-navigation-control"></a>
+                    </li>
+                    <li class="xn-openable">
+                        <a href="#"><span class="fa fa-home"></span> <span class="xn-text">Properties</span></a>
+                        <ul class="animated zoomIn">
+                            <li><a href="client_list.html"><span class="fa fa-image"></span> Client</a></li>
+                            <li><a href="purchase_list.html"><span class="fa fa-user"></span> Purchase</a></li>
+                            <li><a href="sales_list.html"><span class="fa fa-users"></span> Sale</a></li>
+							<li><a href="tenant_list.html"><span class="fa fa-users"></span> Rent</a></li>
+                            <li><a href="loan_list.html"><span class="fa fa-users"></span> Loan</a></li>
+                        </ul>
+                    </li>
+                    <li class="xn-openable">
+                        <a href="#"><span class="fa fa-user"></span> <span class="xn-text">Association</span></a>
+                        <ul class="animated zoomIn">
+                            <li><a href="group_list.html"><span class="fa fa-group"></span> Group</a></li>
+                            <li><a href="contact_list.html"><span class="fa fa-user"></span> Contact</a></li>
+                            <li><a href="bank_details_list.html"><span class="fa fa-bank"></span> Bank</a></li>
+                        </ul>
+                    </li>
+                    <li class="xn-openable">
+                        <a href="#"><span class="fa fa-pencil-square-o"></span> <span class="xn-text">Task</span></a>                        
+                        <ul class="animated zoomIn">
+                            <li><a href="#"><span class="fa fa-heart"></span> All Task</a></li>                            
+                            <li><a href="#"><span class="fa fa-cogs"></span> My Task</a></li>
+                            <li><a href="#"><span class="fa fa-square-o"></span> Create Task</a></li>
+                        </ul>
+                    </li>                    
+                    <li class="xn-openable">
+                        <a href="#"><span class="fa fa-dashboard"></span> <span class="xn-text">Dashboard</span></a>
+                    </li>
+					<li class="xn-openable">
+                        <a href="#"><span class="fa fa-bar-chart-o"></span> <span class="xn-text">Reports</span></a>
+                    </li>
+					<li class="xn-openable">
+                        <a href="#"><span class="fa fa-file-text"></span> <span class="xn-text">Documents</span></a>
+                    </li>
+					<li class="xn-openable">
+                        <a href="#"><span class="fa fa-gear"></span> <span class="xn-text">Settings</span></a>
+                        <ul class="animated zoomIn">
+                            <li><a href="#"><span class="fa fa-heart"></span> My Settings</a></li>                            
+                            <li><a href="user_list.html"><span class="fa fa-cogs"></span> User</a></li>
+                            <li><a href="user_role_list.html"><span class="fa fa-square-o"></span> User Roles</a></li>
+                        </ul>
+                    </li>
+                    <!-- SIGN OUT -->
+                   
+					<li class="xn-icon-button pull-right">
+					   <a href="#" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out"></span></a>                        
+                    </li> 
+                    <!-- END SIGN OUT -->                                        
+                </ul>
+                <!-- END X-NAVIGATION VERTICAL -->                     
+                
+                <!-- PAGE CONTENT WRAPPER -->
+                <div class="page-content-wrap">
+                
+                    <div class="row">
+					
+						<div class="col-md-1">&nbsp;</div>
+						
+                        <div class="col-md-10">
+						<div class="panel panel-default">
+                            <form id="jvalidate" role="form" class="form-horizontal" action="javascript:alert('Form #validate2 submited');">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"><strong>Group Details</strong></h3>
+                                    
+                                </div>
+                                <div class="panel-body">
+									<div class="form-group" style="border-top:1px dotted #ddd">
+										<div class="col-md-6">
+											<div class="">
+												<label class="col-md-3 control-label">Type</label>
+												<div class="col-md-9">
+													<select class="form-control select">
+														<option>Payment</option>
+														<option>Reciept</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="">
+												<label class="col-md-3 control-label">Status</label>
+												<div class="col-md-9">
+												<select class="form-control select">
+													<option>Select</option>
+													<option>Property Purchase</option>
+													<option>Loan EMI</option>
+													<option>Rent</option>
+													<option>Property Sale</option>
+												</select>
+													
+												</div>
+											</div>
+										</div>
+									</div>
+								
+									
+                                </div>
+								
+								
+								<!-- START DATATABLE -->
+								<div class="panel-heading">
+									<h3 class="panel-title">Bank Entry</h3>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+									<div class="panel-body">
+										<div class="form-group" style="border-top:1px dotted #ddd">
+											<div class="col-md-12">
+												<div class="">
+													<label class="col-md-2 control-label" style="margin-left: -38px;">Owner Name</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control" name="owner_name" placeholder=""/>
+													</div>
+												</div>
+											</div>
+											
+										</div>
+										<div class="form-group" style="border-top:1px dotted #ddd">
+											<div class="col-md-6">
+												<div class="">
+													<label class="col-md-3 control-label">Property Name</label>
+													<div class="col-md-9">
+														<input type="text" class="form-control" name="owner_name" placeholder=""/>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="">
+													<label class="col-md-3 control-label">Sub Property Name</label>
+													<div class="col-md-9">
+														<input type="text" class="form-control" name="owner_name" placeholder=""/>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group" style="border-top:1px dotted #ddd">
+											<div class="col-md-6">
+												<div class="">
+													<label class="col-md-3 control-label">Event</label>
+													<div class="col-md-9">
+														<select class="form-control select">
+															<option>Select</option>
+															<option>1st Slab</option>
+															<option>2nd Slab</option>
+															<option>3rd Slab</option>
+															<option>4th Slab</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="">
+													<label class="col-md-3 control-label">Date</label>
+													<div class="col-md-9">
+														<input type="text" class="form-control datepicker" name="owner_name" placeholder=""/>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									</div>
+								</div>
+								<!-- END DEFAULT DATATABLE -->
+								
+								
+								<div class="panel-heading">
+									<h3 class="panel-title">Payment Summary</h3>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+									<div class="panel-body">
+										<div class="table-responsive">
+										<table id="contacts" class="table group1 addschedule">
+											<thead>
+												<tr>
+													<th width="100">Particular</th>
+													<th width="50">Budget</th>
+													<th width="50">Actual</th>
+													<th width="50">Difference</th>
+													
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Basic Amount</td>
+													<td class="Contact_name">10,00,000</td>
+													<td><input type="text" id="txtemail" class="form-control" style="    border: none;" /></td>
+													<td>5,00,000</td>
+													
+												</tr>
+												<tr>
+													<td>Service Tax - 14.5%</td>
+													<td class="Contact_name">1,45,000</td>
+													<td><input type="text" id="txtemail" class="form-control" style="    border: none;"/></td>
+													<td>72,500</td>
+													
+												</tr>
+												<tr>
+													<td>After Tax</td>
+													<td class="Contact_name">11,45,000</td>
+													<td><input type="text" id="txtemail" class="form-control" style="    border: none;"/></td>
+													<td>5,72,500</td>
+													
+												</tr>
+												<tr>
+													<td><select class="form-control select"  style="    border: none;">
+															<option>Select</option>
+															<option>TDS</option>
+															
+														</select></td>
+													<td class="Contact_name">10,00,000</td>
+													<td>50,000</td>
+													<td>50,000</td>
+													
+												</tr>
+												<tr style="background:#ddd;font-weight:bolder;height:27px;">
+													<td>Payable Amount</td>
+													<td class="Contact_name">10,45,000</td>
+													<td>5,22,500</td>
+													<td>5,22,500</td>
+													
+												</tr>
+											</tbody>
+										</table>
+										<div class="row">
+										&nbsp;
+										</div>
+										</div>
+										<div class="row">
+										<button class="btn btn-success repeat1" style="margin-left: 10px;">+</button>
+										</div>
+										</div>
+										
+									</div>
+									</div>
+										
+										<!-- START DATATABLE -->
+								<div class="panel-heading">
+									<h3 class="panel-title">Payment Details</h3>
+								</div>
+								<div class="panel-body">
+									<div class="row">
+									<div class="panel-body">
+										<div class="form-group" style="border-top:1px dotted #ddd">
+											<div class="col-md-12">
+												<div class="">
+													<label class="col-md-2 control-label" style="margin-left: -38px;">Bank A/C</label>
+													<div class="col-md-8">
+														<input type="text" class="form-control" name="owner_name" placeholder=""/>
+													</div>
+												</div>
+											</div>
+											
+										</div>
+										<div class="form-group" style="border-top:1px dotted #ddd">
+											<div class="col-md-6">
+												<div class="">
+													<label class="col-md-3 control-label">Mode</label>
+													<div class="col-md-9">
+														<select class="form-control select">
+															<option>Select</option>
+															<option>Cheque</option>
+															<option>Cash</option>
+															<option>NEFT</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="">
+													<label class="col-md-3 control-label">Payment Date</label>
+													<div class="col-md-9">
+														<input type="text" class="form-control" name="owner_name" placeholder=""/>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group" style="border-top:1px dotted #ddd">
+											<div class="col-md-6">
+												<div class="">
+													<label class="col-md-3 control-label">Cheque No</label>
+													<div class="col-md-9">
+														<input type="text" class="form-control datepicker" name="owner_name" placeholder=""/>
+														
+													</div>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="">
+													<label class="col-md-3 control-label">Cheque Amount</label>
+													<div class="col-md-9">
+														<input type="text" class="form-control datepicker" name="owner_name" placeholder=""/>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group" style="border-top:1px dotted #ddd">
+											
+											<div class="col-md-6">
+												<div class="">
+													<label class="col-md-3 control-label">MICR No</label>
+													<div class="col-md-9">
+														<input type="text" class="form-control datepicker" name="owner_name" placeholder=""/>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									</div>
+								
+									<div class="mb-footer">
+										<button class="btn btn-default mb-control-close">Cancel</button>
+										<button id="save_contact" type="button" class="btn btn-primary pull-right" style="margin-right: 10px;">Save</button>
+									</div>
+								</div>
+									
+									
+								
+							</form>
+						</div>
+						</div>
+						
+						<div class="col-md-1">&nbsp;</div>
+						
+                    </div>
+                    
+                </div>
+                <!-- END PAGE CONTENT WRAPPER -->
+            </div>            
+            <!-- END PAGE CONTENT -->
+        </div>
+        <!-- END PAGE CONTAINER -->
+						
+        <!-- MESSAGE BOX-->
+        <div class="message-box animated fadeIn" data-sound="alert" id="mb-signout">
+            <div class="mb-container">
+                <div class="mb-middle">
+                    <div class="mb-title"><span class="fa fa-sign-out"></span> Log <strong>Out</strong> ?</div>
+                    <div class="mb-content">
+                        <p>Are you sure you want to log out?</p>                    
+                        <p>Press No if youwant to continue work. Press Yes to logout current user.</p>
+                    </div>
+                    <div class="mb-footer">
+                        <div class="pull-right">
+                            <a href="pages-login.html" class="btn btn-success btn-lg">Yes</a>
+                            <button class="btn btn-default btn-lg mb-control-close">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END MESSAGE BOX-->
+
+        <!-- START PRELOADS -->
+        <audio id="audio-alert" src="audio/alert.mp3" preload="auto"></audio>
+        <audio id="audio-fail" src="audio/fail.mp3" preload="auto"></audio>
+        <!-- END PRELOADS -->               
+
+    <!-- START SCRIPTS -->
+        <!-- START PLUGINS -->
+        <script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="js/plugins/bootstrap/bootstrap.min.js"></script>
+        <!-- END PLUGINS -->                
+
+        <!-- THIS PAGE PLUGINS -->
+        <script type='text/javascript' src='js/plugins/icheck/icheck.min.js'></script>
+        <script type="text/javascript" src="js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
+		<script type="text/javascript" src="js/demo_tables.js"></script>
+		<script type="text/javascript" src="js/plugins/moment.min.js"></script>
+        <script type="text/javascript" src="js/plugins/bootstrap/bootstrap-select.js"></script>
+		<script type='text/javascript' src='js/plugins/validationengine/languages/jquery.validationEngine-en.js'></script>
+        <script type='text/javascript' src='js/plugins/validationengine/jquery.validationEngine.js'></script>
+		<script type='text/javascript' src='js/plugins/jquery-validation/jquery.validate.js'></script>
+        <script type="text/javascript" src="js/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+        <script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script>  
+		<script type="text/javascript" src="js/plugins/tableexport/tableExport.js"></script>
+		<script type="text/javascript" src="js/plugins/tableexport/jquery.base64.js"></script>
+		<script type="text/javascript" src="js/plugins/tableexport/html2canvas.js"></script>
+		<script type="text/javascript" src="js/plugins/tableexport/jspdf/libs/sprintf.js"></script>
+		<script type="text/javascript" src="js/plugins/tableexport/jspdf/jspdf.js"></script>
+		<script type="text/javascript" src="js/plugins/tableexport/jspdf/libs/base64.js"></script>
+        <!-- END PAGE PLUGINS -->
+
+        <!-- START TEMPLATE -->
+        
+        
+        <script type="text/javascript" src="js/plugins.js"></script>        
+        <script type="text/javascript" src="js/actions.js"></script>
+        <!-- END TEMPLATE -->
+		
+		<script>
+
+		jQuery(function(){
+    var counter = 1;
+    $('.repeat').click(function(event){
+        event.preventDefault();
+        counter++;
+        var newRow = jQuery('<tr><td>'+counter+'</td>'+
+											'<td class="Contact_name"><input type="text" id="txtname" class="form-control"/></td>'+
+											'<td><input type="text" id="txtdesign" class="form-control"/></td>'+
+													'<td><input type="text" id="txtmob" class="form-control"/></td>'+
+												'	<td><input type="text" id="txtemail" class="form-control"/></td>'+
+												'	<td align="middle"><input type="checkbox" id="chkadmin" class="icheckbox"/></td></tr>');
+        $('table.group').append(newRow);
+    });
+});
+
+
+jQuery(function(){
+    var counter1 = 2;
+    $('.repeat1').click(function(event){
+        event.preventDefault();
+        counter1++;
+        var newRow = jQuery('<tr><td>'+counter1+'</td>'+
+												'	<td class="Contact_name"><input type="text" id="txtname" class="form-control"/></td>'+
+												'	<td><input type="text" id="txtemail" class="form-control"/></td>'+
+												'	<td><input type="text" id="txtphone" class="form-control"/></td>'+
+													
+												'	<td align="middle"><input type="radio" id="chkadmin" group="type" class=""/>Admin'+
+												'	<input type="radio" id="chkadmin" group="type" class=""/>User</tr>');
+        $('table.group1').append(newRow);
+    });
+});
+
+
+</script>
+		
+		<script type="text/javascript">
+            var jvalidate = $("#jvalidate").validate({
+                ignore: [],
+                rules: {                                            
+                        group_name: {
+                                required: true
+                        },
+						status: {
+                                required: true
+                        },
+						group_members: {
+                                required: true
+                        }
+                    }                                        
+                });
+				
+			$('#reset').click(function(){
+				$('#jvalidate')[0].reset();
+				$('.tagsinput').attr('value') = '';
+			 });
+			 
+			$('.contact_id').click(function(){
+				var members = "";
+				
+				$('#contacts tr').each(function() {
+					var row = $(this);
+					
+					if (row.find('input[type="checkbox"]').is(':checked')) {
+						members = members + $(this).find("td.Contact_name").html() + ',';
+					}
+					});
+					
+				alert(members);
+				
+				$('#group_members').attr('value', members);
+				//$('input[name=group_members]').val(members);
+				//$('#group_members').val(members);
+			 });
+        </script>
+    <!-- END SCRIPTS -->      
+    </body>
+</html>

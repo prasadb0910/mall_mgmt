@@ -1,0 +1,469 @@
+@charset "UTF-8";
+@media (max-width: 767px) {
+    .h1,
+    h1 {
+        font-size: 28px
+    }
+    .h2,
+    h2 {
+        font-size: 24px
+    }
+    .h3,
+    h3 {
+        font-size: 18px
+    }
+    .section header .icon.largest i,
+    .services [class*=col] i.fa {
+        font-size: 60px
+    }
+    .offsetTop {
+        padding-top: 20px
+    }
+    .offsetBottom {
+        padding-bottom: 20px
+    }
+    .offsetTopX {
+        padding-top: 60px
+    }
+    .offsetBottomX {
+        padding-bottom: 60px
+    }
+    .offsetTopL {
+        padding-top: 40px
+    }
+    .offsetBottomL {
+        padding-bottom: 40px
+    }
+    .offsetTopS {
+        padding-top: 5px
+    }
+    .offsetBottomS {
+        padding-bottom: 5px
+    }
+    .navbar {
+      /*  padding-top: 20px*/
+	    padding-top: 28px; min-height:65px; background:#fff; box-shadow:0 5px 5px rgba(0,0,0,.5);    }
+    .navbar .social {
+        display: none!important
+    }
+    .navbar.floating {
+       /* padding-top: 15px;
+        padding-bottom: 15px;*/
+		
+		padding-top:30px;
+		padding-bottom:20px;
+		
+    }
+    .navbar.eight .navbar-nav>li.menu-item-object-page.current-menu-item>a:after,
+    .navbar.four .navbar-nav>li>a:after,
+    .navbar.nine .navbar-nav>li.menu-item-object-page.current-menu-item>a:after,
+    .navbar.seven .navbar-nav>li.menu-item-object-page.current-menu-item>a:after,
+    .navbar.six .navbar-nav>li>a:after,
+    .navbar.three .navbar-nav>li>a:after {
+        display: none
+    }
+    .navbar+.section.offsetTop {
+        padding-top: 5px
+    }
+    html.nav-sticky {
+        margin-top: 49px!important
+    }
+    html.nav-sticky.wp-bar {
+        margin-top: 96px!important
+    }
+    body.admin-bar .navbar.floating.navbar-fixed-top {
+        padding-top: 62px
+    }
+    .intro .content .video-preview {
+        margin-top: 20px;
+        width: 120px
+    }
+    .arrows {
+        margin-top: 15px
+    }
+    .services [class*=col] {
+        border-right-width: 0
+    }
+    .services-alt [class*=col] i.fa {
+        font-size: 34px;
+        margin-top: 15px
+    }
+    .btn {
+        padding: 12px 20px
+    }
+    .btn.btn-inverse {
+        padding: 10px 18px
+    }
+    .big-ipad.pull-right {
+        float: left!important
+    }
+    .no-right-xs {
+        float: none!important
+    }
+    .text-center-xs,
+    .text-center-xs>.pull-right {
+        float: none!important;
+        text-align: center
+    }
+    .portfolio-filters a {
+        padding: 10px 12px;
+        margin-right: 5px;
+        margin-top: 7px
+    }
+    .team [class*=col] {
+        padding-left: 20px;
+        padding-right: 20px
+    }
+    .team [class*=col] .social {
+        float: left;
+        margin-top: 5px;
+        margin-left: -5px
+    }
+    .circular-bars input {
+        font-size: 16px!important
+    }
+    .circular-bars .h1,
+    .circular-bars .h2,
+    .circular-bars .h3,
+    .circular-bars .h4,
+    .circular-bars .h5,
+    .circular-bars .h6,
+    .circular-bars h1,
+    .circular-bars h2,
+    .circular-bars h3,
+    .circular-bars h4,
+    .circular-bars h5,
+    .circular-bars h6 {
+        margin-bottom: 20px
+    }
+    .pricing-tables .plan {
+        padding-bottom: 17px
+    }
+    .pricing-tables .plan header {
+        margin-top: 20px;
+        margin-bottom: 15px
+    }
+    .info-box .btn,
+    .pricing-tables .plan .btn:first-of-type {
+        margin-top: 15px
+    }
+    .pricing-tables .plan ul li {
+        padding-top: 8px;
+        padding-bottom: 8px
+    }
+    .sidebar {
+        padding-left: 0
+    }
+    .sidebar .newsletter-form .search-field,
+    .sidebar .newsletter-form input[type=email],
+    .sidebar .newsletter-form input[type=text],
+    .sidebar.widget_search .search-field,
+    .sidebar.widget_search input[type=email],
+    .sidebar.widget_search input[type=text] {
+        width: 100%
+    }
+    .info-box {
+        padding-top: 20px;
+        padding-bottom: 20px
+    }
+    .info-box input[type=email] {
+        font-size: 18px
+    }
+    .large-info {
+        font-size: 28px;
+        padding: 20px;
+        margin-bottom: 10px
+    }
+    .contact-form .field {
+        width: 100%;
+        margin-bottom: 15px!important
+    }
+    .image-slider .arrows.large .arrow.left {
+        left: -20px
+    }
+    .image-slider .arrows.large .arrow.right {
+        right: -20px
+    }
+    .user-comment {
+        margin-bottom: 25px
+    }
+    .user-comment .image {
+        width: 60px
+    }
+    .nothing-found .search-form .search-field,
+    .user-comment .details .info .author {
+        width: 100%
+    }
+    .user-comment .details {
+        margin-left: 90px
+    }
+    .user-comment .details .info .date {
+        float: left
+    }
+    .user-comment .user-comment {
+        margin-top: 25px
+    }
+    .footer,
+    .footer .social {
+        text-align: center
+    }
+    .milestone .counter {
+        font-size: 32px
+    }
+    .imacs .item.center {
+        margin-top: 0
+    }
+    .format-holder.link a,
+    .format-holder.status p {
+        padding-left: 66px;
+        margin-left: 0;
+        margin-top: .6em;
+        margin-bottom: .5em
+    }
+    .map #google-map {
+        height: 300px
+    }
+    .format-holder.link a {
+        font-size: 1.2em
+    }
+    .format-holder.link a:before {
+        font-size: 1.6em!important;
+        top: 4px
+    }
+    .format-holder.status p {
+        font-size: 1.2em
+    }
+    .format-holder.status p:before {
+        font-size: 1.6em!important;
+        top: 4px
+    }
+    .format-holder.aside {
+        font-size: 1.3em;
+        line-height: 1.6em
+    }
+    blockquote {
+        margin: 1.2em 10px;
+        padding: 0 20px 0 50px;
+        font-size: 1.2em
+    }
+    blockquote:before {
+        font-size: 3em;
+        left: 0
+    }
+    blockquote.pull-left,
+    blockquote.pull-right {
+        width: 100%;
+        float: none!important
+    }
+	.navbar .navbar-nav { margin:0; box-shadow:0 5px rgba(0,0,0,.5)}
+	.navbar .navbar-nav>li {
+     margin:0px;  
+    border-bottom: 1px dotted #eee; padding:5px;
+}
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    .offsetTop {
+        padding-top: 40px
+    }
+    .offsetBottom {
+        padding-bottom: 40px
+    }
+    .offsetTopX {
+        padding-top: 100px
+    }
+    .offsetBottomX {
+        padding-bottom: 100px
+    }
+    .offsetTopL {
+        padding-top: 60px
+    }
+    .offsetBottomL {
+        padding-bottom: 60px
+    }
+    .offsetTopS {
+        padding-top: 10px
+    }
+    .offsetBottomS {
+        padding-bottom: 10px
+    }
+    .section header .icon.largest i {
+        font-size: 80px
+    }
+    .navbar {
+        padding-top: 40px
+    }
+    .navbar-nav,
+    .navbar.eight .navbar-nav,
+    .navbar.five .navbar-nav,
+    .navbar.four .navbar-nav,
+    .navbar.nine .navbar-nav,
+    .navbar.one .navbar-nav,
+    .navbar.seven .navbar-nav,
+    .navbar.six .navbar-nav,
+    .navbar.three .navbar-nav,
+    .navbar.two .navbar-nav {
+        max-width: 630px
+    }
+    .navbar .social {
+        display: none!important
+    }
+    .navbar.floating {
+        padding-top: 30px;
+        padding-bottom: 15px
+    }
+    .navbar+.section.offsetTop {
+        padding-top: 20px
+    }
+    html.nav-sticky {
+        margin-top: 75px!important
+    }
+    html.nav-sticky.wp-bar {
+        margin-top: 105px!important
+    }
+    body.admin-bar .navbar.floating.navbar-fixed-top {
+        padding-top: 60px
+    }
+    .services [class*=col] {
+        border-right-width: 0
+    }
+    .services [class*=col] i.fa {
+        font-size: 60px
+    }
+    .team [class*=col] {
+        padding-left: 25px;
+        padding-right: 25px
+    }
+    .info-box {
+        padding-top: 35px;
+        padding-bottom: 35px
+    }
+    .info-box .btn {
+        margin-top: 15px
+    }
+    .pricing-tables .plan {
+        margin-left: 0;
+        margin-right: 0
+    }
+    .sidebar .newsletter-form .search-field,
+    .sidebar .newsletter-form input[type=email],
+    .sidebar .newsletter-form input[type=text],
+    .sidebar.widget_search .search-field,
+    .sidebar.widget_search input[type=email],
+    .sidebar.widget_search input[type=text] {
+        width: 100%
+    }
+    .milestone .counter {
+        font-size: 42px
+    }
+    .imacs .item.center {
+        margin-top: 0
+    }
+    .imacs .item.center img {
+        width: 400px
+    }
+    .imacs .item.left.complete {
+        top: 25px;
+        left: 30px;
+        width: 300px
+    }
+    .imacs .item.right.complete {
+        top: 25px;
+        right: 30px;
+        width: 300px
+    }
+    #wp-calendar tbody td {
+        padding: 4px 7px
+    }
+    .user-comment {
+        margin-bottom: 25px
+    }
+    .user-comment .image {
+        width: 60px
+    }
+    .user-comment .details {
+        margin-left: 90px
+    }
+    .user-comment .details .info .author {
+        width: 100%
+    }
+    .user-comment .details .info .date {
+        float: left
+    }
+    .user-comment .user-comment {
+        margin-top: 25px
+    }
+    .format-holder.link a,
+    .format-holder.status p {
+        padding-left: 66px;
+        margin-left: 0;
+        margin-top: .6em;
+        margin-bottom: .5em
+    }
+    .footer .menu {
+        display: block
+    }
+    .format-holder.link a {
+        font-size: 1.2em
+    }
+    .format-holder.link a:before {
+        font-size: 1.6em!important;
+        top: 4px
+    }
+    .format-holder.status p {
+        font-size: 1.2em
+    }
+    .format-holder.status p:before {
+        font-size: 1.6em!important;
+        top: 4px
+    }
+    .format-holder.aside {
+        font-size: 1.3em;
+        line-height: 1.6em
+    }
+    blockquote {
+        margin: 1.2em 10px;
+        padding: 0 20px 0 50px;
+        font-size: 1.2em
+    }
+    blockquote:before {
+        font-size: 3em;
+        left: 0
+    }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+    .navbar.eight .navbar-nav,
+    .navbar.one .navbar-nav,
+    .navbar.three .navbar-nav {
+        max-width: 850px
+    }
+    .navbar.five .navbar-nav,
+    .navbar.four .navbar-nav,
+    .navbar.nine .navbar-nav,
+    .navbar.seven .navbar-nav,
+    .navbar.six .navbar-nav,
+    .navbar.two .navbar-nav {
+        max-width: 710px
+    }
+    .navbar .social {
+        margin-left: 50px
+    }
+    .sidebar .newsletter-form .search-field,
+    .sidebar .newsletter-form input[type=email],
+    .sidebar .newsletter-form input[type=text],
+    .sidebar.widget_search .search-field,
+    .sidebar.widget_search input[type=email],
+    .sidebar.widget_search input[type=text] {
+        width: 150px
+    }
+    .imacs .item.center {
+        margin-top: 25px
+    }
+    .imacs .item.left.complete {
+        top: -25px;
+        left: 30px
+    }
+    .imacs .item.right.complete {
+        top: -25px;
+        right: 30px
+    }
+}

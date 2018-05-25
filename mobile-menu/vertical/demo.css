@@ -1,0 +1,45 @@
+ 
+.wrapper {
+  /*margin-top: 50px;*/
+  /*padding: 15px 30px;*/
+  transition: all 0.3s ease-out;
+}
+
+.clearfix:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+
+/* Small devices (tablets)
+==========================*/
+@media (min-width: 768px) {
+
+}
+
+
+/* Medium devices (desktops)
+==========================*/
+@media (min-width: 992px) {
+
+  body {
+    overflow-y: scroll;
+  }
+
+  .logo img {
+    width: 200px;
+    text-align: center;
+    margin-top: 10px;
+    float: none;
+  }
+
+  .wrapper {
+    margin-left: 200px; overflow-x:hidden;
+  }
+
+  .wrapper__minify {
+    margin-left: 60px;
+  }
+
+}

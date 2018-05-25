@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta charset="utf-8" />
+<title>Pages - Admin Dashboard UI Kit - Form Layouts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+<link rel="apple-touch-icon" href="pages/ico/60.png">
+<link rel="apple-touch-icon" sizes="76x76" href="pages/ico/76.png">
+<link rel="apple-touch-icon" sizes="120x120" href="pages/ico/120.png">
+<link rel="apple-touch-icon" sizes="152x152" href="pages/ico/152.png">
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta content="" name="description" />
+<meta content="" name="author" />
+<link href="assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" />
+<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+<link href="assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="assets/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css" media="screen">
+<link href="pages/css/pages-icons.css" rel="stylesheet" type="text/css">
+<link class="main-stylesheet" href="pages/css/pages.css" rel="stylesheet" type="text/css" />
+<link href="assets/plugins/dropzone/css/dropzone.css" rel="stylesheet" type="text/css" />
+<link href="assets/css/maintainance.css" rel="stylesheet" type="text/css" />
+<style>
+.a
+{
+border-bottom: 2px solid #edf0f5;
+margin-bottom: 25px;
+padding-bottom: 25px;
+}
+</style>
+<style type="text/css">
+#image-preview {
+  min-width: auto;
+  min-height: 300px;
+  width:100%;
+  height:auto;
+  position: relative;
+  overflow: hidden;
+  background: url("assets/img/demo/preview.jpg") ;
+   background-repeat: no-repeat;
+    background-size: 100% 100%;
+  color: #ecf0f1;
+  margin:auto;
+}
+#image-preview input {
+  line-height: 200px;
+  font-size: 200px;
+  position: absolute;
+  opacity: 0;
+  z-index: 10;
+}
+#image-label 
+{
+    
+color:white;
+padding-left:6px;
+
+}
+#image-label_field
+{
+background: transparent -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(75%, rgba(0,0,0,0.8))) repeat scroll 0 0;
+	
+	
+}
+#image-label_field:hover
+{
+	background: transparent linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 75%) repeat scroll 0 0;
+}
+.add
+{
+	color:#41a541;
+	cursor:default;
+font-size:14px;
+		font-weight:500;
+}
+.remove
+{
+color:#d63b3b;
+text-align:right;
+	cursor:default;
+	    margin-bottom: 10px;
+		font-size:14px;
+		font-weight:500;
+}
+.block1
+{
+	padding: 20px 20px;
+    border: 2px solid #edf0f5;
+    border-radius: 7px;
+    background: #f6f9fc;
+	    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.delete
+{
+color:#d63b3b;
+text-align:left;
+vertical-align:center;
+	cursor:default;
+	    margin-top: 15px;
+		font-size:20px;
+		font-weight:500;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 28px;
+	font-weight:400;
+}
+.blue-btn:hover,
+.blue-btn:active,
+.blue-btn:focus,
+.blue-btn {
+  background: transparent;
+  border: dotted 1px #27a9e0;
+  border-radius: 3px;
+  color: #27a9e0;
+  font-size: 16px;
+  margin-bottom: 20px;
+  outline: none !important;
+  padding: 10px 20px;
+}
+
+.fileUpload {
+  position: relative;
+  overflow: hidden;
+  height: 43px;
+  margin-top: 0;
+}
+
+.fileUpload input.uploadlogo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  width: 100%;
+  height: 42px;
+}
+
+/*Chrome fix*/
+input::-webkit-file-upload-button {
+  cursor: pointer !important;
+  height: 42px;
+  width: 100%;
+}
+.attachments
+{
+fon-size:20px!important;
+font-weight:600;
+padding-left:15px;
+ border-left: solid 2px #27a9e0;
+}
+
+</style>
+</head>
+<body class="fixed-header ">
+
+<nav class="page-sidebar" data-pages="sidebar">
+
+<div class="sidebar-overlay-slide from-top" id="appMenu">
+<div class="row">
+<div class="col-xs-6 no-padding">
+<a href="#" class="p-l-40"><img src="assets/img/demo/social_app.svg" alt="socail">
+</a>
+</div>
+<div class="col-xs-6 no-padding">
+<a href="#" class="p-l-10"><img src="assets/img/demo/email_app.svg" alt="socail">
+</a>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-6 m-t-20 no-padding">
+<a href="#" class="p-l-40"><img src="assets/img/demo/calendar_app.svg" alt="socail">
+</a>
+</div>
+<div class="col-xs-6 m-t-20 no-padding">
+<a href="#" class="p-l-10"><img src="assets/img/demo/add_more.svg" alt="socail">
+</a>
+</div>
+</div>
+</div>
+
+
+<div class="sidebar-header">
+<img src="assets/img/logo_white.png" alt="logo" class="brand" data-src="assets/img/logo_white.png" data-src-retina="assets/img/logo_white_2x.png" width="78" height="22">
+<div class="sidebar-header-controls">
+<button type="button" class="btn btn-xs sidebar-slide-toggle btn-link m-l-20 hidden-md-down" data-pages-toggle="#appMenu"><i class="fa fa-angle-down fs-16"></i>
+</button>
+<button type="button" class="btn btn-link hidden-md-down" data-toggle-pin="sidebar"><i class="fa fs-12 "style="color:#000;"></i>
+</button>
+</div>
+</div>
+
+
+<div class="sidebar-menu">
+
+<ul class="menu-items">
+<li>
+<a href="" class="detailed">
+<span class="title">Reams</span>
+
+</a>
+<span class="bg-success icon-thumbnail"><i class="pg-home"></i></span>
+</li>
+
+<li class="">
+<a href="" class="detailed">
+<span class="title">Dashboard</span>
+
+</a>
+<span class="bg-success icon-thumbnail"><i class="fa fa-dashboard"></i></span>
+</li>
+
+<li class="open">
+<a href="javascript:;">
+<span class="title">Masters</span>
+<span class=" open  arrow"></span>
+</a>
+<span class="icon-thumbnail"><i class="fa fa-indent"></i></span>
+<ul class="sub-menu">
+<li class="">
+<a href="contact.html">Contact</a>
+<span class="icon-thumbnail">fe</span>
+</li>
+<li class="">
+<a href="list_page.html">Owner</a>
+<span class="icon-thumbnail">li</span>
+</li>
+<li class="">
+<a href="list_page.html">Bank</a>
+<span class="icon-thumbnail">li</span>
+</li>
+
+<li class="">
+<a href="contact_type.html">Contact Type</a>
+<span class="icon-thumbnail">li</span>
+</li>
+
+<li class="">
+<a href="Expense_category.html">Expense Category </a>
+<span class="icon-thumbnail">li</span>
+</li>
+
+<li class="">
+<a href="list_page.html">City Master </a>
+<span class="icon-thumbnail">li</span>
+</li>
+</ul>
+</li>
+
+<li class="open">
+<a href="javascript:;">
+<span class="title">Transaction</span>
+<span class=" open  arrow"></span>
+</a>
+<span class="icon-thumbnail"><i class="fa fa-rupee"></i></span>
+<ul class="sub-menu">
+<li class="">
+<a href="input_form.html">Purchase</a>
+<span class="icon-thumbnail">fe</span>
+</li>
+<li class="">
+<a href="list_page.html">Sub-Property</a>
+<span class="icon-thumbnail">li</span>
+</li>
+<li class="">
+<a href="list_page.html">Sale</a>
+<span class="icon-thumbnail">li</span>
+</li>
+
+<li class="">
+<a href="list_page.html">Rent</a>
+<span class="icon-thumbnail">li</span>
+</li>
+
+<li class="">
+<a href="list_page.html">Bank Entry</a>
+<span class="icon-thumbnail">li</span>
+</li>
+
+<li class="">
+<a href="list_page.html">Loan </a>
+<span class="icon-thumbnail">li</span>
+</li>
+
+<li class="">
+<a href="list_page.html">LOAN DISBURSEMENT </a>
+<span class="icon-thumbnail">li</span>
+</li>
+
+<li class="">
+<a href="list_page.html">Expense </a>
+<span class="icon-thumbnail">li</span>
+</li>
+<li class="">
+<a href="list_page.html">Payment </a>
+<span class="icon-thumbnail">li</span>
+</li>
+</ul>
+</li>
+
+<li class="#">
+<a href="" class="detailed">
+<span class="title">Task</span>
+
+</a>
+<span class="bg-success icon-thumbnail"><i class="fa fa-pencil-square-o"></i></span>
+</li>
+
+<li class="#">
+<a href="" class="detailed">
+<span class="title">Report</span>
+
+</a>
+<span class="bg-success icon-thumbnail"><i class="fa fa-bar-chart-o "></i></span>
+</li>
+
+<li class="#">
+<a href="" class="detailed">
+<span class="title">Tax</span>
+
+</a>
+<span class="bg-success icon-thumbnail"><i class="fa fa-gavel "></i></span>
+</li>
+
+
+<li class="#">
+<a href="" class="detailed">
+<span class="title">Valuation</span>
+
+</a>
+<span class="bg-success icon-thumbnail"><i class="fa fa-money "></i></span>
+</li>
+
+<!-- <li class="open"> -->
+<!-- <a href="javascript:;"> -->
+<!-- <span class="title">Properties</span> -->
+<!-- <span class=" open  arrow"></span> -->
+<!-- </a> -->
+<!-- <span class="icon-thumbnail"><i class="pg-form"></i></span> -->
+<!-- <ul class="sub-menu"> -->
+<!-- <li class=""> -->
+<!-- <a href="input_form.html">Input Form</a> -->
+<!-- <span class="icon-thumbnail">fe</span> -->
+<!-- </li> -->
+<!-- <li class=""> -->
+<!-- <a href="list_page.html">List Page</a> -->
+<!-- <span class="icon-thumbnail">li</span> -->
+<!-- </li> -->
+
+<!-- </ul> -->
+<!-- </li> -->
+
+
+
+
+<!-- </ul> -->
+<!-- </li> -->
+
+
+</ul>
+<div class="clearfix"></div>
+ </div>
+
+</nav>
+
+
+
+<div class="page-container ">
+
+<div class="header ">
+
+<a href="#" class="btn-link toggle-sidebar hidden-lg-up pg pg-menu" data-toggle="sidebar">
+</a>
+
+<div class="">
+<div class="brand inline   ">
+
+</div>
+
+
+
+
+ </div>
+<div class="d-flex align-items-center">
+
+<div class="pull-left p-r-10 fs-14 font-heading hidden-md-down">
+<span class="semi-bold">David</span> <span class="text-master">Nest</span>
+</div>
+<div class="dropdown pull-right hidden-md-down">
+<button class="profile-dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="thumbnail-wrapper d32 circular inline">
+<img src="assets/img/profiles/avatar.jpg" alt="" data-src="assets/img/profiles/avatar.jpg" data-src-retina="assets/img/profiles/avatar_small2x.jpg" width="32" height="32">
+</span>
+</button>
+<div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu">
+<a href="#" class="dropdown-item"><i class="pg-settings_small"></i> Settings</a>
+<a href="#" class="dropdown-item"><i class="pg-outdent"></i> Feedback</a>
+<a href="#" class="dropdown-item"><i class="pg-signals"></i> Help</a>
+<a href="#" class="clearfix bg-master-lighter dropdown-item">
+<span class="pull-left">Logout</span>
+<span class="pull-right"><i class="pg-power"></i></span>
+</a>
+</div>
+</div>
+
+
+</div>
+</div>
+
+
+<div class="page-content-wrapper ">
+
+<div class="content ">
+
+
+
+<div class=" container-fluid   container-fixed-lg ">
+
+
+
+<ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+<li class="breadcrumb-item "><a href="#">Contact List</a></li>
+<li class="breadcrumb-item active">Contact Details</li>
+</ol>
+<div class="row">
+
+
+
+
+
+
+<div class="col-md-12">
+
+
+
+<div class="swiper-wrapper "  style="
+    
+">
+				<!----><div class="swiper-slide swiper-slide-active" style="width: 366.667px;">
+					<div class="workorders-place-wrap workorders-wrap-clear">
+						<div class="workorders-place-head" style="
+  
+">
+							<h3>
+								<span class="head-title">New</span>
+								<span class="head-count count-1">(0)</span>
+							</h3>
+						</div>
+
+						<div class="workorders-place-body" style="
+
+">
+							<div class="workorders-place-inner" style="
+   
+">
+								<!---->
+
+								<!-- Placeholder drag & drop -->
+								
+
+								<!-- Placeholder -->
+								<!----><div  class="placeholder-workorders" style="
+
+">
+									<div  ondrop="drop(event)" ondragover="allowDrop(event)">
+										<!----><div class="m-b-10" >
+											<i class="fa fa fa-arrows"></i>
+											<h4>Drag</h4>
+										</div><!---->
+										<h4>No new requests</h4>
+									</div>
+								</div><!---->
+							</div>
+						</div>
+					</div>
+				</div><!----><div class="swiper-slide swiper-slide-next" style="width: 366.667px; margin-right: 20px;">
+					<div class="workorders-place-wrap workorders-wrap-clear" >
+						<div class="workorders-place-head">
+							<h3>
+								<span class="head-title">In Progress</span>
+								<span class="head-count count-2">(0)</span>
+							</h3>
+						</div>
+
+						<div class="workorders-place-body">
+							<div class="workorders-place-inner">
+								<!---->
+
+								<!-- Placeholder drag & drop -->
+								
+
+								<!-- Placeholder -->
+								<!----><div  class="placeholder-workorders">
+									<div  ondrop="drop(event)" ondragover="allowDrop(event)">
+										<!----><div class="m-b-10">
+											<i class="fa fa fa-arrows"></i>
+											<h4>Drag</h4>
+										</div><!---->
+										<h4>No in progress requests</h4>
+									</div>
+								</div><!---->
+							</div>
+						</div>
+					</div>
+				</div><!----><div class="swiper-slide" style="width: 366.667px; margin-right: 20px;">
+					<div class="workorders-place-wrap">
+						<div class="workorders-place-head">
+							<h3>
+								<span class="head-title">Resolved</span>
+								<span class="head-count count-3">(2)</span>
+							</h3>
+						</div>
+
+						<div class="workorders-place-body">
+							<div class="workorders-place-inner">
+								<div class="m-panel panel-default panel-maintenance-item m-status--maintenance-block priority-2" draggable="true" ondragstart="drag(event)">
+									
+
+									
+									<div class=" col-md-12" >
+
+<div class="card card-transparent container-fixed-lg bg-white contact_card " style="background:#fff;">
+<div class="row p-l-20">
+<div class=" col-md-12">
+
+
+
+<div class="info">
+<H5 class="title_1 pull-left" >Legal</H5><p class="pull-right p-t-15 p-r-10"><span style="color: #5cb85c;font-size:16px">#23920</p><br>
+<div class="info-name-property pull-left">Priority</div><br>
+<div class="location-address">
+			<!----><address>Green Acres 3</address><!---->
+			<!----><address>Thane, MH, 400607, IN</address><!---->
+		</div>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+<div class=" col-md-12 p-b-10 p-t-5">
+<span class="badge badge-notify pull-left ">RR</span>
+<span class="pull-left " style="padding-left:50px"><small class="user-roommates empty">Assign to</small><br> Rahul Rathod</span>
+<a href="view_task.php" class=" pull-right invoice" style="color:#5cb85c;">View <i class="	fa fa-angle-right tab-icon"></i> </a>
+</div>
+</div>
+
+
+</div>
+</div>									
+				
+
+
+
+		<div class="m-panel panel-default panel-maintenance-item m-status--maintenance-block priority-2" draggable="true" ondragstart="drag(event)">
+									
+
+									
+									<div class=" col-md-12" >
+
+<div class="card card-transparent container-fixed-lg bg-white contact_card " style="background:#fff;">
+<div class="row p-l-20">
+<div class=" col-md-12">
+
+
+
+<div class="info">
+<H5 class="title_1 pull-left" >Legal</H5><p class="pull-right p-t-15 p-r-10"><span style="color: #5cb85c;font-size:16px">#23920</p><br>
+<div class="info-name-property pull-left">Priority</div><br>
+<div class="location-address">
+			<!----><address>Green Acres 3</address><!---->
+			<!----><address>Thane, MH, 400607, IN</address><!---->
+		</div>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+<div class=" col-md-12 p-b-10 p-t-5">
+<span class="badge badge-notify pull-left ">RR</span>
+<span class="pull-left " style="padding-left:50px"><small class="user-roommates empty">Assign to</small><br> Rahul Rathod</span>
+<a href="view_task.php" class=" pull-right invoice" style="color:#5cb85c;">View <i class="	fa fa-angle-right tab-icon"></i> </a>
+</div>
+</div>
+
+
+</div>
+</div>	
+
+
+
+
+
+
+
+
+				
+								<!-- Placeholder drag & drop -->
+								
+
+								<!-- Placeholder -->
+								<!---->
+					
+							</div>
+						</div>
+					</div>
+				</div><!---->
+			</div>
+			</div>
+
+
+
+
+
+
+</div>
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+<div class=" container-fluid  container-fixed-lg footer">
+<div class="copyright sm-text-center">
+<p class="small no-margin pull-left sm-pull-reset">
+<span class="hint-text">Copyright &copy; 2017 </span>
+<span class="font-montserrat">REVOX</span>.
+<span class="hint-text">All rights reserved. </span>
+<span class="sm-block"><a href="#" class="m-l-10 m-r-10">Terms of use</a> <span class="muted">|</span> <a href="#" class="m-l-10">Privacy Policy</a></span>
+</p>
+<p class="small no-margin pull-right sm-pull-reset">
+Hand-crafted <span class="hint-text">&amp; made with Love</span>
+</p>
+<div class="clearfix"></div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+
+
+<script src="assets/plugins/pace/pace.min.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="assets/plugins/modernizr.custom.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<script src="assets/plugins/tether/js/tether.min.js" type="text/javascript"></script>
+<script src="assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery-ios-list/jquery.ioslist.min.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery-actual/jquery.actual.min.js"></script>
+<script src="assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+<script src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
+<script type="text/javascript" src="assets/plugins/select2/js/select2.full.min.js"></script>
+<script type="text/javascript" src="assets/plugins/classie/classie.js"></script>
+<script src="assets/plugins/switchery/js/switchery.min.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="assets/plugins/dropzone/dropzone.min.js"></script>
+<script type="text/javascript" src="assets/js/jquery.uploadPreview.min.js"></script>
+
+<script src="pages/js/pages.min.js"></script>
+<script src="assets/js/form_layouts.js" type="text/javascript"></script>
+<script src="assets/js/scripts.js" type="text/javascript"></script>
+
+<script src="assets/js/append.js" type="text/javascript"></script>
+
+<script src="assets/js/demo.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $.uploadPreview({
+    input_field: "#image-upload",
+    preview_box: "#image-preview",
+    label_field: "#image-label"
+  });
+});
+</script>
+<script>
+ $(".date").datepicker();
+
+</script>
+<script type="text/javascript">
+   $(document).ready(function() {
+ $('#dob').change(function(){ 
+	checkdob();});
+ });
+ </script>
+ <script type="text/javascript">
+            function checkdob(){
+            var age = getAge();
+            if(age<18 && age !=null){
+                $('.guardian').show();
+            }
+            else{
+                $('.guardian').hide();
+                $('#guardian').val('');
+                $('#guardian_relation').val('');
+            }
+        }
+    
+        function getAge(){
+            var age = null;
+
+            if ($('#dob').val()!=""){
+                var day = moment($('#dob').val(), "MM/DD/YYYY");
+                var dob = new Date(day);
+                var today = new Date();
+                age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
+            }
+            
+            return age;
+        }
+        
+    </script>
+    <script>
+	
+
+ function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+}
+  </script>
+
+
+
+<script>
+$('#loan_doc_box').on('click','#loan_doc',function() {
+ 	$(this).parent().remove();
+});
+$('#property_doc_box').on('click','#property_doc',function() {
+ 	$(this).parent().remove();
+});
+
+$('#other_doc_box').on('click','#other_doc',function() {
+ 	$(this).parent().remove();
+});
+</script>
+<script>
+
+	$('#type').change(function(){
+				if($('#type').val() == 'Others') {
+					$('.others-validation').hide();
+					$('.others-hide').hide();
+					$('.company-hide').show();
+                    $('#contact_type_div').show();
+
+                    $('#dob').val('');
+                    $('#date_of_anniversary').val('');
+                    checkdob();
+
+                    $('#full_name_label').html('Name');
+                    $('#c_middle_name').hide();
+                    $('#c_last_name').hide();
+                    $('#owner_type').show();
+                    $('#c_name').attr("placeholder", "Name");
+
+				} else {
+					$('.others-validation').show();
+					$('.others-hide').show();
+                    $('.company-hide').hide();
+                    $('#contact_type_div').hide();
+
+                    $('#company').val('');
+                    $('#contact_type').val('');
+                    $('#pan_card').val('');
+                    checkdob();
+
+                    $('#full_name_label').html('Full Name');
+                    $('#c_middle_name').show();
+                    $('#c_last_name').show();
+                    $('#owner_type').hide();
+                    $('#c_name').attr("placeholder", "First Name");
+				}
+			});
+
+
+
+</script>
+<script>
+
+		 window.intercomSettings = {
+		   app_id: "xt5z6ibr"
+		 };
+		</script>
+		<script>
+		$(document).ready(function($) {
+
+  // Upload btn on change call function
+  $(".uploadlogo").change(function() {
+    var filename = readURL(this);
+    $(this).parent().children('span').html(filename);
+  });
+
+  // Read File and return value  
+  function readURL(input) {
+    var url = input.value;
+    var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+    if (input.files && input.files[0] && (
+      ext == "png" || ext == "jpeg" || ext == "jpg" || ext == "gif" || ext == "pdf"
+      )) {
+      var path = $(input).val();
+      var filename = path.replace(/^.*\\/, "");
+      // $('.fileUpload span').html('Uploaded Proof : ' + filename);
+      return ""+filename;
+    } else {
+      $(input).val("");
+      return "Only image/pdf formats are allowed!";
+    }
+  }
+  // Upload btn end
+
+});
+		
+	</script>
+<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/xt5z6ibr';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+</body>
+</html>

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta charset="utf-8" />
+<title>Pages - Admin Dashboard UI Kit - Form Layouts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+<link rel="apple-touch-icon" href="pages/ico/60.png">
+<link rel="apple-touch-icon" sizes="76x76" href="pages/ico/76.png">
+<link rel="apple-touch-icon" sizes="120x120" href="pages/ico/120.png">
+<link rel="apple-touch-icon" sizes="152x152" href="pages/ico/152.png">
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta content="" name="description" />
+<meta content="" name="author" />
+<link href="assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" />
+<link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+<link href="assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="assets/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css" media="screen">
+<link href="pages/css/pages-icons.css" rel="stylesheet" type="text/css">
+<link class="main-stylesheet" href="pages/css/pages.css" rel="stylesheet" type="text/css" />
+<link href="assets/plugins/dropzone/css/dropzone.css" rel="stylesheet" type="text/css" />
+<style>
+.a
+{
+border-bottom: 2px solid #edf0f5;
+margin-bottom: 25px;
+padding-bottom: 25px;
+}
+</style>
+<style type="text/css">
+#image-preview {
+  min-width: 312px;
+  min-height: 300px;
+  width:100%;
+  height:auto;
+  position: relative;
+  overflow: hidden;
+  background: url("assets/img/demo/preview.jpg") ;
+   background-repeat: no-repeat;
+    background-size: 100% 100%;
+  color: #ecf0f1;
+  margin:auto;
+}
+#image-preview input {
+  line-height: 200px;
+  font-size: 200px;
+  position: absolute;
+  opacity: 0;
+  z-index: 10;
+}
+#image-label 
+{
+    
+color:white;
+padding-left:6px;
+
+}
+#image-label_field
+{
+background: transparent -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(75%, rgba(0,0,0,0.8))) repeat scroll 0 0;
+	
+	
+}
+#image-label_field:hover
+{
+	background: transparent linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 75%) repeat scroll 0 0;
+}
+.add
+{
+	color:#41a541;
+	cursor:default;
+font-size:14px;
+		font-weight:500;
+}
+.remove
+{
+color:#d63b3b;
+text-align:right;
+	cursor:default;
+	    margin-bottom: 10px;
+		font-size:14px;
+		font-weight:500;
+}
+.block1
+{
+	padding: 20px 20px;
+    border: 2px solid #edf0f5;
+    border-radius: 7px;
+    background: #f6f9fc;
+	    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 28px;
+	font-weight:400;
+}
+</style>
+</head>
+<body class="fixed-header ">
+
+<nav class="page-sidebar" data-pages="sidebar">
+
+<div class="sidebar-overlay-slide from-top" id="appMenu">
+<div class="row">
+<div class="col-xs-6 no-padding">
+<a href="#" class="p-l-40"><img src="assets/img/demo/social_app.svg" alt="socail">
+</a>
+</div>
+<div class="col-xs-6 no-padding">
+<a href="#" class="p-l-10"><img src="assets/img/demo/email_app.svg" alt="socail">
+</a>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-6 m-t-20 no-padding">
+<a href="#" class="p-l-40"><img src="assets/img/demo/calendar_app.svg" alt="socail">
+</a>
+</div>
+<div class="col-xs-6 m-t-20 no-padding">
+<a href="#" class="p-l-10"><img src="assets/img/demo/add_more.svg" alt="socail">
+</a>
+</div>
+</div>
+</div>
+
+
+<div class="sidebar-header">
+<img src="assets/img/logo_white.png" alt="logo" class="brand" data-src="assets/img/logo_white.png" data-src-retina="assets/img/logo_white_2x.png" width="78" height="22">
+<div class="sidebar-header-controls">
+<button type="button" class="btn btn-xs sidebar-slide-toggle btn-link m-l-20 hidden-md-down" data-pages-toggle="#appMenu"><i class="fa fa-angle-down fs-16"></i>
+</button>
+<button type="button" class="btn btn-link hidden-md-down" data-toggle-pin="sidebar"><i class="fa fs-12"></i>
+</button>
+</div>
+</div>
+
+
+<div class="sidebar-menu">
+
+<ul class="menu-items">
+<li>
+<a href="" class="detailed">
+<span class="title">Home</span>
+
+</a>
+<span class="bg-success icon-thumbnail"><i class="pg-home"></i></span>
+</li>
+
+<li class="">
+<a href="" class="detailed">
+<span class="title">Groups</span>
+
+</a>
+<span class="bg-success icon-thumbnail"><i class="fa fa-group"></i></span>
+</li>
+
+<li class="">
+<a href="list_page.html" class="detailed">
+<span class="title">Properties</span>
+
+</a>
+<span class="bg-success icon-thumbnail"><i class="fa fa-building-o"></i></span>
+</li>
+
+<li class="#">
+<a href="" class="detailed">
+<span class="title">Alerts</span>
+
+</a>
+<span class="bg-success icon-thumbnail"><i class="fa fa-exclamation-triangle"></i></span>
+</li>
+
+<li class="#">
+<a href="" class="detailed">
+<span class="title">Payments</span>
+
+</a>
+<span class="bg-success icon-thumbnail"><i class="fa fa-credit-card "></i></span>
+</li>
+
+<!-- <li class="open"> -->
+<!-- <a href="javascript:;"> -->
+<!-- <span class="title">Properties</span> -->
+<!-- <span class=" open  arrow"></span> -->
+<!-- </a> -->
+<!-- <span class="icon-thumbnail"><i class="pg-form"></i></span> -->
+<!-- <ul class="sub-menu"> -->
+<!-- <li class=""> -->
+<!-- <a href="input_form.html">Input Form</a> -->
+<!-- <span class="icon-thumbnail">fe</span> -->
+<!-- </li> -->
+<!-- <li class=""> -->
+<!-- <a href="list_page.html">List Page</a> -->
+<!-- <span class="icon-thumbnail">li</span> -->
+<!-- </li> -->
+
+<!-- </ul> -->
+<!-- </li> -->
+
+
+
+
+<!-- </ul> -->
+<!-- </li> -->
+
+
+</ul>
+<div class="clearfix"></div>
+ </div>
+
+</nav>
+
+
+
+<div class="page-container ">
+
+<div class="header ">
+
+<a href="#" class="btn-link toggle-sidebar hidden-lg-up pg pg-menu" data-toggle="sidebar">
+</a>
+
+<div class="">
+<div class="brand inline   ">
+<img src="assets/img/logo.png" alt="logo" data-src="assets/img/logo.png" data-src-retina="assets/img/logo_2x.png" width="78" height="22">
+</div>
+
+
+
+
+ </div>
+<div class="d-flex align-items-center">
+
+<div class="pull-left p-r-10 fs-14 font-heading hidden-md-down">
+<span class="semi-bold">David</span> <span class="text-master">Nest</span>
+</div>
+<div class="dropdown pull-right hidden-md-down">
+<button class="profile-dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<span class="thumbnail-wrapper d32 circular inline">
+<img src="assets/img/profiles/avatar.jpg" alt="" data-src="assets/img/profiles/avatar.jpg" data-src-retina="assets/img/profiles/avatar_small2x.jpg" width="32" height="32">
+</span>
+</button>
+<div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu">
+<a href="#" class="dropdown-item"><i class="pg-settings_small"></i> Settings</a>
+<a href="#" class="dropdown-item"><i class="pg-outdent"></i> Feedback</a>
+<a href="#" class="dropdown-item"><i class="pg-signals"></i> Help</a>
+<a href="#" class="clearfix bg-master-lighter dropdown-item">
+<span class="pull-left">Logout</span>
+<span class="pull-right"><i class="pg-power"></i></span>
+</a>
+</div>
+</div>
+
+
+</div>
+</div>
+
+
+<div class="page-content-wrapper ">
+
+<div class="content ">
+
+
+
+<div class=" container-fluid   container-fixed-lg ">
+
+<ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="#">Home</a></li>
+<li class="breadcrumb-item active">Form layouts</li>
+</ol>
+
+<div class="row">
+<div class="col-md-4">
+
+<div class="col-md-12">
+<div class="card card-default">
+<div class="card-header separator"   style="background:#d63b3b;">
+<div class="card-title" style="color:#fff;">CURRENCY
+</div>
+</div>
+<div class="card-block">
+
+<p>When it comes to digital design, the lines between functionality, aesthetics, and psychology are inseparably blurred. Without the constraints of the physical world, there’s no natural form to fall back on, and every bit of constraint and affordance must be introduced intentionally.  </p>
+
+<form class="m-t-10" role="form">
+<div class="form-group form-group-default form-group-default-select2 required">
+<label class="">Currency</label>
+<select class="full-width" data-placeholder="Select Country" data-init-plugin="select2">
+<optgroup label="Alaskan/Hawaiian Time Zone">
+<option value="AK">India</option>
+<option value="HI">Hawaii</option>
+</optgroup>
+<optgroup label="Pacific Time Zone">
+<option value="CA">California</option>
+<option value="NV">Nevada</option>
+<option value="OR">Oregon</option>
+<option value="WA">Washington</option>
+</optgroup>
+</select>
+</div>
+</form>
+
+</div>
+</div>
+</div>
+<div class="col-lg-12">
+
+
+
+<div class="card card-default" style="background:#e6ebf1">
+<div class="card-header " style="background:#f6f9fc">
+<div class="card-title">
+Drag n' drop uploader
+
+</div><span><button id="clear">Clear</button></span></div>
+
+<div id="image-preview" class="p-l-20 p-b-20 p-t-20 p-r-20">
+ 
+  <input type="file" name="image" id="image-upload" />
+</div>
+<div id="image-label_field">
+ <label for="image-upload" id="image-label"><i class="fa fa-cloud-upload"></i><span>Upload Photo</span></label>
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+<div class="col-md-8">
+
+<div class=" container-fluid   container-fixed-lg bg-white">
+
+
+ <div class="card card-transparent">
+<div class="card-block">
+<form id="form-personal" role="form" autocomplete="off">
+<p><b>Ownership</b></p>
+<div class="a">
+
+<div class="row clearfix">
+<div class="col-md-6">
+<div class="form-group ">
+<label>Legal Owner Name</label>
+</div>
+</div>
+</div><div class="optionBox" id="optionBox">
+  
+    <div class="block" id="block">
+        <span class="add" id="add">+ add owner</span>
+    </div>
+</div></div>
+
+
+
+
+
+
+<p><b>Property Details</b></p>
+
+
+<div class="a">
+
+<div class="row clearfix">
+<div class="col-md-6">
+<div class="form-group form-group-default form-group-default-select2 required">
+<label class="">Properties Type</label>
+<select class="full-width" data-placeholder="Select Country" data-init-plugin="select2">
+
+<option value="AK">land</option>
+<option value="HI">unit</option>
+
+
+<option value="NV">others</option>
+
+</select>
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-group form-group-default">
+<label>Property name</label>
+<input type="text" class="form-control" name="lastName">
+</div>
+</div>
+</div>
+</div>
+
+<p class="m-t-20"><b>Address Details<b></p>
+<div class="a">
+
+<div class="row clearfix">
+<div class="col-md-6">
+<div class="form-group form-group-default required">
+<label>Unit/Apartment No</label>
+<input type="text" class="form-control " name="startDate" required>
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-group form-group-default">
+<label>Floor</label>
+<input type="text" class="form-control " name="endDate">
+</div>
+</div>
+</div>
+
+<div class="row clearfix">
+<div class="col-md-6">
+<div class="form-group form-group-default required">
+<label>Wing</label>
+<input  type="text" class="form-control " name="startDate" required>
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-group form-group-default">
+<label>Building Name</label>
+<input  type="text" class="form-control " name="endDate">
+</div>
+</div>
+</div>
+
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group form-group-default required">
+<label>Society Name</label>
+<input type="text" class="form-control" name="url">
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-group form-group-default required">
+<label>Street / locality</label>
+<input type="text" class="form-control" name="email">
+</div>
+</div>
+</div>
+
+
+
+
+<div class="row clearfix">
+<div class="col-md-6">
+<div class="form-group ">
+<label>Add Property No.</label>
+</div>
+</div>
+
+
+
+</div>
+
+<div class="optionBox" id="optionBox1">
+  
+    <div class="block" id="block1">
+        <span class="add" id="add1">+ add Property No.</span>
+    </div>
+</div>
+<hr>
+<div class="row">
+<div class="col-md-6">
+<div class="form-group form-group-default required">
+<label>Pincode</label>
+<input type="text" class="form-control" name="Pincode">
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-group form-group-default required">
+<label>City</label>
+<input type="text" class="form-control" name="City">
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group form-group-default required">
+<label>State</label>
+<input type="text" class="form-control" name="state">
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-group form-group-default required">
+<label>Country</label>
+<input type="text" class="form-control" name="Country">
+</div>
+</div>
+</div>
+
+<div class="row clearfix">
+<div class="col-md-6">
+<div class="form-group form-group-default required">
+<label>Google map address</label>
+<input type="text" class="form-control" name="map">
+</div>
+</div>
+
+
+</div>
+
+</div>
+
+<p><b>Other Details</b></p>
+
+
+<div class="a">
+
+<div class="row clearfix">
+
+<div class="col-md-6">
+<div class="form-group form-group-default">
+<label>Parking Count</label>
+<input type="text" class="form-control" name="lastName">
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-group form-group-default">
+<label>Parking Number</label>
+<input type="text" class="form-control" name="lastName">
+</div>
+</div>
+</div>
+
+<div class="row clearfix">
+<div class="col-md-6">
+<div class="form-group ">
+<label>Guarantor</label>
+</div>
+</div>
+</div><div class="optionBox" id="optionBox2">
+  
+    <div class="block" id="block2">
+        <span class="add" id="add2">+ add guarantor</span>
+    </div>
+</div>
+<hr>
+<div class="row clearfix">
+<div class="col-md-6">
+<div class="form-group ">
+<label>Purchase From</label>
+</div>
+</div>
+</div><div class="optionBox" id="optionBox3">
+  
+    <div class="block" id="block3">
+        <span class="add" id="add3">+ add Purchase from</span>
+    </div>
+</div>
+<hr>
+
+
+<div class="row clearfix">
+
+<div class="col-md-6">
+<div class="form-group form-group-default">
+<label>Description</label>
+<input type="text" class="form-control" name="description">
+</div>
+</div>
+
+</div>
+
+
+</div>
+
+
+<p><b>Share Details</b></p>
+
+
+<div class="a">
+
+<div class="row clearfix">
+<div class="col-md-6">
+<div class="form-group ">
+<label>Company Name</label>
+</div>
+</div>
+</div><div class="optionBox" id="optionBox4">
+  
+    <div class="block" id="block4">
+        <span class="add" id="add4">+ add Company Name</span>
+    </div>
+</div>
+<hr>
+<div class="row clearfix">
+<div class="col-md-6">
+<div class="form-group ">
+<label>Certificate No.</label>
+</div>
+</div>
+</div><div class="optionBox" id="optionBox5">
+  
+    <div class="block" id="block5">
+        <span class="add" id="add5">+ add Certificate No.</span>
+    </div>
+</div>
+
+
+</div>
+
+
+<p><b>Group Details</b></p>
+
+
+<div class="a">
+
+<div class="row clearfix">
+<div class="col-md-6">
+<div class="form-group form-group-default form-group-default-select2 required">
+<label class="">Select Group</label>
+<select class="full-width" data-placeholder="Select Country" data-init-plugin="select2">
+
+<option value="AK">a</option>
+<option value="HI">b</option>
+<option value="NV">c</option>
+
+</select>
+</div>
+</div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+<br>
+<button class="btn btn-success" type="submit">Submit</button>
+<button class="btn btn-default"><i class="pg-close"></i> Clear</button>
+</form>
+</div>
+</div>
+
+</div>
+
+
+
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+<div class=" container-fluid  container-fixed-lg footer">
+<div class="copyright sm-text-center">
+<p class="small no-margin pull-left sm-pull-reset">
+<span class="hint-text">Copyright &copy; 2017 </span>
+<span class="font-montserrat">REVOX</span>.
+<span class="hint-text">All rights reserved. </span>
+<span class="sm-block"><a href="#" class="m-l-10 m-r-10">Terms of use</a> <span class="muted">|</span> <a href="#" class="m-l-10">Privacy Policy</a></span>
+</p>
+<p class="small no-margin pull-right sm-pull-reset">
+Hand-crafted <span class="hint-text">&amp; made with Love</span>
+</p>
+<div class="clearfix"></div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+
+
+<script src="assets/plugins/pace/pace.min.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="assets/plugins/modernizr.custom.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<script src="assets/plugins/tether/js/tether.min.js" type="text/javascript"></script>
+<script src="assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery-ios-list/jquery.ioslist.min.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery-actual/jquery.actual.min.js"></script>
+<script src="assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+<script type="text/javascript" src="assets/plugins/select2/js/select2.full.min.js"></script>
+<script type="text/javascript" src="assets/plugins/classie/classie.js"></script>
+<script src="assets/plugins/switchery/js/switchery.min.js" type="text/javascript"></script>
+<script src="assets/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+<script src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
+<script type="text/javascript" src="assets/plugins/dropzone/dropzone.min.js"></script>
+<script type="text/javascript" src="assets/js/jquery.uploadPreview.min.js"></script>
+
+<script src="pages/js/pages.min.js"></script>
+
+
+<script src="assets/js/form_layouts.js" type="text/javascript"></script>
+<script src="assets/js/scripts.js" type="text/javascript"></script>
+<script src="assets/js/append.js" type="text/javascript"></script>
+
+<script src="assets/js/demo.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $.uploadPreview({
+    input_field: "#image-upload",
+    preview_box: "#image-preview",
+    label_field: "#image-label"
+  });
+});
+</script>
+<script>
+
+$("#clear").on("click", function() {
+    
+    var input = $("input[name=image]");
+    var fileName = input.val();
+    
+    if(fileName) { // returns true if the string is not empty
+        input.val('');
+    }
+});
+</script>
+
+
+<script>
+		 window.intercomSettings = {
+		   app_id: "xt5z6ibr"
+		 };
+		</script>
+<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/xt5z6ibr';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+</body>
+</html>
