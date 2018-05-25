@@ -308,7 +308,7 @@
 									</button>
 									<div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu">
 										<?php  if(isset($access)) { if($access[0]->r_edit == 1) {  ?> 
-											<a href="<?php echo base_url().'index.php/Rent/edit/'.$r_id; ?>" class="dropdown-item edit" ><i class="pg-settings_small"></i> Edit</a>
+											<a href="<?php echo base_url().'index.php/Rent_real_estate/edit/'.$r_id; ?>" class="dropdown-item edit" ><i class="pg-settings_small"></i> Edit</a>
 										<?php } }  ?>
 
 										<!-- <a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> Delete</a> -->

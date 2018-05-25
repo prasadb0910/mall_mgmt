@@ -53,7 +53,7 @@ class Rent_real_estate extends CI_Controller
         }
         //$this->load->view('Rent_real_estate/rent_real_estate_details');
     }
-    
+
     public function view($rent_id)
     {
         $this->get_record($rent_id, 'Rent_real_estate/rent_real_estate_view');
@@ -250,6 +250,10 @@ class Rent_real_estate extends CI_Controller
                 $data['deposit_paid_details']=$result;
 
                 $data['r_id']=$rid;
+
+                $pcolname="";
+                $docs=$this->document_model->edit_view_doc($pcolname, $rid, 'Property_Rent', 'rent');
+                $data=array_merge($data, $docs);
 
                 $data['maker_checker'] = $this->session->userdata('maker_checker');
 
