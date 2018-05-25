@@ -174,7 +174,7 @@ class Rent_real_estate extends CI_Controller
 
             $this->rent_model->setOtherSchedule($rid, $txn_status);
 
-            $this->rent_model->send_rent_intimation($rid);
+            //$this->rent_model->send_rent_intimation($rid);
             if($this->input->post('revenue_due_day')!="")    
                 $this->rent_model->revenueSchedule($rid,$this->input->post('property'));
 
@@ -259,9 +259,10 @@ class Rent_real_estate extends CI_Controller
         $result=$this->rent_model->getAccess();
         if(count($result)>0) {
             $data['access']=$result;
-            $data['rent']=$this->rent_model->rentData($status, $property_id, '', $contact_id);
+            $data['rent']=$this->rent_model->rentData('');
+          
 
-            $count_data=$this->rent_model->getAllCountData($contact_id);
+            $count_data=2;
             $approved=0;
             $pending=0;
             $rejected=0;
@@ -269,7 +270,7 @@ class Rent_real_estate extends CI_Controller
 
             if (count($result)>0){
                 for($i=0;$i<count($count_data);$i++){
-                    if (strtoupper(trim($count_data[$i]->txn_status))=="APPROVED")
+                    if (strtoupper(trim($data['rent'][$i]->txn_status))=="APPROVED")
                         $approved=$approved+1;
                     else if (strtoupper(trim($count_data[$i]->txn_status))=="PENDING" || strtoupper(trim($count_data[$i]->txn_status))=="DELETE")
                         $pending=$pending+1;
@@ -279,21 +280,29 @@ class Rent_real_estate extends CI_Controller
                         $inprocess=$inprocess+1;
                 }
             }
+            $property_id = $data['rent'][0]->property_txn_id;
+            $gid = $data['rent'][0]->gp_id;
 
             $data['contact_id']=$contact_id;
-            
             $data['approved']=$approved;
             $data['pending']=$pending;
             $data['rejected']=$rejected;
             $data['inprocess']=$inprocess;
             $data['all']=count($count_data);
+            foreach ($data['rent'] as $key => $value) {
+                $gid =  $value->gp_id;
+                $property_id =  $value->property_id;
+                $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
+                mysqli_next_result( $this->db->conn_id );
+                $data['rent'][$key]->owner_name=$result;  
+
+            }
 
             $data['checkstatus'] = $status;
-            $data['propertynorent']=$this->rent_model->getPropertyNotOnRent();
-
+            //$data['propertynorent']=$this->rent_model->getPropertyNotOnRent();
             $data['maker_checker'] = $this->session->userdata('maker_checker');
 
-            load_view('rent/tenant_list', $data);
+            load_view('Rent_real_estate/rent_real_estate_list', $data);
 
         } else {
             echo '<script>alert("You donot have access to this page.");</script>';

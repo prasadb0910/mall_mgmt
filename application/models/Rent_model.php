@@ -9,17 +9,19 @@ class Rent_model Extends CI_Model{
         $this->load->model('purchase_model');
     }
 
-    public function get_rentdata($value='')
+    public function rentData($rent_id='')
     {
-        $sql = "Select rt.*,pt.*, case when A.c_owner_type='individual' 
+        $sql = "Select rt.*,pt.*,pd.pr_client_id, case when A.c_owner_type='individual' 
                 then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                else concat(ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
+                else concat(ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as tenant_name 
                 from rent_txn rt
                 left join property_txn pt on rt.txn_id=pt.property_txn_id
+                left join purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
                 left join rent_tenant_details  rd on rt.txn_id=rd.rent_id
                 left join contact_master A on (rd.contact_id=A.c_id)
                 left join contact_master B on (A.c_contact_id=B.c_id)";
-        $query=$this->db->query();        
+        $query=$this->db->query($sql); 
+        return $query->result();       
     }
 
     /*function rentData($status='',$property_id='',$r_id='',$contact_id='',$property_type_id=''){
