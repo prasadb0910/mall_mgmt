@@ -16,7 +16,8 @@ class Rent_real_estate extends CI_Controller
 
     public function index() {
 
-       $this->load->view('Rent_real_estate/rent_real_estate_list');
+        $this->checkstatus('ALL','1');
+       //$this->load->view('Rent_real_estate/rent_real_estate_list');
     }
 
 	public function add() {
@@ -52,10 +53,215 @@ class Rent_real_estate extends CI_Controller
         }
         //$this->load->view('Rent_real_estate/rent_real_estate_details');
     }
-    public function view() {
-       $this->load->view('Rent_real_estate/rent_real_estate_view');
+    
+    public function view($rent_id)
+    {
+        $this->get_record($rent_id, 'Rent_real_estate/rent_real_estate_view');
+       /* $data['rent']=$this->rent_model->rentData('ALL', '','',$rent_id);
+        if(count($data['rent'])>0)
+        {
+            foreach ($data['rent'] as $key => $value) {
+                $gid =  $value->gp_id;
+                $property_id =  $value->property_id;
+                $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
+                mysqli_next_result( $this->db->conn_id );
+                $data['rent'][$key]->owner_name=$result; 
+            }
+        }
+        load_view('Rent_real_estate/rent_real_estate_view', $data);*/
     }
 
+    public function edit($rid){
+        $this->get_record($rid, 'Rent_real_estate/rent_real_estate_details');
+    }
+
+    public function get_record($rid, $view){
+        $data['tax_details']=$this->rent_model->getAllTaxes('rent');
+
+        $gid=$this->session->userdata('groupid');
+        $roleid=$this->session->userdata('role_id');
+        $session_id=$this->session->userdata('session_id');
+        $query=$this->db->query("SELECT * FROM user_role_options WHERE section = 'Rent' AND role_id='$roleid'");
+        $result=$query->result();
+        if(count($result)>0) {
+            if($result[0]->r_edit==1 or $result[0]->r_approvals==1) {
+                $data['access']=$result;
+                $ptype = '';
+
+                $data['rentby']=$this->session->userdata('session_id');
+
+                $query=$this->db->query("SELECT * FROM rent_txn WHERE txn_fkid = '$rid'");
+                $result1=$query->result();
+                if (count($result1)>0){
+                    $rid = $result1[0]->txn_id;
+                }
+
+                $query=$this->db->query("SELECT * FROM tax_master WHERE txn_type like '%Rent%' AND status = '1' AND tax_action='1'"); 
+                $result=$query->result();
+                $data['tax']=$result;
+
+                $query=$this->db->query("SELECT * FROM rent_txn WHERE txn_id = '$rid'");
+                $result1=$query->result();
+                if (count($result1)>0){
+                    $txn_fkid = $result1[0]->txn_fkid;
+                }
+
+                if($txn_fkid!=''){
+                    $data['property']=$this->purchase_model->purchaseData('All',$txn_fkid,'1');
+                } else {
+                    $data['property'] = $this->purchase_model->purchaseData('All',$rid,'1');
+                }
+                
+
+                $result=$this->rent_model->rentData('ALL', '','',$rid);
+                if(count($result)>0) {
+                    $data['rent']=$result;
+                    if ($result[0]->txn_status=="Approved") {
+                        $txn_status=1;
+                    } else {
+                        $txn_status=3;
+                    }
+                    $property_id=$result[0]->property_id;
+                    $gid=$result[0]->gp_id;
+                    $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
+                    mysqli_next_result( $this->db->conn_id );
+                    $data['rent'][0]->owner_name=$result; 
+
+                } else {
+                    $txn_status=3;
+                    $property_id='0';
+                }
+
+                
+
+                $query=$this->db->query("SELECT * FROM contact_type_master where g_id = '$gid' order by id desc");
+                $result=$query->result();
+                $data['contact_type']=$result;
+                
+
+                $distict_tax=$this->rent_model->getDistinctTaxDetail($rid, $txn_status);
+                $data['tax_name']=$distict_tax;
+
+                $event_type='';
+                $event_name='';
+                $basic_amount=0;
+                $net_amount=0;
+                $sql="SELECT event_type,sum(basic_cost) as basic_cost,sum(net_amount) as net_amount FROM rent_schedule 
+                        WHERE rent_id = '".$rid."' and status = '$txn_status' GROUP BY event_type";
+                $query=$this->db->query($sql);
+                $result=$query->result();
+                $data['p_schedule']=array();
+
+                $k=0;
+                if(count($result)>0) {
+                    foreach($result as $row){                     
+                        $data['p_schedule'][$k]['event_type']=$row->event_type;
+                        $data['p_schedule'][$k]['event_name']=$event_name;
+                        $data['p_schedule'][$k]['basic_cost']=$row->basic_cost;
+                        $data['p_schedule'][$k]['net_amount']=$row->net_amount;
+
+                        $query=$this->db->query("SELECT tax_type,sum(tax_amount) as tax_amount FROM rent_schedule_taxation 
+                                                WHERE rent_id = '".$rid."' and event_type = '".$row->event_type."' and status = '$txn_status' 
+                                                group by tax_type order by tax_type asc ");
+                        $result_tax=$query->result();
+                        $j=0;
+                        if(count($result_tax) > 0){
+                            foreach($result_tax as $taxrow){
+                                $data['p_schedule'][$k]['tax_type'][$j]=$taxrow->tax_type;
+                                $data['p_schedule'][$k]['tax_amount'][$j]=$taxrow->tax_amount;
+                                $j++;
+                            }
+                        }
+
+                        $k++;
+                    }
+                }
+
+                $query=$this->db->query("SELECT tax_type, sum(tax_amount) as total_tax_amount FROM rent_schedule_taxation 
+                                        WHERE rent_id = '".$rid."'  and status = '$txn_status' group by tax_type order by tax_type asc ");
+                $result_tax=$query->result();
+                $k=0;
+                foreach($result_tax as $row){
+                    $data['total_tax_amount'][$k]=$row->total_tax_amount;
+                    $k++;
+                }
+
+                $sql="SELECT * FROM rent_schedule  WHERE rent_id = '".$rid."' and status = '$txn_status' ";
+                $query=$this->db->query($sql);
+                $result=$query->result();
+                $data['p_schedule1']=array();
+               
+                $k=0;
+                if(count($result)>0) {
+                    foreach($result as $row) {
+                        $data['p_schedule1'][$k]['schedule_id']=$row->sch_id;
+                        $data['p_schedule1'][$k]['event_type']=$row->event_type;
+                        $data['p_schedule1'][$k]['event_name']=$row->event_name;
+                        $data['p_schedule1'][$k]['basic_cost']=$row->basic_cost;
+                        $data['p_schedule1'][$k]['net_amount']=$row->net_amount;
+                        $data['p_schedule1'][$k]['event_date']=$row->event_date;
+
+                        $query=$this->db->query("SELECT * FROM rent_schedule_taxation WHERE rent_id = '".$rid."' and sch_id = '".$row->sch_id."' and status = '$txn_status' order by tax_master_id Asc ");
+                        $result_tax=$query->result();
+                        $j=0;
+                        if(count($result_tax) > 0){
+                            foreach($result_tax as $taxrow){
+                                $data['p_schedule1'][$k]['tax_id'][$j]=$taxrow->txsc_id;
+                                $data['p_schedule1'][$k]['tax_master_id'][$j]=$taxrow->tax_master_id;                            
+                                $data['p_schedule1'][$k]['tax_type'][$j]=$taxrow->tax_type;
+                                $data['p_schedule1'][$k]['tax_amount'][$j]=$taxrow->tax_amount;
+                                $data['p_schedule1'][$k]['tax_percent'][$j]=$taxrow->tax_percent;
+                                $j++;
+                            }
+                        }
+                        $k++;
+                    }
+                }
+
+                $sql = "select A.* from rent_escalation_details A where A.rent_id = '$rid' order by A.id";
+                $query=$this->db->query($sql);
+                $result=$query->result();
+                $data['escalations']=$result;
+
+                $sql = "select A.* from rent_pdc_details A where A.rent_id = '$rid' order by A.id";
+                $query=$this->db->query($sql);
+                $result=$query->result();
+                $data['pdcs']=$result;
+
+                $sql = "select A.* from rent_other_amt_details A where A.rent_id = '$rid' order by A.id";
+                $query=$this->db->query($sql);
+                $result=$query->result();
+                $data['other_amt_details']=$result;
+
+                $data['utility'] = $this->rent_model->getPropertyUtilities($rid, $property_id);
+
+                $sql = "select A.*, B.notification_id, B.owner, B.tenant from 
+                        (select * from notification_master) A 
+                        left join 
+                        (select * from rent_notification_details where rent_id = '$rid') B 
+                        on (A.id = B.notification_id) order by A.id";
+                $query=$this->db->query($sql);
+                $result=$query->result();
+                $data['notification']=$result;
+
+                $sql = "select sum(paid_amount) as paid_amount from actual_schedule where table_type='rent' and event_type='Deposit' and fk_txn_id='$rid' and txn_status='Approved'";
+                $query=$this->db->query($sql);
+                $result=$query->result();
+                $data['deposit_paid_details']=$result;
+
+                $data['r_id']=$rid;
+
+                $data['maker_checker'] = $this->session->userdata('maker_checker');
+
+                load_view($view,$data);
+            } else {
+                echo "Unauthorized access";
+            }
+        } else {
+            echo '<script>alert("You donot have access to this page.");</script>';
+            $this->load->view('login/main_page');
+        }
+    }
 
     public function saverecord(){
         $gid=$this->session->userdata('groupid');
@@ -255,22 +461,22 @@ class Rent_real_estate extends CI_Controller
     }
 
     //$status='',$property_type_id=''
-    public function checkstatus($status='', $property_id='', $contact_id=''){
+    public function checkstatus($status='', $property_type_id='', $property_id=''){
         $result=$this->rent_model->getAccess();
         if(count($result)>0) {
             $data['access']=$result;
-            $data['rent']=$this->rent_model->rentData('');
-          
+            $data['rent']=$this->rent_model->rentData($status, $property_type_id,'');
 
-            $count_data=2;
+            $count_data=$this->rent_model->getAllcount();
             $approved=0;
             $pending=0;
             $rejected=0;
             $inprocess=0;
 
             if (count($result)>0){
+               
                 for($i=0;$i<count($count_data);$i++){
-                    if (strtoupper(trim($data['rent'][$i]->txn_status))=="APPROVED")
+                    if (strtoupper(trim($count_data[$i]->txn_status))=="APPROVED")
                         $approved=$approved+1;
                     else if (strtoupper(trim($count_data[$i]->txn_status))=="PENDING" || strtoupper(trim($count_data[$i]->txn_status))=="DELETE")
                         $pending=$pending+1;
@@ -280,24 +486,23 @@ class Rent_real_estate extends CI_Controller
                         $inprocess=$inprocess+1;
                 }
             }
-            $property_id = $data['rent'][0]->property_txn_id;
-            $gid = $data['rent'][0]->gp_id;
 
-            $data['contact_id']=$contact_id;
+            if(count($data['rent'])>0)
+            {
+                
+                foreach ($data['rent'] as $key => $value) {
+                    $gid =  $value->gp_id;
+                    $property_id =  $value->property_id;
+                    $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
+                    mysqli_next_result( $this->db->conn_id );
+                    $data['rent'][$key]->owner_name=$result; 
+                }
+            }
             $data['approved']=$approved;
             $data['pending']=$pending;
             $data['rejected']=$rejected;
             $data['inprocess']=$inprocess;
             $data['all']=count($count_data);
-            foreach ($data['rent'] as $key => $value) {
-                $gid =  $value->gp_id;
-                $property_id =  $value->property_id;
-                $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
-                mysqli_next_result( $this->db->conn_id );
-                $data['rent'][$key]->owner_name=$result;  
-
-            }
-
             $data['checkstatus'] = $status;
             //$data['propertynorent']=$this->rent_model->getPropertyNotOnRent();
             $data['maker_checker'] = $this->session->userdata('maker_checker');

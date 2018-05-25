@@ -38,19 +38,19 @@
             <div id="rootwizard">
                 <ul class="nav nav-tabs nav-tabs-linetriangle nav-tabs-separator nav-stack-sm" role="tablist" data-init-reponsive-tabs="dropdownfx">
                     <li class="nav-item all">
-                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/ALL/1')?>">ALL()</a>
+                        <a class="<?php if($checkstatus=='All') echo 'active'; ?>" href="<?=base_url('index.php/Rent_real_estate/checkstatus/ALL/1')?>">ALL(<?php echo $all; ?>)</a>
                     </li>
                     <li class="nav-item approved">
-                        <a class=""  href="<?=base_url('index.php/Real_estate_property/checkstatus/Approved/1')?>">Approved()</a>
+                        <a class="<?php if($checkstatus=='Approved') echo 'active'; ?>"  href="<?=base_url('index.php/Rent_real_estate/checkstatus/Approved/1')?>">Approved(<?php echo $approved; ?>)</a>
                     </li>
                     <li class="nav-item pending">
-                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/Pending/1')?>">Pending()</a>
+                        <a class="<?php if($checkstatus=='Pending') echo 'active'; ?>" href="<?=base_url('index.php/Rent_real_estate/checkstatus/Pending/1')?>">Pending(<?php echo $pending; ?>)</a>
                     </li>
                     <li class="nav-item rejected">
-                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/Rejected/1')?>">Rejected()</a>
+                        <a class="<?php if($checkstatus=='Rejected') echo 'active'; ?>" href="<?=base_url('index.php/Rent_real_estate/checkstatus/Rejected/1')?>">Rejected(<?php echo $rejected; ?>)</a>
                     </li>
                     <li class="nav-item inprocess">
-                        <a class=""  href="<?=base_url('index.php/Real_estate_property/checkstatus/InProcess/1')?>">Draft()</a>
+                        <a class="<?php if($checkstatus=='InProcess') echo 'active'; ?>"  href="<?=base_url('index.php/Rent_real_estate/checkstatus/InProcess/1')?>">Draft(<?php echo $inprocess; ?>)</a>
                     </li>
                 </ul>
                 <br>
@@ -77,7 +77,7 @@
                                                     <div class="card card-transparent container-fixed-lg bg-white " style="background:#fff;">
                                                         <div class="row">
                                                             <div class=" col-md-4">
-                                                                <img src="" alt="Paris" class="prop_img m-t-20 m-l-20" style="width:180px"onerror=" this.src='<?php echo base_url()?>assets/img/demo/preview.jpg'">
+                                                                <img src="<?php echo base_url().$rent[$i]->p_image; ?>" alt="Paris" class="prop_img m-t-20 m-l-20" style="width:180px" onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
                                                             </div>
                                                             <div class=" col-md-8">
                                                                 <div class="card-header ">
@@ -121,7 +121,8 @@
                                                             </div>
                                                         </div> 
                                                         <div class="col-md-12">
-                                                            <a href="" class=" pull-right invoice p-b-5     p-t-5" style="color:#5cb85c;">View <i class="fa fa-angle-right tab-icon"></i> </a>
+                                                            <a href="<?php echo base_url().'index.php/Rent_real_estate/view/'.$rent[$i]->txn_id; ?>" class=" pull-right invoice p-b-5     p-t-5" style="color:#5cb85c;">View <i class="fa fa-angle-right tab-icon"></i> </a>
+                                                            
                                                         </div>
                                                     </div>
                                                 </div>
@@ -129,19 +130,25 @@
                                           <?php } ?>
                                         </div>
                                         <div class="row list">
-                                         
+                                         <?php for($i=0; $i<count($rent); $i++) { ?>
                                             <div class=" col-md-12">
                                                 <div class="card card-transparent container-fixed-lg bg-white " style="background:#fff;">
                                                     <div class="row">
-                                                        <img src="" alt="Paris" class="prop_img" style="max-width:100%;max-height:100%;height:100px; width:100px;border:none;padding: 8px;" onerror=" this.src='<?php echo base_url()?>assets/img/demo/preview.jpg'">
+                                                        <img src="<?php echo base_url().$rent[$i]->p_image; ?>" alt=" " class="prop_img" style="max-width:100%;max-height:100%;height:100px; width:100px;border:none;padding: 8px;" onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
                                                         <div class="info pull-left p-l-10" style="margin-top: 20px;text-align:left;width:35%">
-															<div class="building_name"></div>
-                                                            <div class="owner_name"><H4 class="m-t-0 m-b-0"></H4></div>
-                                                         
-                                                            <div class="address"><i class="fa fa-map-marker"></i>  </div>
+                                                            <div class="building_name"><?php echo $rent[$i]->unit_name; ?></div>
+														<div class="owner_name">
+                                                             <?php
+
+                                                                foreach ($rent[$i]->owner_name as $key => $value) {
+                                                                    echo $value->owner_name.",";
+                                                                }
+
+                                                                ?>  
+                                                             </div>
+                                                           <p class=" flat_info m-t-0 m-b-0"><b><?php echo $rent[$i]->tenant_name?></b></p>
                                                         </div>
-                                                        <p class=" flat_info m-t-0 m-b-0 pull-left" style="margin-top: 45px;padding-left: 10px;width: 18%;"></p>
-                                                     
+                                                        <p class=" flat_info m-t-0 m-b-0 pull-left" style="margin-top: 45px;padding-left: 10px;width: 18%;"><?php echo $rent[$i]->unit_name . ', ' . $rent[$i]->floor.' ' . 'Floor - ' . $rent[$i]->area.'  '.$rent[$i]->area_unit; ?></p>    
 														<p class="avaibility m-t-0 m-b-0 pull-left" style="margin-top: 45px;padding-left: 10px;"></p>
 														
                                                         <div class="prop_btns">
@@ -159,11 +166,11 @@
                                                                 <a href="" data-toggle="tooltip" data-placement="bottom" title="Sub Property"><i style="font-size:22px;" class="fa fa-building-o"></i></a>
                                                             </div>
                                                         </div>
-                                                        <a href="" class=" pull-right invoice" style="color:#5cb85c;margin-top: 37px;padding-left: 20px;">View <i class="   fa fa-angle-right tab-icon"></i> </a>
-                                                    </div>
+                                                        <a href="<?php echo base_url().'index.php/Rent_real_estate/view/'.$rent[$i]->txn_id; ?>" class=" pull-left invoice" style="color:#5cb85c;margin-top: 37px;padding-left: 30px;">View <i class="   fa fa-angle-right tab-icon"></i> </a>
+                                                         </div>
                                                 </div>
                                             </div>
-                                            
+                                         <?php  } ?>   
                                         </div>
                                     </div>
                                 </div>

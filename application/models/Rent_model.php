@@ -9,11 +9,92 @@ class Rent_model Extends CI_Model{
         $this->load->model('purchase_model');
     }
 
-    public function rentData($rent_id='')
+    public function rentData($status='',$property_type_id='',$property_id,$rent_id="")
+    {   
+
+        $cond="";
+        if($status=='InProcess')
+        {
+            if($cond=="")
+                    $cond = "Where rt.txn_status='In Process'";
+            else
+                    $cond.=" Andrt.txn_status='In Process'";
+
+        }else if($status=='Pending')
+        {
+             if($cond=="")
+                   $cond="Where (rt.txn_status='Pending' or rt.txn_status='Delete')";
+            else
+                    $cond="And (rt.txn_status='Pending' or rt.txn_status='Delete')";
+        }else if($status=='ALL')
+        {
+            $cond = "";
+        }else{
+            
+             if($cond=="")
+                   $cond="Where rt.txn_status='$status'";
+            else
+                    $cond="And  rt.txn_status='$status'";
+        }
+
+       
+
+        if($property_id!=""){
+
+            if($cond=="")
+                    $cond = " Where pt.property_txn_id=".$property_id;
+            else
+                    $cond.=" And pt.property_txn_id=".$property_id;    
+        }
+
+        if($property_id!=""){
+
+            if($cond=="")
+                    $cond = " Where pt.property_type_id=".$property_type_id;
+            else
+                    $cond.=" And pt.property_type_id=".$property_type_id;    
+        }
+
+        if($rent_id!=""){
+
+            if($cond=="")
+                    $cond = " Where rt.txn_id=".$rent_id;
+            else
+                    $cond.=" And rt.txn_id=".$rent_id;
+        }
+
+        $sql = "Select rt.*,pt.*,pd.pr_client_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
+                    case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
+                    case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
+                    case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
+                    case when A.c_owner_type='individual' 
+                    then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
+                    else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as tenant_name
+                from rent_txn rt
+                left join property_txn pt on rt.txn_id=pt.property_txn_id
+                left join purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
+                left join rent_tenant_details  rd on rt.txn_id=rd.rent_id
+                left join contact_master A on (rd.contact_id=A.c_id)
+                left join contact_master B on (A.c_contact_id=B.c_id)".$cond;
+        $query=$this->db->query($sql); 
+        return $query->result();       
+    }
+
+    
+
+    public function getAllcount($contact_id='')
     {
-        $sql = "Select rt.*,pt.*,pd.pr_client_id, case when A.c_owner_type='individual' 
-                then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                else concat(ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as tenant_name 
+        $gid=$this->session->userdata('groupid');
+        $roleid=$this->session->userdata('role_id');
+        $session_id=$this->session->userdata('session_id');
+
+        $sql = "Select rt.*,pt.*,pd.pr_client_id,case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
+                    case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
+                    case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
+                    case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
+                    case when A.c_owner_type='individual' 
+                    then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
+                    else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as tenant_name
                 from rent_txn rt
                 left join property_txn pt on rt.txn_id=pt.property_txn_id
                 left join purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
@@ -21,212 +102,7 @@ class Rent_model Extends CI_Model{
                 left join contact_master A on (rd.contact_id=A.c_id)
                 left join contact_master B on (A.c_contact_id=B.c_id)";
         $query=$this->db->query($sql); 
-        return $query->result();       
-    }
-
-    /*function rentData($status='',$property_id='',$r_id='',$contact_id='',$property_type_id=''){
-        if($status=='All'){
-            $cond="";
-            $cond3="";
-        } else if($status=='InProcess'){
-            $status='In Process';
-            $cond="and E.txn_status='In Process'";
-            $cond3="where E.txn_status='In Process'";
-        } else if($status=='Pending'){
-            $cond="and (E.txn_status='Pending' or E.txn_status='Delete')";
-            $cond3="where (E.txn_status='Pending' or E.txn_status='Delete')";
-        } else {
-            $cond="and E.txn_status='$status'";
-            $cond3="where E.txn_status='$status'";
-        }
-
-        if($contact_id!=""){
-            if($cond==""){
-                $cond = " and E.contact_id='$contact_id'";
-            } else {
-                $cond = $cond . " and E.contact_id='$contact_id'";
-            }
-
-            if($cond3==""){
-                $cond3 = " where E.contact_id='$contact_id'";
-            } else {
-                $cond3 = $cond3 . " and E.contact_id='$contact_id'";
-            }
-        }
-
-        if($property_id!=""){
-            $cond2=" and property_id='" . $property_id . "'";
-        } else {
-            $cond2="";
-        }
-
-        if($r_id!=""){
-            $cond2=" and txn_id='" . $r_id . "'";
-        }
-
-        $gid=$this->session->userdata('groupid');
-        $roleid=$this->session->userdata('role_id');
-        $session_id=$this->session->userdata('session_id');
-        $query=$this->db->query("select distinct owner_id from user_role_owners where user_id = '$session_id'");
-        $result=$query->result();
-
-        if (count($result)>0) {
-            $sql="select * from 
-                (select C.*, D.contact_id, D.owner_name, D.c_name, D.c_last_name, D.c_emailid1 from 
-                (select A.*, B.p_property_name, B.p_display_name, B.p_type, B.p_status, 
-                    B.p_image, B.pr_agreement_area, B.pr_agreement_unit, B.purchase_price, B.p_apartment, B.p_flatno, B.p_floor, 
-                    B.p_wing, B.p_address, B.p_landmark, B.p_state, B.p_city, B.p_pincode, B.p_country, B.p_googlemaplink from 
-                (select A.*, B.sp_name from 
-                (select * from rent_txn where gp_id = '$gid' and 
-                    property_id in (select distinct purchase_id from purchase_ownership_details 
-                                        where pr_client_id in (select distinct owner_id from user_role_owners 
-                                            where user_id = '$session_id'))" . $cond2 . ") A
-                left join 
-                (select A.*, B.purchase_price from 
-                (select A.*, B.pr_agreement_area, B.pr_agreement_unit 
-                    from purchase_txn A left join purchase_property_description B on (A.txn_id=B.purchase_id) 
-                    where A.gp_id='$gid') A 
-                left join 
-                (select purchase_id,sum(net_amount) as purchase_price from purchase_schedule where status = '1' or status = '3' group by purchase_id) B 
-                on A.txn_id = B.purchase_id) B 
-                on A.property_id=B.txn_id) C 
-                left join 
-                (select A.*, B.c_name, B.c_last_name, B.c_emailid1, B.owner_name from 
-                (select * FROM rent_tenant_details A where A.contact_id in (select min(contact_id) from rent_tenant_details 
-                    where rent_id = A.rent_id and contact_id in (select distinct owner_id from user_role_owners 
-                    where user_id = '$session_id'))) A 
-                left join 
-                (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
-                    case when A.c_owner_type='individual' 
-                    then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                    else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
-                from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-                where A.c_status='Approved' and A.c_gid='$gid') B 
-                on (A.contact_id=B.c_id)) D 
-                on C.txn_id=D.rent_id) E 
-                where E.owner_name is not null and E.owner_name<>'' " . $cond;
-        } else {
-            $sql="select * from 
-                (select C.*, D.contact_id, D.owner_name, D.c_name, D.c_last_name, D.c_emailid1 from 
-                (select A.*, B.p_property_name, B.p_display_name, B.p_type, B.p_status, 
-                    B.p_image, B.pr_agreement_area, B.pr_agreement_unit, B.purchase_price, B.p_apartment, B.p_flatno, B.p_floor, 
-                    B.p_wing, B.p_address, B.p_landmark, B.p_state, B.p_city, B.p_pincode, B.p_country, B.p_googlemaplink from 
-                (select A.*, B.sp_name from 
-                (select * from rent_txn where gp_id = '$gid' " . $cond2 . ") A 
-                left join 
-                (select * from sub_property_allocation where txn_status='Approved' and gp_id = '$gid') B 
-                on A.sub_property_id = B.txn_id) A 
-                left join 
-                (select A.*, B.purchase_price from 
-                (select A.*, B.pr_agreement_area, B.pr_agreement_unit 
-                    from purchase_txn A left join purchase_property_description B on (A.txn_id=B.purchase_id) 
-                    where A.gp_id='$gid') A 
-                left join 
-                (select purchase_id,sum(net_amount) as purchase_price from purchase_schedule where status = '1' or status = '3' group by purchase_id) B 
-                on A.txn_id = B.purchase_id) B 
-                on A.property_id=B.txn_id) C 
-                left join 
-                (select A.*, B.c_name, B.c_last_name, B.c_emailid1, B.owner_name from 
-                (select * FROM rent_tenant_details A where A.contact_id in (select min(contact_id) from rent_tenant_details 
-                    where rent_id = A.rent_id)) A 
-                left join 
-                (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
-                    case when A.c_owner_type='individual' 
-                    then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                    else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
-                from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-                where A.c_status='Approved' and A.c_gid='$gid') B 
-                on (A.contact_id=B.c_id)) D 
-                on C.txn_id=D.rent_id) E " . $cond3;
-        }
-
-        $query=$this->db->query($sql);
-        // echo $this->db->last_query();
-        return $query->result();
-    }*/
-
-    function getAllCountData($contact_id=''){
-        $gid=$this->session->userdata('groupid');
-        $roleid=$this->session->userdata('role_id');
-        $session_id=$this->session->userdata('session_id');
-
-        $cond = "";
-        if($contact_id!=""){
-            $cond = " where E.contact_id='$contact_id'";
-        }
-
-        $query=$this->db->query("select distinct owner_id from user_role_owners where user_id = '$session_id'");
-        $result=$query->result();
-
-        if (count($result)>0) {
-            $sql="select * from 
-                (select C.txn_id, D.contact_id, D.owner_name, D.c_name, D.c_last_name, D.c_emailid1, C.c_name, C.property_id, C.gp_id, C.rent_amount, 
-                C.possession_date, C.termination_date, C.txn_status, C.p_property_name, C.p_display_name, 
-                C.p_type, C.p_status from 
-                (select A.txn_id, A.property_id, A.tenant_id, A.gp_id, A.rent_amount, A.possession_date, 
-                    A.termination_date, A.txn_status, B.p_property_name, B.p_display_name, B.p_type, B.p_status from 
-                (select * from rent_txn where gp_id = '$gid' and 
-                    property_id in (select distinct purchase_id from purchase_ownership_details 
-                                        where pr_client_id in (select distinct owner_id from user_role_owners 
-                                            where user_id = '$session_id'))) A 
-                left join 
-                (select * from purchase_txn where gp_id = '$gid') B 
-                on A.property_id=B.txn_id) C 
-                left join 
-                (select A.*, B.c_name, B.c_last_name, B.c_emailid1, B.owner_name from 
-                (select * from rent_tenant_details A where A.contact_id in (select min(contact_id) from rent_tenant_details 
-                    where rent_id = A.rent_id and contact_id in (select distinct owner_id from user_role_owners 
-                    where user_id = '$session_id'))) A 
-                left join 
-                (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
-                    case when A.c_owner_type='individual' 
-                    then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                    else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
-                from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-                where A.c_status='Approved' and A.c_gid='$gid') B 
-                on (A.contact_id=B.c_id)) D 
-                on C.txn_id=D.rent_id) E" . $cond;
-        } else {
-            $sql="select * from 
-                (select C.txn_id, D.contact_id, D.owner_name, D.c_name, D.c_last_name, D.c_emailid1, C.property_id, C.gp_id, C.rent_amount, 
-                C.possession_date, C.termination_date, C.txn_status, C.p_property_name, C.p_display_name, 
-                C.p_type, C.p_status from 
-                (select A.txn_id, A.property_id, A.tenant_id, A.gp_id, A.rent_amount, A.possession_date, 
-                    A.termination_date, A.txn_status, B.p_property_name, B.p_display_name, B.p_type, B.p_status from 
-                (select * from rent_txn where gp_id = '$gid') A 
-                left join 
-                (select * from purchase_txn where gp_id = '$gid') B 
-                on A.property_id=B.txn_id) C 
-                left join 
-                (select A.*, B.c_name, B.c_last_name, B.c_emailid1, B.owner_name from 
-                (select * from rent_tenant_details A where A.contact_id in (select min(contact_id) from rent_tenant_details 
-                    where rent_id = A.rent_id)) A 
-                left join 
-                (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
-                    case when A.c_owner_type='individual' 
-                    then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                    else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
-                from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-                where A.c_status='Approved' and A.c_gid='$gid') B 
-                on (A.contact_id=B.c_id)) D 
-                on C.txn_id=D.rent_id) E" . $cond;
-        }
-
-        $query=$this->db->query($sql);
-        $result=$query->result();
-        return $result;
+        return $query->result(); 
     }
 
     // function getAllTaxes(){

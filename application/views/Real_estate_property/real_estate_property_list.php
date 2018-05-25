@@ -91,7 +91,7 @@
                                                     <div class="card card-transparent container-fixed-lg bg-white " style="background:#fff;">
                                                         <div class="row">
                                                             <div class=" col-md-4">
-                                                                <img src="<?php echo base_url().$property[$i]->p_image; ?>" alt="Paris" class="prop_img m-t-20 m-l-20" style="width:180px"onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
+                                                                <img src="<?php echo base_url().$property[$i]->p_image; ?>" alt="Paris" class="prop_img m-t-20 m-l-20" style="width:180px" onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
                                                             </div>
                                                             <div class=" col-md-8">
                                                                 <div class="card-header ">

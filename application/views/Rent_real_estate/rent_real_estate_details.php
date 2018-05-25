@@ -408,11 +408,11 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="">Dashboard</a></li>
                 <li class="breadcrumb-item"><a href="index/Rent/checkstatus/All">Rent List</a></li>
-                <?php if(isset($editrent)){ ?>
+                <?php if(isset($rent)){ ?>
                 <li class="breadcrumb-item"><a href="">Rent View</a></li>
                 <?php } ?>
                 <li class="breadcrumb-item active">Rent Details</li>
-                <input type="hidden" id="r_id" name="r_id" value="<?php if(isset($editrent)) echo $r_id; ?>" />
+                <input type="hidden" id="r_id" name="r_id" value="<?php if(isset($rent)) echo $r_id; ?>" />
             </ol>
             <div class="row">
                 <div class="col-md-12 ">
@@ -437,9 +437,9 @@
                                         <label class="">Unit Name</label>
                                         <select class="full-width" name="property" id="property" data-error="#err_unit" data-placeholder="Select" data-init-plugin="select2" onchange="get_property_details();" data-minimum-results-for-search="Infinity">
                                             <option value="">Select</option>
-                                             <?php if(isset($editrent)) { 
+                                             <?php if(isset($rent)) { 
                                                 for($i=0; $i<count($property); $i++) { ?>
-                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($editrent[0]->property_id == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
+                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($rent[0]->property_id == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
                                             <?php } } else { ?>
                                                     <?php for($i=0; $i<count($property); $i++) { ?>
                                                     <option value="<?php echo $property[$i]->property_txn_id; ?>"><?php echo $property[$i]->unit_name; ?></option>
@@ -457,20 +457,20 @@
                                 <div class="col-md-3">
                                     <div class="form-group form-group-default required">
                                         <label>Start Date</label>
-                                        <input type="text" class="form-control datepicker" name="possession_date" id="possession_date" onchange="calculatedate(); instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { if($editrent[0]->possession_date!=null && $editrent[0]->possession_date!='') echo date('d/m/Y',strtotime($editrent[0]->possession_date)); }} ?>"/>
+                                        <input type="text" class="form-control datepicker" name="possession_date" id="possession_date" onchange="calculatedate(); instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { if($rent[0]->possession_date!=null && $rent[0]->possession_date!='') echo date('d/m/Y',strtotime($rent[0]->possession_date)); }} ?>"/>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group form-group-default required">
                                         <label>End Date</label>
-                                        <input type="text" class="form-control datepicker" name="termination_date" id="termination_date" onchange="calculatedate(); instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { if($editrent[0]->termination_date!=null && $editrent[0]->termination_date!='') echo date('d/m/Y',strtotime($editrent[0]->termination_date)); }} ?>"/>
+                                        <input type="text" class="form-control datepicker" name="termination_date" id="termination_date" onchange="calculatedate(); instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { if($rent[0]->termination_date!=null && $rent[0]->termination_date!='') echo date('d/m/Y',strtotime($rent[0]->termination_date)); }} ?>"/>
                                     </div>
                                 </div>
 								
 								  <div class="col-md-3">
                                     <div class="form-group form-group-default " id="noticep_error">
                                         <label>Lockin Period In Months</label>
-                                        <input type="text" class="form-control format_number" name="locking_period" id="locking_period" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { echo $editrent[0]->lease_period; }} ?>" />
+                                        <input type="text" class="form-control format_number" name="locking_period" id="locking_period" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo $rent[0]->lease_period; }} ?>" />
                                       
                                     </div>
                                 </div>
@@ -478,7 +478,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group form-group-default ">
                                         <label>Lease Period In Months</label>
-                                        <input type="text" class="form-control format_number" name="lease_period" id="lease_period" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { echo $editrent[0]->lease_period; }} ?>" />
+                                        <input type="text" class="form-control format_number" name="lease_period" id="lease_period" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo $rent[0]->lease_period; }} ?>" />
                                     </div>
                                 </div>
                               
@@ -487,13 +487,13 @@
                                 <div class="col-md-3">
                                     <div class="form-group form-group-default " id="rentp_error">
                                         <label>Free Rent Period In Months</label>
-                                        <input type="text" class="form-control format_number" name="free_rent_period" id="free_rent_period" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { echo $editrent[0]->free_rent_period; }} ?>"/> 
+                                        <input type="text" class="form-control format_number" name="free_rent_period" id="free_rent_period" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo $rent[0]->free_rent_period; }} ?>"/> 
                                     </div>
                                 </div>
                                    <div class="col-md-3">
                                     <div class="form-group form-group-default " id="noticep_error">
                                         <label>Notice Period In Months</label>
-                                        <input type="text" class="form-control format_number" name="notice_period" id="notice_period" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { echo $editrent[0]->notice_period; }} ?>" />
+                                        <input type="text" class="form-control format_number" name="notice_period" id="notice_period" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo $rent[0]->notice_period; }} ?>" />
                                       
                                     </div>
                                 </div>
@@ -601,13 +601,13 @@
                                     <div class="col-md-3">
                                         <div class="form-group form-group-default ">
                                             <label>Amount</label>
-                                            <input type="text" class="form-control format_number rent_amount" name="rent_amount" id="rent_amount" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>=0) { echo format_money($editrent[0]->rent_amount,2); }} ?>" />
+                                            <input type="text" class="form-control format_number rent_amount" name="rent_amount" id="rent_amount" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->rent_amount,2); }} ?>" />
                                         </div>
                                     </div>
                                      <div class="col-md-3">
                                         <div class="form-group form-group-default ">
                                             <label>Revenue % </label>
-                                            <input type="text" class="form-control format_number rent_amount" name="revenue_percentage" id="revenue_percentage" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>=0) { echo format_money($editrent[0]->revenue_percentage,2); }} ?>" />
+                                            <input type="text" class="form-control format_number rent_amount" name="revenue_percentage" id="revenue_percentage" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->revenue_percentage,2); }} ?>" />
                                         </div>
                                     </div>
                                </div>
@@ -617,9 +617,9 @@
                                             <label class="">Invoice Schedule</label>
                                             <select class="full-width" name="schedule" id="schedule" data-error="#err_schedule" data-placeholder="Select" data-init-plugin="select2" onchange="instchange(); opentable();" data-minimum-results-for-search="Infinity">
                                                 <option value="">Select</option>
-                                                <option value="Monthly" <?php if(isset($editrent)) if($editrent[0]->schedule == 'Monthly') { echo 'selected';} ?> >Monthly</option>
-                                                <option value="Quarterly" <?php if(isset($editrent)) if($editrent[0]->schedule == 'Quarterly') { echo 'selected';} ?> >Quarterly</option>
-                                                <option value="Yearly" <?php if(isset($editrent)) if($editrent[0]->schedule == 'Yearly') { echo 'selected';} ?> >Yearly</option>
+                                                <option value="Monthly" <?php if(isset($rent)) if($rent[0]->schedule == 'Monthly') { echo 'selected';} ?> >Monthly</option>
+                                                <option value="Quarterly" <?php if(isset($rent)) if($rent[0]->schedule == 'Quarterly') { echo 'selected';} ?> >Quarterly</option>
+                                                <option value="Yearly" <?php if(isset($rent)) if($rent[0]->schedule == 'Yearly') { echo 'selected';} ?> >Yearly</option>
                                             </select>
                                             <div id="err_schedule"></div>
                                         </div>
@@ -627,7 +627,7 @@
                                      <div class="col-md-3">
                                             <div class="form-group form-group-default ">
                                                 <label>First Invoice Date</label>
-                                                <input type="text" class="form-control datepicker" name="invoice_date" id="invoice_date" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { if($editrent[0]->invoice_date!=null && $editrent[0]->invoice_date!='') echo date('d/m/Y',strtotime($editrent[0]->invoice_date)); }} ?>"/>
+                                                <input type="text" class="form-control datepicker" name="invoice_date" id="invoice_date" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { if($rent[0]->invoice_date!=null && $rent[0]->invoice_date!='') echo date('d/m/Y',strtotime($rent[0]->invoice_date)); }} ?>"/>
                                             </div>
                                      </div>
                                      <div class="col-md-3">
@@ -635,9 +635,9 @@
                                                 <label> Revenue % input due day</label>
                                                 <select class="full-width" name="revenue_due_day" id="revenue_due_day" data-error="#err_rent_due_day" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                                     <option value="">Select</option>
-                                                    <?php if(isset($editrent) && count($editrent)>0) {
+                                                    <?php if(isset($rent) && count($rent)>0) {
                                                             for($i=1; $i<=31; $i++) { 
-                                                                if($editrent[0]->rent_due_day==$i) echo '<option selected>'.$i.'</option>'; 
+                                                                if($rent[0]->rent_due_day==$i) echo '<option selected>'.$i.'</option>'; 
                                                                 else echo '<option>'.$i.'</option>';}} 
                                                     else {for($i=1; $i<=31; $i++) { echo '<option>'.$i.'</option>';}} ?>
                                                 </select>
@@ -651,7 +651,7 @@
                                                     <input type="text" class="form-control format_number" name="advance_rent_amount" id="advance_rent_amount" placeholder="Enter Here"  style="" />
                                                 </div>
                                                 <div class="input-group-addon bg-transparent h-c-50">
-                                                    <input type="checkbox" name="advance_rent" id="advance_rent" value="yes" onchange="set_advrent()" class="toggle"  <?php if(isset($editrent)) { if($editrent[0]->advance_rent==1) echo 'checked'; } ?> />
+                                                    <input type="checkbox" name="advance_rent" id="advance_rent" value="yes" onchange="set_advrent()" class="toggle"  <?php if(isset($rent)) { if($rent[0]->advance_rent==1) echo 'checked'; } ?> />
                                                 </div>
                                             </div>
                                      </div>
@@ -662,9 +662,9 @@
                                                 <label>  Due Day</label>
                                                 <select class="full-width" name="rent_due_day" id="rent_due_day" data-error="#err_rent_due_day" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                                     <option value="">Select</option>
-                                                    <?php if(isset($editrent) && count($editrent)>0) {
+                                                    <?php if(isset($rent) && count($rent)>0) {
                                                             for($i=1; $i<=31; $i++) { 
-                                                                if($editrent[0]->rent_due_day==$i) echo '<option selected>'.$i.'</option>'; 
+                                                                if($rent[0]->rent_due_day==$i) echo '<option selected>'.$i.'</option>'; 
                                                                 else echo '<option>'.$i.'</option>';}} 
                                                     else {for($i=1; $i<=31; $i++) { echo '<option>'.$i.'</option>';}} ?>
                                                 </select>
@@ -679,15 +679,15 @@
                                             <div class="form-input-group">
                                                 <label class="inline" style="float:left!important;">GST Rate</label>
                                               
-                                                <select class="full-width" name="gst_rate" id="gst_rate" <?php if(isset($editrent)) { if($editrent[0]->gst==1) echo ''; else echo 'disabled'; } else echo 'disabled'; ?> onchange="instchange(); opentable(); set_tax();" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity"  data-error="#err_gst_rate" >
+                                                <select class="full-width" name="gst_rate" id="gst_rate" <?php if(isset($rent)) { if($rent[0]->gst==1) echo ''; else echo 'disabled'; } else echo 'disabled'; ?> onchange="instchange(); opentable(); set_tax();" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity"  data-error="#err_gst_rate" >
                                                     <option value="">Select</option>
                                                     <?php 
                                                         $selected='';
                                                         if(isset($tax)){
                                                             foreach($tax as $row){
-                                                                if(isset($editrent)) { 
-                                                                    if(count($editrent)>=0) { 
-                                                                        if($editrent[0]->gst_rate==$row->tax_id) $selected = "selected='selected'"; 
+                                                                if(isset($rent)) { 
+                                                                    if(count($rent)>=0) { 
+                                                                        if($rent[0]->gst_rate==$row->tax_id) $selected = "selected='selected'"; 
                                                                     }
                                                                 }
                                                                 echo '<option value="'.$row->tax_id.'" '.$selected.'>'.$row->tax_name.'-'.$row->tax_percent.'</option>';
@@ -698,7 +698,7 @@
 												 <div id="err_gst_rate"></div>
                                             </div>
                                             <div class="input-group-addon bg-transparent h-c-50">
-                                                <input type="checkbox" class ="toggle" name="gst" id="gst" value="yes" onchange="set_gst();"<?php if(isset($editrent)) { if($editrent[0]->gst==1) echo 'checked'; } ?> />
+                                                <input type="checkbox" class ="toggle" name="gst" id="gst" value="yes" onchange="set_gst();"<?php if(isset($rent)) { if($rent[0]->gst==1) echo 'checked'; } ?> />
                                             </div>
                                         </div>
                                     </div>
@@ -706,10 +706,10 @@
                                         <div class="form-group form-group-default1 input-group">
                                             <div class="form-input-group">
                                                 <label style="">TDS Rate In %</label>
-                                                <input type="text" class="form-control format_number" name="tds_rate" id="tds_rate" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>=0) { echo format_money($editrent[0]->tds_rate,2); }} ?>" <?php if(isset($editrent)) { if($editrent[0]->tds==1) echo '';   } else { echo "disabled" ;} ?>    style="" /></label>
+                                                <input type="text" class="form-control format_number" name="tds_rate" id="tds_rate" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->tds_rate,2); }} ?>" <?php if(isset($rent)) { if($rent[0]->tds==1) echo '';   } else { echo "disabled" ;} ?>    style="" /></label>
                                             </div>
                                             <div class="input-group-addon bg-transparent h-c-50">
-                                                <input type="checkbox" name="tds" id="tds" value="yes" onchange="set_tds();" class="toggle"  <?php if(isset($editrent)) { if($editrent[0]->tds==1) echo 'checked'; } ?> />
+                                                <input type="checkbox" name="tds" id="tds" value="yes" onchange="set_tds();" class="toggle"  <?php if(isset($rent)) { if($rent[0]->tds==1) echo 'checked'; } ?> />
                                             </div>
                                         </div>
                                     </div>
@@ -720,12 +720,12 @@
                                                 <!-- <input type="text" class="form-control " name="tds_rate" id="tds_rate" value="yes" placeholder="Enter Here" style="text-align:center;"> -->
                                             </div>
                                             <div class="input-group-addon bg-transparent h-c-50">
-                                                <input type="checkbox" name="pdc" id="pdc" value="yes" onchange="set_pdc();" class="toggle"  <?php if(isset($editrent)) { if($editrent[0]->pdc==1) echo 'checked'; } ?> />
+                                                <input type="checkbox" name="pdc" id="pdc" value="yes" onchange="set_pdc();" class="toggle"  <?php if(isset($rent)) { if($rent[0]->pdc==1) echo 'checked'; } ?> />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="add_pdc" style="<?php if(isset($editrent)) { if($editrent[0]->pdc==1) echo ''; else echo 'display: none;'; } else echo 'display: none;'; ?>">
+                                <div id="add_pdc" style="<?php if(isset($rent)) { if($rent[0]->pdc==1) echo ''; else echo 'display: none;'; } else echo 'display: none;'; ?>">
                                     <button type="button" class="btn btn-default-info pull-right" data-toggle="modal" data-target="#myModal2">Yes Add PDCs</button>
                                     <br><br>
                                 </div>
@@ -753,7 +753,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default required">
                                         <label>Amount In &#x20B9;</label>
-                                        <input type="text" class="form-control format_number" name="deposit_amount" id="deposit_amount" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { echo format_money($editrent[0]->deposit_amount,2); }} ?>"/>
+                                        <input type="text" class="form-control format_number" name="deposit_amount" id="deposit_amount" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo format_money($rent[0]->deposit_amount,2); }} ?>"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6" style="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo ''; } else echo 'display: none;'; } else echo 'display: none;'; ?>">
@@ -765,7 +765,7 @@
                                 <div class="col-md-6" style="display: none;">
                                     <div class="form-group form-group-default required">
                                         <label class="">Category </label>
-                                        <input type="text" class="form-control" name="deposit_category" id="deposit_category" placeholder="Enter Here" value="<?php if(isset($editrent)) echo $editrent[0]->deposit_category; else echo 'Deposit'; ?>" readonly />
+                                        <input type="text" class="form-control" name="deposit_category" id="deposit_category" placeholder="Enter Here" value="<?php if(isset($rent)) echo $rent[0]->deposit_category; else echo 'Deposit'; ?>" readonly />
                                     </div>
                                 </div>
                             </div>
@@ -1183,7 +1183,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group form-group-default required">
                                         <label>Remark</label>
-                                        <input type="text" class="form-control" id="maker_remark" name="maker_remark" value="<?php if(isset($editrent)){ echo $editrent[0]->maker_remark;}?>">
+                                        <input type="text" class="form-control" id="maker_remark" name="maker_remark" value="<?php if(isset($rent)){ echo $rent[0]->maker_remark;}?>">
                                     </div>
                                 </div>
                             </div>
@@ -1198,7 +1198,7 @@
                         <input type="hidden" id="submitVal" value="1" />
                         <a href="index/rent" class="btn btn-danger pull-left" style="margin-left: 10px;" >Cancel</a>
                         <input type="submit" class="btn btn-success pull-right submit-form" name="submit" value="<?php  echo 'Submit'; ?>" style="margin-right: 10px;" />
-                        <input type="submit" class="btn btn-success pull-right save-form" name="submit" value="Save" style="margin-right: 10px; <?php //if($maker_checker!='yes' && isset($editrent)) echo 'display:none'; ?>" />
+                        <input type="submit" class="btn btn-success pull-right save-form" name="submit" value="Save" style="margin-right: 10px; <?php //if($maker_checker!='yes' && isset($rent)) echo 'display:none'; ?>" />
                     </fieldset>
 
                     <div class="modal fade" id="myModal2" role="dialog">
@@ -1301,7 +1301,7 @@
 
     <?php 
         $due_day = '<option value="">Select</option>';
-        if(isset($editrent) && count($editrent)>0) {
+        if(isset($rent) && count($rent)>0) {
             for($i=1; $i<=31; $i++) { 
                 $due_day = $due_day . '<option>'.$i.'</option>';
             }
