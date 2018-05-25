@@ -9,16 +9,16 @@
      <link href="<?php echo base_url()?>assets/css/prop_list.css" rel="stylesheet" />
 
     <style>
-        <?php// if($maker_checker!='yes') { ?>
-            // .approved {
+         <?php// if($maker_checker!='yes') { ?>
+        // .approved {
                 // display: none !important;
-            // }
+             // }
             // .pending {
-                // display: none !important;
+                 // display: none !important;
             // }
             // .rejected {
-                // display: none !important;
-            // }
+                 // display: none !important;
+             // }
         <?php //} ?>
     </style>
 </head>
@@ -38,19 +38,19 @@
             <div id="rootwizard">
                 <ul class="nav nav-tabs nav-tabs-linetriangle nav-tabs-separator nav-stack-sm" role="tablist" data-init-reponsive-tabs="dropdownfx">
                     <li class="nav-item all">
-                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/ALL/1')?>">ALL(<?php echo $all?>)</a>
+                        <a class="<?php if($checkstatus=='All') echo 'active'; ?>" href="<?=base_url('index.php/Real_estate_property/checkstatus/All/1')?>">ALL(<?php echo $all?>)</a>
                     </li>
                     <li class="nav-item approved">
-                        <a class=""  href="<?=base_url('index.php/Real_estate_property/checkstatus/Approved/1')?>">Approved(<?php echo $approved?>)</a>
+                        <a class="<?php if($checkstatus=='Approved') echo 'active'; ?>"  href="<?=base_url('index.php/Real_estate_property/checkstatus/Approved/1')?>">Approved(<?php echo $approved?>)</a>
                     </li>
                     <li class="nav-item pending">
-                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/Pending/1')?>">Pending(<?php echo $pending?>)</a>
+                        <a class="<?php if($checkstatus=='Pending') echo 'active'; ?>" href="<?=base_url('index.php/Real_estate_property/checkstatus/Pending/1')?>">Pending(<?php echo $pending?>)</a>
                     </li>
                     <li class="nav-item rejected">
-                        <a class="" href="<?=base_url('index.php/Real_estate_property/checkstatus/Rejected/1')?>">Rejected(<?php echo $rejected?>)</a>
+                        <a class="<?php if($checkstatus=='Rejected') echo 'active'; ?>" href="<?=base_url('index.php/Real_estate_property/checkstatus/Rejected/1')?>">Rejected(<?php echo $rejected?>)</a>
                     </li>
                     <li class="nav-item inprocess">
-                        <a class=""  href="<?=base_url('index.php/Real_estate_property/checkstatus/InProcess/1')?>">Draft(<?php echo $inprocess?>)</a>
+                        <a class="<?php if($checkstatus=='InProcess') echo 'active'; ?>"  href="<?=base_url('index.php/Real_estate_property/checkstatus/InProcess/1')?>">Draft(<?php echo $inprocess?>)</a>
                     </li>
                 </ul>
                 <br>
@@ -91,7 +91,7 @@
                                                     <div class="card card-transparent container-fixed-lg bg-white " style="background:#fff;">
                                                         <div class="row">
                                                             <div class=" col-md-4">
-                                                                <img src="<?php echo base_url().$property[$i]->p_image; ?>" alt="Paris" class="prop_img m-t-20 m-l-20" style="width:180px" onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
+                                                                <img src="<?php echo base_url().$property[$i]->p_image; ?>" alt="Paris" class="prop_img m-t-20 m-l-20" style="width:180px"onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
                                                             </div>
                                                             <div class=" col-md-8">
                                                                 <div class="card-header ">

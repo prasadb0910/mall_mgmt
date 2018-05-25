@@ -158,7 +158,7 @@
 <?php $this->load->view('templates/main_header');?>
 <div class="page-content-wrapper ">
     <div class="content">
-    <form id="form_purchase" role="form" method ="post" action="<?php if(isset($p_txn)) { echo base_url().'index.php/non_real_estate_property/updaterecord/'.$p_id; } else { echo base_url().'index.php/non_real_estate_property/saverecord'; } ?>"  enctype="multipart/form-data">
+    <form id="form_non_real_estate_property" role="form" method ="post" action="<?php if(isset($p_txn)) { echo base_url().'index.php/non_real_estate_property/updaterecord/'.$p_id; } else { echo base_url().'index.php/non_real_estate_property/saverecord'; } ?>"  enctype="multipart/form-data">
     <div class=" container-fluid   container-fixed-lg ">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
@@ -205,13 +205,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default form-group-default-select2 required">
                                         <label class="">Type </label>
-                                        <select class="form-control full-width" name="unit_type" id="unit_type" data-error="#unit_type" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
+                                        <select class="form-control full-width" name="unit_type" id="unit_type" data-error="#err_unit_type" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                             <option value="">Select</option>
                                            <option value="Hoarding" <?=(isset($p_txn[0]->unit_type) && $p_txn[0]->unit_type=='Hoarding'?'selected':'')?>>Hoarding</option>
                                             <option value="Kiosks"  <?=(isset($p_txn[0]->unit_type) && $p_txn[0]->unit_type=='Kiosks'?'selected':'')?>>Kiosks</option>
                                             
                                         </select>
-                                        <div id="err_purchase_mode"></div>
+                                        <div id="err_unit_type"></div>
                                     </div>
                                 </div>
                             </div>
@@ -226,13 +226,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default form-group-default-select2 required">
                                         <label class="">Area Unit </label>
-                                        <select class="form-control full-width" id="area_unit" name="area_unit" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity"  data-error="#area_unit1" >
+                                        <select class="form-control full-width" id="area_unit" name="area_unit" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity"  data-error="#err_area_unit" >
                                             <option value="">Select</option>
                                             <option value="Sqft" <?=(isset($p_txn[0]->area_unit) && $p_txn[0]->area_unit=='Sqft'?'selected':'')?>>Sqft</option>
                                             <option value="Sqm" <?=(isset($p_txn[0]->area_unit) && $p_txn[0]->area_unit=='Sqm'?'selected':'')?>>Sqm</option>
                                            
                                         </select>
-                                      
+                                         <div id="err_area_unit"></div>
                                     </div>
                                 </div>
                             
@@ -245,6 +245,8 @@
                                         <input type="text" class="form-control" id="location" name="location"  placeholder="Enter Here" value="<?php if(isset($p_txn)) { echo $p_txn[0]->location; } ?>" />
                                     </div>
                                 </div>
+								<div class="col-md-6">
+								    </div>
                             </div>
                             
                         </div>
@@ -274,9 +276,10 @@
 
 <?php $this->load->view('templates/script');?>
 <!--script type="text/javascript" src="js/load_autocomplete.js"></script-->
-<script type="text/javascript" src="js/validations.js"></script>
-<script type="text/javascript" src="js/document.js"></script>
-<script type="text/javascript" src="js/purchase.js"></script>
+<script type="text/javascript" src="<?=base_url()?>js/validations.js"></script>
+<script type="text/javascript" src="<?=base_url()?>js/document.js"></script>
+<script type="text/javascript" src="<?=base_url()?>js/purchase.js"></script>
+
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNy33uOQrIGSIdqfn_4MzP0AKOy2DR1o4&libraries=places&callback=initAutocomplete" async defer></script>
 

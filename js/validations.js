@@ -4008,14 +4008,32 @@ function checkTaxNameAvailability() {
 
 
 
-// ----------------- PURCHASE FORM VALIDATION -------------------------------------
-$("#form_purchase").validate({
+// ----------------- REAL ESTATE PROPERTY FORM VALIDATION -------------------------------------
+$("#form_real_estate_property").validate({
     rules: {
-        property_name: {
+        unit: {
             required: true,
-            checkPropertyNameAvailability: true
+            //checkPropertyNameAvailability: true
         },
-        date_of_purchase: {
+        // date_of_purchase: {
+            // required: function(element) {
+                        // if($("#submitVal").val()=="0"){
+                            // return true;
+                        // } else {
+                            // return false;
+                        // }
+                    // }
+        // },
+        // purchase_mode: {
+            // required: function(element) {
+                        // if($("#submitVal").val()=="0"){
+                            // return true;
+                        // } else {
+                            // return false;
+                        // }
+                    // }
+        // },
+        unit_type: {
             required: function(element) {
                         if($("#submitVal").val()=="0"){
                             return true;
@@ -4024,7 +4042,61 @@ $("#form_purchase").validate({
                         }
                     }
         },
-        purchase_mode: {
+        // property_status: {
+            // required: function(element) {
+                        // if($("#submitVal").val()=="0"){
+                            // return ($("#ptype").val()=="Building" || $("#ptype").val()=="Apartment" || $("#ptype").val()=="Bunglow" || $("#ptype").val()=="Commercial" || $("#ptype").val()=="Retail" || $("#ptype").val()=="Industrial");
+                        // } else {
+                            // return false;
+                        // }
+                    // }
+        // },
+        // builder_name_name: {
+            // required: function(element) {
+                        // if($("#submitVal").val()=="0"){
+                            // return true;
+                        // } else {
+                            // return false;
+                        // }
+                    // }
+        // },
+        // property_usage: {
+            // required: function(element) {
+                        // if($("#submitVal").val()=="0"){
+                            // return true;
+                        // } else {
+                            // return false;
+                        // }
+                    // }
+        // },
+        // property_description: {
+            // required: function(element) {
+                        // if($("#submitVal").val()=="0"){
+                            // return true;
+                        // } else {
+                            // return false;
+                        // }
+                    // }
+        // },
+        // apartment_name: {
+            // required: function(element) {
+                        // if($("#submitVal").val()=="0"){
+                            // return ($("#ptype").val()=="Apartment" || $("#ptype").val()=="Commercial" || $("#ptype").val()=="Retail" || $("#ptype").val()=="Industrial");
+                        // } else {
+                            // return false;
+                        // }
+                    // }
+        // },
+        unit_no: {
+            required: function(element) {
+                        if($("#submitVal").val()=="0"){
+                           return true;
+                        } else {
+                            return false;
+                        }
+                    }
+        },
+        floor: {
             required: function(element) {
                         if($("#submitVal").val()=="0"){
                             return true;
@@ -4033,7 +4105,7 @@ $("#form_purchase").validate({
                         }
                     }
         },
-        property_type: {
+        area: {
             required: function(element) {
                         if($("#submitVal").val()=="0"){
                             return true;
@@ -4042,79 +4114,7 @@ $("#form_purchase").validate({
                         }
                     }
         },
-        property_status: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return ($("#ptype").val()=="Building" || $("#ptype").val()=="Apartment" || $("#ptype").val()=="Bunglow" || $("#ptype").val()=="Commercial" || $("#ptype").val()=="Retail" || $("#ptype").val()=="Industrial");
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        builder_name_name: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        property_usage: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        property_description: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        apartment_name: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return ($("#ptype").val()=="Apartment" || $("#ptype").val()=="Commercial" || $("#ptype").val()=="Retail" || $("#ptype").val()=="Industrial");
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        flat_no: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return ($("#ptype").val()=="Apartment" || $("#ptype").val()=="Commercial" || $("#ptype").val()=="Retail" || $("#ptype").val()=="Industrial");
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        address: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        city: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        pincode: {
+        area_unit: {
             required: function(element) {
                         if($("#submitVal").val()=="0"){
                             return true;
@@ -4122,82 +4122,9 @@ $("#form_purchase").validate({
                             return false;
                         }
                     },
-            numbersonly: true
+           // numbersonly: true
         },
-        state: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        country: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        googlemaplink: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        agreement_area: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-        },
-        agreement_unit: {
-            required: function(element) {
-                        if($("#submitVal").val()=="0"){
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-        }
-        // ,
-        // open_parking: {
-        //     required: function(element) {
-        //                 if($("#submitVal").val()=="0"){
-        //                     return true;
-        //                 } else {
-        //                     return false;
-        //                 }
-        //             }
-        // },
-        // covered_parking: {
-        //     required: function(element) {
-        //                 if($("#submitVal").val()=="0"){
-        //                     return true;
-        //                 } else {
-        //                     return false;
-        //                 }
-        //             }
-        // }
-        // ,
-        // brokername_name: {
-        //     required: function(element) {
-        //                 if($("#submitVal").val()=="0"){
-        //                     return true;
-        //                 } else {
-        //                     return false;
-        //                 }
-        //             }
-        // }
+        
     },
 
     ignore: false,
@@ -4408,6 +4335,130 @@ function checkOwnership() {
 
     return valid;
 }
+
+
+$('#form_real_estate_property').submit(function() {
+    if (!$("#form_real_estate_property").valid()) {
+        return false;
+    } else {
+        return true;
+    }
+});
+
+// ----------------- NON REAL ESTATE PROPERTY FORM VALIDATION -------------------------------------
+
+$("#form_non_real_estate_property").validate({
+    rules: {
+        unit: {
+            required: function(element) {
+                        if($("#submitVal").val()=="0"){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+            //checkPropertyNameAvailability: true
+        },
+      
+        unit_type: {
+            required: function(element) {
+                        if($("#submitVal").val()=="0"){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+        },
+     
+
+        area: {
+            required: function(element) {
+                        if($("#submitVal").val()=="0"){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+        },
+        area_unit: {
+            required: function(element) {
+                        if($("#submitVal").val()=="0"){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+           // numbersonly: true
+        },
+		
+		 location: {
+            required: function(element) {
+                        if($("#submitVal").val()=="0"){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+           // numbersonly: true
+        },
+        
+    },
+
+    ignore: false,
+
+    errorPlacement: function (error, element) {
+        var placement = $(element).data('error');
+        if (placement) {
+            $(placement).append(error);
+        } else {
+            error.insertAfter(element);
+        }
+    },
+
+    invalidHandler: function(e,validator) {
+        var errors="";
+        if ($('#panel-ownership').find("input.error, select.error").length>0) {
+            errors=errors+"Please Clear errors in ownership. <br/>";
+        }
+        if ($('#panel-property-details').find("input.error, select.error").length>0) {
+            errors=errors+"Please Clear errors in property details. <br/>";
+        }
+        if ($('#panel-property-description').find("input.error, select.error").length>0) {
+            errors=errors+"Please Clear errors in property description. <br/>";
+        }
+        if ($('#panel-purchase-consideration').find("input.error, select.error").length>0) {
+            errors=errors+"Please Clear errors in purchase consideration. <br/>";
+        }
+        if ($('#panel-rp-details').find("input.error, select.error").length>0) {
+            errors=errors+"Please Clear errors in related party details. <br/>";
+        }
+        if ($('#panel-documents').find("input.error, select.error").length>0) {
+            errors=errors+"Please Clear errors in documents. <br/>";
+        }
+        if ($('#panel-pending-activity').find("input.error, select.error").length>0) {
+            errors=errors+"Please Clear errors in pending activity. <br/>";
+        }
+
+        $('#form_errors').html(errors);
+
+        if(errors!=""){
+            $('#form_errors').show();
+        } else {
+            $('#form_errors').hide();
+        }
+    }
+});
+
+
+
+$('#form_non_real_estate_property').submit(function() {
+    if (!$("#form_non_real_estate_property").valid()) {
+        return false;
+    } else {
+        return true;
+    }
+});
+
 
 
 
