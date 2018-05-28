@@ -589,10 +589,10 @@
 								    <div class="col-md-3">
                                         <div class="form-group form-group-default form-group-default-select2 required">
                                             <label class="">Type Of Rent</label>
-                                            <select class="full-width" name="rent_type" id="rent_type" data-error="#err_schedule" data-placeholder="Select" data-init-plugin="select2" onchange="instchange(); opentable();" data-minimum-results-for-search="Infinity">
+                                            <select class="full-width" name="rent_type" id="rent_type" data-error="#err_schedule" data-placeholder="Select" data-init-plugin="select2" onchange="rentype();" data-minimum-results-for-search="Infinity">
                                                 <option value="">Select</option>
-                                                <option value="fixed">Fixed</option>
-                                                <option value="revenue">% Revenue
+                                                <option <?=($rent[0]->rent_type=='fixed'?"selected":"")?> value="fixed">Fixed</option>
+                                                <option  <?=($rent[0]->rent_type=='revenue'?"selected":"")?> value="revenue">% Revenue
                                                 </option>
                                             </select>
                                             <div id="err_schedule"></div>
@@ -601,13 +601,13 @@
                                     <div class="col-md-3">
                                         <div class="form-group form-group-default ">
                                             <label>Amount</label>
-                                            <input type="text" class="form-control format_number rent_amount" name="rent_amount" id="rent_amount" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->rent_amount,2); }} ?>" />
+                                            <input type="text" class="form-control format_number rent_amount" name="rent_amount" id="rent_amount" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->rent_amount,2); }} ?>" />
                                         </div>
                                     </div>
-                                     <div class="col-md-3">
+                                     <div class="col-md-3" style="display:none"  id="revenue_percentage">
                                         <div class="form-group form-group-default ">
                                             <label>Revenue % </label>
-                                            <input type="text" class="form-control format_number rent_amount" name="revenue_percentage" id="revenue_percentage" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->revenue_percentage,2); }} ?>" />
+                                            <input type="text" class="form-control format_number rent_amount" name="revenue_percentage" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->revenue_percentage,2); }} ?>"  />
                                         </div>
                                     </div>
                                </div>
@@ -630,10 +630,10 @@
                                                 <input type="text" class="form-control datepicker" name="invoice_date" id="invoice_date" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { if($rent[0]->invoice_date!=null && $rent[0]->invoice_date!='') echo date('d/m/Y',strtotime($rent[0]->invoice_date)); }} ?>"/>
                                             </div>
                                      </div>
-                                     <div class="col-md-3">
+                                     <div class="col-md-3" style="display:none" id="revenue_due_day">
                                             <div class="form-group form-group-default form-group-default-select2 required">
                                                 <label> Revenue % input due day</label>
-                                                <select class="full-width" name="revenue_due_day" id="revenue_due_day" data-error="#err_rent_due_day" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
+                                                <select class="full-width" name="revenue_due_day"  data-error="#err_rent_due_day" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                                     <option value="">Select</option>
                                                     <?php if(isset($rent) && count($rent)>0) {
                                                             for($i=1; $i<=31; $i++) { 
@@ -1350,21 +1350,23 @@
 
 <script type="text/javascript">
   $( document ).ready(function() {
-    $("#rent_type").on("change" ,function(){
-        alert($(this).val());
+     rentype();
+  });
 
-        if($(this).val()=="fixed")
+  var rentype = function() {
+        if($('#rent_type').val()=="fixed")
         {
-            $('#revenue_percentage').val('');
-            $('#revenue_percentage').attr('disabled','true');
+            $('#revenue_percentage').hide();
+            $('#revenue_due_day').hide();
         }
         else
         {
-             $('#revenue_percentage').removeAttr("disabled");
-
+            $('#revenue_percentage').show();
+            $('#revenue_due_day').show();
         }
-    })
-  });
+    }
+
+
 </script>
 
 <script type="text/javascript">

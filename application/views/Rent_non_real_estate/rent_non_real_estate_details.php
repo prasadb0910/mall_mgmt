@@ -210,7 +210,10 @@
 <?php $this->load->view('templates/main_header');?>
 <div class="page-content-wrapper ">
 <div class="content">
-    <form id="form_rent_non_real_estate" role="form" method ="post" action="<?=base_url().'index.php/Rent_real_estate/saverecord'?>"  enctype="multipart/form-data">
+    
+
+
+    <form id="form_rent" role="form" method="post" enctype="multipart/form-data" action="<?php if(isset($rent)){ echo base_url().'index.php/Rent_non_real_estate/updaterecord/'.$r_id; } else { echo base_url().'index.php/Rent_non_real_estate/saverecord';} ?>">
     <input type="hidden" name="rent_module_type" value="2">
     <div class=" container-fluid   container-fixed-lg ">
         <ol class="breadcrumb">
@@ -256,7 +259,7 @@
                                  <div class="col-md-6">
                                     <div class="form-group form-group-default form-group-default-select2 required">
                                         <label class="">Unit Name</label>
-                                        <select class="full-width" name="unit" id="unit" data-error="#err_unit" data-placeholder="Select" data-init-plugin="select2" onchange="get_property_details();" data-minimum-results-for-search="Infinity">
+                                        <select class="full-width" name="property" id="property" data-error="#err_unit" data-placeholder="Select" data-init-plugin="select2" onchange="get_property_details();" data-minimum-results-for-search="Infinity">
                                             <option value="">Select</option>
                                             <?php if(isset($editrent)) { 
                                                 for($i=0; $i<count($property); $i++) { ?>
@@ -317,7 +320,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default form-group-default-select2 required">
                                         <label class="">Client</label>
-                                        <select class="form-control full-width" name="client" id="client" data-error="#err_client" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
+                                        <select class="form-control full-width" name="tenant[]" id="client" data-error="#err_client" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                             <option value="">Select</option>
                                              <option value="">Select</option>
                                                  <?php for ($k=0; $k < count($contact) ; $k++) { ?>

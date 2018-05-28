@@ -210,7 +210,7 @@
 <?php $this->load->view('templates/main_header');?>
 <div class="page-content-wrapper ">
 <div class="content">
-    <form id="form_rent_3rdparty" role="form" method ="post" action="<?=base_url().'index.php/Rent_real_estate/saverecord'?>"  enctype="multipart/form-data">
+    <form id="form_rent_3rdparty" role="form" method ="post" action="<?=base_url().'index.php/Rent_3rd_party/saverecord'?>"  enctype="multipart/form-data">
 
     <div class=" container-fluid   container-fixed-lg ">
         <ol class="breadcrumb">

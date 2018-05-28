@@ -346,36 +346,24 @@
 											<div class="info-name-property">
 												<span>
 													<a class="info-link" href="">
-														Test 22 
+														<?=$rent[0]->unit_name?> , Non Real Estate
 													</a>
-													<span>, </span>
 												</span>
-												<a  class="info-link" title="" href="">
-													Building
-												</a>
 											</div>
 											<!-- <div class="info-location">
 												<div class="icon-svg">
 													<i class="fa fa-map-marker" aria-hidden="true"></i>
 												</div>
 												<div class="location-address">
-													<address><?php //echo $editrent[0]->p_address; ?></address>
-													<address><?php //echo $editrent[0]->p_googlemaplink; ?></address>
+													<address><?php //echo $rent[0]->p_address; ?></address>
+													<address><?php //echo $rent[0]->p_googlemaplink; ?></address>
 												</div>
 											</div> -->
 										</div>
 										<div class="unit-options">
-											<!-- <div>
-												<span>1</span>
-												<small>bed</small>
-											</div> &nbsp /
 											<div>
-												<span>1</span>
-												<small>bath</small>
-											</div> &nbsp / -->
-											<div>
-												<span>1,000</span>
-												<small>Sq ft</small>
+												<span>Area - <?=$rent[0]->area?></span>
+												<small><?=$rent[0]->area_unit?></small>
 											</div>
 										</div>
 									</article>
@@ -385,33 +373,48 @@
 												<div class="col-md-12 col-sm-4">
 													<div class="transaction-item">
 														<div class="view-block m-b-0">
-															
 															<div class="title-block">
-																<h4>Period</h4>
-																<span class="period"> 3 months</span>
+																<h4>Lease Type</h4>
+																<span class="period"><?=$rent[0]->rent_type?></span></span>
 															</div>
-															
+															<div class="title-block">
+																<h4>Lease Period</h4>
+																<span class="period"><?=$rent[0]->lease_period?></span>
+															</div>
+															<div class="title-block">
+																<h4>Lockin Period</h4>
+																<span class="period"><?=$rent[0]->locking_period?></span>
+															</div>
+															<div class="title-block">
+																<h4>Notice Period  </h4>
+																<span class="period"><?=$rent[0]->notice_period?></span>
+															</div>
+															<div class="title-block">
+																<h4>Rent Free Period</h4>
+																<span class="period"><?=$rent[0]->free_rent_period?> </span>
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
 										</section>
 									</article>
-									<article class="lease-residents">
+							<article class="lease-residents">
 										<h5 class="view-title">Residents information</h5>
-		                             
+		                                <?php $j=0; if(isset($tenants)) { 
+		                                    for ($j=0; $j < count($tenants) ; $j++) { ?>
 
 										<div class="thumbnail-wrapper d32 circular b-white pull-left" id="contact1" style="margin: 15px;">
-											<div class="bg-master text-center text-white" style=" background: #899be7;text-align: center; padding-top: 14px;font-size:20px;"><span>DM</span>
+											<div class="bg-master text-center text-white" style=" background: #899be7;text-align: center; padding-top: 14px;font-size:20px;"><span><?php echo (strlen($tenants[$j]->c_name)>0?substr($tenants[$j]->c_name, 0, 1):'') . (strlen($tenants[$j]->c_last_name)>0?substr($tenants[$j]->c_last_name, 0, 1):''); ?></span>
 											</div>  
 										</div>
 										<div class="info pull-left p-l-10" style="margin-top: 15px;text-align:left;">
-											<span class="title_1">Dhaval Maru</span><br>
-											<span class="email">dhaval@gmail.com</span><br>
-											<span class="mob_no">9632587412</span>
+											<span class="title_1"><?php echo $tenants[$j]->c_name . ' ' . $tenants[$j]->c_last_name; ?></span><br>
+											<span class="email"><?php echo $tenants[$j]->c_emailid1; ?></span><br>
+											<span class="mob_no"><?php echo $tenants[$j]->c_mobile1; ?></span>
 										</div>
 
-                                		
+                                		<?php }} ?>
 									</article>
 									<article class="lease-transaction">
 										<h5 class="view-title">Lease transactions</h5>
@@ -422,68 +425,67 @@
 														<div class="view-block m-b-0">
 															<div class="title-block">
 																<h4>Rent</h4>
-																<span>29900 ₹</span></span>
+																<span>₹<?php echo format_money($rent[0]->rent_amount,2); ?></span></span>
 															</div>
-														
+															<div class="title-block">
+																<h4>Due day</h4>
+																<span><?php echo $rent[0]->rent_due_day; ?><?php if($rent[0]->rent_due_day=='1') echo 'st'; else if($rent[0]->rent_due_day=='2') echo 'nd'; else if($rent[0]->rent_due_day=='3') echo 'rd'; else echo'th'; ?></span>
+															</div>
 															<div class="title-block">
 																<h4>GST </h4>
-																<span>13</span>
-															</div>
-															
-															<div class="title-block">
-																	<h4>Category</h4>
-																	<span>Deposit</span></span>
+																<span><?php if($rent[0]->gst=='1') echo 'yes'; ?></span>
 															</div>
 															<div class="title-block">
 																	<h4>Deposits</h4>
-																	<span>12220 ₹</span></span>
-															</div>
-															<div class="title-block" style="">
+																	<span>₹<?php echo format_money($rent[0]->deposit_amount,2); ?></span></span>
+																	</div>
+																	<div class="title-block" style="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo ''; } else echo 'display: none;'; } else echo 'display: none;'; ?>">
 																	<h4>Deposits Paid</h4>
-																	<span>20000 ₹</span></span>
-															</div>
+																	<span>₹<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo format_money($deposit_paid_details[0]->paid_amount,2); }} ?></span></span>
+																	</div>
 															
 														</div>
 													</div>
 												</div>
 											</div>
 
-											
-													<div class="row" style="display:none">
+											<?php $j=0; if(isset($other_amt_details)) { 
+                                    			for ($j=0; $j < count($other_amt_details) ; $j++) { ?>
+													<div class="row">
 														<div class="col-md-12 col-sm-4">
 															<div class="transaction-item">
 																<div class="view-block m-b-0">
 																	<div class="title-block">
 																		<h4>Other</h4>
-																		<span>₹</span></span>
+																		<span>₹<?php echo format_money($other_amt_details[$j]->amount,2); ?></span></span>
 																	</div>
 																	<div class="title-block">
 																		<h4>Due day</h4>
-																		<span></span>
+																		<span><?php echo $other_amt_details[$j]->due_day; ?><?php if($other_amt_details[$j]->due_day=='1') echo 'st'; else if($other_amt_details[$j]->due_day=='2') echo 'nd'; else if($other_amt_details[$j]->due_day=='3') echo 'rd'; else echo'th'; ?></span>
 																	</div>
 																	<div class="title-block">
 																		<h4>GST </h4>
-																		<span></span>
+																		<span><?php if($other_amt_details[$j]->gst=='1') echo 'yes'; ?></span>
 																	</div>
 																	<div class="title-block">
 																	<h4>Deposits</h4>
-																	<span>₹</span></span>
+																	<span>₹<?php echo format_money($rent[0]->deposit_amount,2); ?></span></span>
 																	</div>
-																	<div class="title-block" style="">
+																	<div class="title-block" style="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo ''; } else echo 'display: none;'; } else echo 'display: none;'; ?>">
 																	<h4>Deposits Paid</h4>
-																	<span>₹</span></span>
+																	<span>₹<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo format_money($deposit_paid_details[0]->paid_amount,2); }} ?></span></span>
 																	</div>
 																	
 																</div>
 															</div>
 														</div>
 													</div>
-										
+											<?php }} ?>
 										
 										
 										</section>
 									</article>
-									<article class="escalations">
+									<article class="escalations"  <?php if (count($escalations)==0) echo 'style="display: none;"'; ?>>
 										<h5 class="view-title">Y-o-Y Escalations</h5>
 										<section>
 											<div class="row">
@@ -496,21 +498,22 @@
 															</tr>
 														</thead>
 														<tbody>
-							                               
+							                                <?php $j=0; if(isset($escalations)) { 
+							                                    for ($j=0; $j < count($escalations) ; $j++) { ?>
 
 															<tr class="odd gradeX">
-																<td>2018</td>
-																<td>10</td>
+																<td><?php if(isset($escalations)) { if(count($escalations)>0) { if($escalations[$j]->esc_date!=null && $escalations[$j]->esc_date!='') echo date('d/m/Y',strtotime($escalations[$j]->esc_date)); }} ?></td>
+																<td><?php if(isset($escalations)) { if(count($escalations)>0) { echo format_money($escalations[$j]->escalation,2); }} ?>%	</td>
 															</tr>
 
-                                						
+                                							<?php }} ?>
 														</tbody>
 													</table>
 												</div>
 											</div>
 										</section>
 									</article>
-									<!--<article class="lease-utilities">
+									<article class="lease-utilities" <?php if (count($utility)==0) echo 'style="display: none;"'; else { if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1') echo ''; else echo 'style="display: none;"'; } else echo 'style="display: none;"'; } ?>>
 										<h5 class="view-title">
 											<span>Utilities</span>
 											<span  class="icon-fo-ok"></span>
@@ -519,12 +522,15 @@
 											<div class="col-xs-24 col-sm-12" >
 												<div class="utilities-block">
 													<div class="utilities-tag">
-														
+														<?php for ($k=0; $k < count($utility) ; $k++) { 
+																if(isset($utility[$k]->tenant)) { if($utility[$k]->tenant=='1') { ?>
+																	<span class="tag"><?php if(isset($utility[$k]->amenity)) echo $utility[$k]->amenity; ?></span>
+														<?php }}} ?>
 													</div>
 												</div>
 											</div>
 										</div>
-									</article>-->
+									</article>
 										<br>
 									   <?php $this->load->view('templates/document_view');?>
 								
@@ -537,24 +543,18 @@
 								<!-- <span class="leases_status">Active</span>
 								<span class="leases_status status_name">#1</span> -->
 							</div>
-							<div class="view_block_type_lease  p-b-20" style=" border-bottom:2px solid #edf0f5;">
-								<div class="m-b-10">
-									<h5  style="font-size:16px;font-weight:600">Lease type</h5>
-									<span class="m-status--leases-type">Monthly</span>
-								</div>
-							</div>
 							<div class="view-block-date p-b-20"  style=" border-bottom:2px solid #edf0f5;">
 								<div class="date-type">
 									<div>
 										<div>
 											<h5  style="font-size:16px;font-weight:600">Start date</h5>
-											<span>12-02-2018</span>
+											<span><?=$rent[0]->possession_date?></span>
 										</div>
 									</div>
 									<div>
 										<div>
 											<h5  style="font-size:16px;font-weight:600">End date</h5>
-												<span>12-04-2018</span>
+												<span><?=$rent[0]->termination_date?></span>
 										</div>
 									</div>
 								</div>

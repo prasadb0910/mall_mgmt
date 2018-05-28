@@ -371,7 +371,7 @@
 												<small>bath</small>
 											</div> &nbsp / -->
 											<div>
-												<span><?=$rent[0]->area?></span>
+												<span>Area - <?=$rent[0]->area?></span>
 												<small><?=$rent[0]->area_unit?></small>
 											</div>
 										</div>
@@ -408,21 +408,22 @@
 											</div>
 										</section>
 									</article>
-									<article class="lease-residents">
+							<article class="lease-residents">
 										<h5 class="view-title">Residents information</h5>
-		                             
+		                                <?php $j=0; if(isset($tenants)) { 
+		                                    for ($j=0; $j < count($tenants) ; $j++) { ?>
 
 										<div class="thumbnail-wrapper d32 circular b-white pull-left" id="contact1" style="margin: 15px;">
-											<div class="bg-master text-center text-white" style=" background: #899be7;text-align: center; padding-top: 14px;font-size:20px;"><span><?php echo (strlen($rent[0]->c_name)>0?substr($rent[0]->c_name, 0, 1):'') . (strlen($rent[0]->c_last_name)>0?substr($rent[0]->c_last_name, 0, 1):''); ?></span>
+											<div class="bg-master text-center text-white" style=" background: #899be7;text-align: center; padding-top: 14px;font-size:20px;"><span><?php echo (strlen($tenants[$j]->c_name)>0?substr($tenants[$j]->c_name, 0, 1):'') . (strlen($tenants[$j]->c_last_name)>0?substr($tenants[$j]->c_last_name, 0, 1):''); ?></span>
 											</div>  
 										</div>
 										<div class="info pull-left p-l-10" style="margin-top: 15px;text-align:left;">
-											<span class="title_1"><?=$rent[0]->c_name?></span><br>
-											<span class="email"><?=$rent[0]->c_emailid1?></span><br>
-											<span class="mob_no"><?=$rent[0]->c_mobile1?></span>
+											<span class="title_1"><?php echo $tenants[$j]->c_name . ' ' . $tenants[$j]->c_last_name; ?></span><br>
+											<span class="email"><?php echo $tenants[$j]->c_emailid1; ?></span><br>
+											<span class="mob_no"><?php echo $tenants[$j]->c_mobile1; ?></span>
 										</div>
 
-                                		
+                                		<?php }} ?>
 									</article>
 									<article class="lease-transaction">
 										<h5 class="view-title">Lease transactions</h5>

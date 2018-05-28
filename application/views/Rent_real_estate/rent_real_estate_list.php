@@ -93,9 +93,12 @@
                                                                     </H4></div>
                                                                 </div>
                                                                 <div class="card-block">
-                                                                    <p class=" flat_info m-t-0 m-b-0"><b><?php echo $rent[$i]->tenant_name?></b></p>
-                                                                    <p class=" flat_info m-t-0 m-b-0"><?php echo $rent[$i]->unit_name . ', ' . $rent[$i]->floor.' ' . 'Floor - ' . $rent[$i]->area.'  '.$rent[$i]->area_unit; ?></p>
-																   
+
+                                                                     <?php foreach($rent[$i]->tenant_name as $name) { ?>
+                                                                       <p class=" flat_info m-t-0 m-b-0"><b><?php echo $name->contact_name; ?></b></p> 
+                                                                      <?php  }?>
+                                                                      <p class=" flat_info m-t-0 m-b-0"><?php echo $rent[$i]->unit_name . ', ' . $rent[$i]->floor.' ' . 'Floor - ' . $rent[$i]->area.'  '.$rent[$i]->area_unit; ?></p>
+                                                                   
                                                                 </div>
                                                             </div>
                                                         </div>
