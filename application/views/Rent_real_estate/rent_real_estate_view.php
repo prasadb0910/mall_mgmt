@@ -284,7 +284,7 @@
 	<?php $this->load->view('templates/main_header');?>
 	<div class="page-content-wrapper ">
 		<div class="content ">
-			<form id="form_rent_view" role="form" method ="post" action="<?php //echo base_url().'index.php/Rent/update/'.$r_id; ?>" enctype="multipart/form-data">
+			<form id="form_rent_view" role="form" method ="post" action="<?php echo base_url().'index.php/Rent_real_estate/update/'.$r_id; ?>" enctype="multipart/form-data">
 			<div class=" container-fluid   container-fixed-lg">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="<?php echo base_url().'index.php/Dashboard'; ?>">Dashboard</a></li>

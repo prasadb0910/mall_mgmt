@@ -209,8 +209,11 @@
 <div class="page-container ">
 <?php $this->load->view('templates/main_header');?>
 <div class="page-content-wrapper ">
-<div class="content">
-    <form id="form_revenue_sharing" role="form" method="post" enctype="multipart/form-data" action="<?=base_url().'index.php/Rent_revenue_sharing/save'?>">
+<div class="content"><!-- 
+    <form id="form_revenue_sharing" role="form" method="post" enctype="multipart/form-data" action="<?=base_url().'index.php/Rent_revenue_sharing/save'?>"> -->
+
+    <form id="form_rent" role="form" method="post" enctype="multipart/form-data" action="<?php if(isset($rent)){ echo base_url().'index.php/Rent_revenue_sharing/updaterecord/'.$r_id; } else { echo base_url().'index.php/Rent_revenue_sharing/saverecord';} ?>"
+        
     <div class=" container-fluid   container-fixed-lg ">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
@@ -251,11 +254,11 @@
                                  <div class="col-md-6">
                                     <div class="form-group form-group-default form-group-default-select2 required">
                                         <label class="">Unit Name</label>
-                                      <select class="full-width" name="property" id="property" data-error="#err_unit" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
+                                      <select class="full-width" name="property" id="property" data-error="#err_unit" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity" onchange="property_selected();">
                                             <option value="">Select</option>
-                                             <?php if(isset($editrent)) { 
+                                             <?php if(isset($rent)) { 
                                                 for($i=0; $i<count($property); $i++) { ?>
-                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($editrent[0]->property_id == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
+                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($rent[0]->property_id == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
                                             <?php } } else { ?>
                                                     <?php for($i=0; $i<count($property); $i++) { ?>
                                                     <option value="<?php echo $property[$i]->property_txn_id; ?>"><?php echo $property[$i]->unit_name; ?></option>
@@ -284,7 +287,7 @@
 								<div class="col-md-3">
 										<div class="form-group form-group-default ">
 											<label>Amount</label>
-											<input type="text" class="form-control format_number rent_amount" name="revenue_amount" id="revenue_amount" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>=0) { echo format_money($editrent[0]->rent_amount,2); }} ?>" />
+											<input type="text" class="form-control format_number rent_amount" name="revenue_amount" id="revenue_amount" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->rent_amount,2); }} ?>" />
 										</div>
 								</div>
 				
@@ -335,7 +338,10 @@
 <script type="text/javascript" src="js/document.js"></script>
  -->
 <script type="text/javascript">
-    $('#property').on('change',function(){
+     $( document ).ready(function() {
+       property_selected();
+     });
+   /* $('#property').on('change',function(){
         $('#month').empty();
         $.ajax({
             url:BASE_URL+"index.php/Rent_revenue_sharing/get_month",
@@ -361,7 +367,34 @@
                 //alert(responsemydata.data);
             },
         });
-    });
+    });*/
+
+     var property_selected = function() {
+         $.ajax({
+            url:BASE_URL+"index.php/Rent_revenue_sharing/get_month",
+            data:{'property_id':$('#property').val()},
+            dataType:"json",
+            type:"POST",
+            success:function(response){
+
+             if(response.length>0)
+            {
+                var option='';
+               $.each(response, function (index, data) {
+                option += "<option value='"+data.revenue_schedule_id+"'>"+data.event_date+"</option>";
+               })
+               $('#month').append(option);  
+            }
+                
+            
+            },
+            error:function(responsemydata,status,error) {
+                var err=eval("("+responsemydata.responseText+")");
+                alert(err.Message);
+                //alert(responsemydata.data);
+            },
+        });
+    }
 </script>
 
 </body>

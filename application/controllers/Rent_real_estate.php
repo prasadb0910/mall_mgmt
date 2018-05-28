@@ -17,7 +17,6 @@ class Rent_real_estate extends CI_Controller
     public function index() {
 
         $this->checkstatus('All','1');
-       //$this->load->view('Rent_real_estate/rent_real_estate_list');
     }
 
 	public function add() {
@@ -30,7 +29,10 @@ class Rent_real_estate extends CI_Controller
             $query=$this->db->query("SELECT * FROM tax_master WHERE txn_type like '%rent%' AND status = '1' AND tax_action='1'");
             $result=$query->result();
             $data['tax']=$result;
-            $data['property']= $this->rent_model->getPropertyDetails('',1);
+            //$data['property']= $this->rent_model->getPropertyDetails('',1);
+            $result = $this->db->query("call sp_getpropertynorent(1,'')")->result();
+            mysqli_next_result( $this->db->conn_id );
+            $data['property']=$result; 
             $gid=$this->session->userdata('groupid');
             $result = $this->db->query("call sp_getcontact('Approved','$gid','Tenants')")->result();
             mysqli_next_result( $this->db->conn_id );
@@ -106,11 +108,12 @@ class Rent_real_estate extends CI_Controller
                     $txn_fkid = $result1[0]->txn_fkid;
                 }
 
-                if($txn_fkid!=''){
+               /* if($txn_fkid!=''){
                     $data['property']=$this->purchase_model->purchaseData('All',$txn_fkid,'1');
                 } else {
                     $data['property'] = $this->purchase_model->purchaseData('All',$rid,'1');
-                }
+                }*/
+
                 
 
                 $result=$this->rent_model->rentData('All', '','',$rid);
@@ -126,6 +129,14 @@ class Rent_real_estate extends CI_Controller
                     $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
                     mysqli_next_result( $this->db->conn_id );
                     $data['rent'][0]->owner_name=$result; 
+
+                    /*$data['property'] = $this->db->query("Select * from property_txn Where  property_txn_id NOT IN((Select property_id from rent_txn)) 
+                        and property_typ_id=1
+                        OR  property_txn_id IN($property_id)")->result();*/
+
+                    $result = $this->db->query("call sp_getpropertynorent(1,$property_id)")->result();
+                    mysqli_next_result( $this->db->conn_id );
+                    $data['property']=$result; 
 
                 } else {
                     $txn_status=3;
@@ -413,6 +424,115 @@ class Rent_real_estate extends CI_Controller
             $this->approve($rid);
         } else  {
             $this->updaterecord($rid);
+        }
+    }
+
+    public function approve($rid) {
+        $roleid=$this->session->userdata('role_id');
+        $curusr=$this->session->userdata('session_id');
+        $gid=$this->session->userdata('groupid');
+        $now=date('Y-m-d H:i:s');
+        $modnow=date('Y-m-d H:i:s');
+
+        $query=$this->db->query("SELECT * FROM user_role_options WHERE section = 'Rent' AND role_id='$roleid'");
+        $result=$query->result();
+        if(count($result)>0) {
+            if($result[0]->r_edit == 1 || $result[0]->r_approvals == 1) {
+                $query=$this->db->query("SELECT * FROM rent_txn WHERE txn_id = '$rid'");
+                $res=$query->result();
+                if(count($res)>0) {
+                    $rec_status = $res[0]->txn_status;
+                    $txn_fkid = $res[0]->txn_fkid;
+                    $gp_id = $res[0]->gp_id;
+                } else {
+                    $rec_status = 'In Process';
+                    $txn_fkid = '';
+                    $gp_id = $this->session->userdata('groupid');
+                }
+
+                if($this->input->post('submit')=='Approve') {
+                    $txn_status='Approved';
+                } else  {
+                    $txn_status='Rejected';
+                }
+                $remarks = $this->input->post('status_remarks');
+
+                if ($txn_status=='Rejected') {
+                    $this->db->query("update rent_txn set txn_status='Rejected', remarks='$remarks', rejected_by='$curusr', rejected_date='$modnow' WHERE txn_id = '$rid'");
+
+                    $logarray['table_id']=$rid;
+                    $logarray['module_name']='Rent';
+                    $logarray['cnt_name']='Rent';
+                    $logarray['action']='Rent Record ' . $txn_status;
+                    $logarray['gp_id']=$gid;
+                    $this->user_access_log_model->insertAccessLog($logarray);
+                } else {
+                    if ($txn_fkid=='' || $txn_fkid==null) {
+                        $this->db->query("update rent_txn set txn_status='Approved', remarks='$remarks', approved_by='$curusr', approved_date='$modnow' WHERE txn_id = '$rid'");
+                        $this->db->query("update rent_schedule set sch_status = '1', status='1' WHERE rent_id = '$rid'");
+                        $this->db->query("update rent_schedule_taxation set status='1' WHERE rent_id = '$rid'");
+
+                        $logarray['table_id']=$rid;
+                        $logarray['module_name']='Rent';
+                        $logarray['cnt_name']='Rent';
+                        $logarray['action']='Rent Record ' . $txn_status;
+                        $logarray['gp_id']=$gid;
+                        $this->user_access_log_model->insertAccessLog($logarray);
+                    } else {
+                        if ($rec_status=='Delete') {
+                            $txn_status='Inactive';
+                        }
+                        $this->db->query("update rent_txn A, rent_txn B set A.gp_id=B.gp_id, A.property_id=B.property_id, 
+                                         A.sub_property_id=B.sub_property_id, A.tenant_id=B.tenant_id, 
+                                         A.rent_amount=B.rent_amount, A.free_rent_period=B.free_rent_period, 
+                                         A.deposit_amount=B.deposit_amount, A.deposit_paid_date=B.deposit_paid_date, 
+                                         A.possession_date=B.possession_date, A.lease_period=B.lease_period, 
+                                         A.rent_due_day=B.rent_due_day, A.termination_date=B.termination_date, 
+                                         A.txn_status='$txn_status', A.create_date=B.create_date, A.created_by=B.created_by, 
+                                         A.modified_date=B.modified_date, A.modified_by=B.modified_by, 
+                                         A.approved_by='$curusr', A.approved_date='$modnow', 
+                                         A.remarks='$remarks', A.rejected_by=B.rejected_by, 
+                                         A.rejected_date=B.rejected_date, A.maker_remark=B.maker_remark, 
+                                         A.maintenance_by=B.maintenance_by, A.property_tax_by=B.property_tax_by, 
+                                         A.notice_period=B.notice_period, A.category=B.category, A.schedule=B.schedule, A.invoice_date=B.invoice_date, 
+                                         A.gst=B.gst, A.gst_rate=B.gst_rate, A.tds=B.tds, A.tds_rate=B.tds_rate, A.pdc=B.pdc, 
+                                         A.deposit_category=B.deposit_category, A.invoice_issuer=B.invoice_issuer 
+                                         ,A.rent_type=B.rent_type,A.revenue_percentage=B.revenue_percentage,A.revenue_due_day=B.revenue_due_day,A.advance_rent=B.advance_rent,A.advance_rent_amount=B.advance_rent_amount,A.rent_module_type=B.rent_module_type,A.locking_period=B.locking_period
+                                         WHERE B.txn_id = '$rid' and A.txn_id=B.txn_fkid");
+
+                        $this->db->where('doc_ref_id', $txn_fkid);
+                        $this->db->where('doc_ref_type', 'Property_Rent');
+                        $this->db->delete('document_details');
+                        $this->db->query("update document_details set doc_ref_id = '$txn_fkid' WHERE doc_ref_id = '$rid' and doc_ref_type = 'Property_Rent'");
+
+                        $this->db->query("update rent_schedule set sch_status = '2', status='2' WHERE rent_id = '$txn_fkid' and (invoice_no is null || invoice_no='')");
+                        $this->db->query("update rent_schedule set rent_id = '$txn_fkid', sch_status = '1', status='1' WHERE rent_id = '$rid'");
+
+                        $this->db->query("update rent_schedule_taxation set status='2' WHERE rent_id = '$txn_fkid'");
+                        $this->db->query("update rent_schedule_taxation set rent_id = '$txn_fkid', status='1' WHERE rent_id = '$rid'");
+
+                        $this->db->where('rent_id', $txn_fkid);
+                        $this->db->delete('rent_tenant_details');
+                        $this->db->query("update rent_tenant_details set rent_id = '$txn_fkid' WHERE rent_id = '$rid'");
+
+                        $this->db->query("delete from rent_txn WHERE txn_id = '$rid'");
+
+                        $logarray['table_id']=$txn_fkid;
+                        $logarray['module_name']='Rent';
+                        $logarray['cnt_name']='Rent';
+                        $logarray['action']='Rent Record ' . $txn_status;
+                        $logarray['gp_id']=$gid;
+                        $this->user_access_log_model->insertAccessLog($logarray);
+                    }
+                }
+
+                redirect(base_url().'index.php/Rent');
+            } else {
+                echo "Unauthorized access.";
+            }
+        } else {
+            echo '<script>alert("You donot have access to this page.");</script>';
+            $this->load->view('login/main_page');
         }
     }
 
@@ -832,8 +952,7 @@ class Rent_real_estate extends CI_Controller
             }
         }
     }
-
-    //$status='',$property_type_id=''
+    
     public function checkstatus($status='', $property_type_id='', $property_id=''){
         $result=$this->rent_model->getAccess();
         if(count($result)>0) {

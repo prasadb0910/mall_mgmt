@@ -261,9 +261,9 @@
                                         <label class="">Unit Name</label>
                                         <select class="full-width" name="property" id="property" data-error="#err_unit" data-placeholder="Select" data-init-plugin="select2" onchange="get_property_details();" data-minimum-results-for-search="Infinity">
                                             <option value="">Select</option>
-                                            <?php if(isset($editrent)) { 
+                                            <?php if(isset($rent)) { 
                                                 for($i=0; $i<count($property); $i++) { ?>
-                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($editrent[0]->property_id == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
+                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($rent[0]->property_id == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
                                             <?php } } else { ?>
                                                     <?php for($i=0; $i<count($property); $i++) { ?>
                                                     <option value="<?php echo $property[$i]->property_txn_id; ?>"><?php echo $property[$i]->unit_name; ?></option>
@@ -285,20 +285,20 @@
                                 <div class="col-md-4">
                                     <div class="form-group form-group-default required">
                                         <label>Start Date</label>
-                                        <input type="text" class="form-control datepicker" name="possession_date" id="possession_date" onchange="calculatedate(); instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { if($editrent[0]->possession_date!=null && $editrent[0]->possession_date!='') echo date('d/m/Y',strtotime($editrent[0]->possession_date)); }} ?>"/>
+                                         <input type="text" class="form-control datepicker" name="possession_date" id="possession_date" onchange="calculatedate(); instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { if($rent[0]->possession_date!=null && $rent[0]->possession_date!='') echo date('d/m/Y',strtotime($rent[0]->possession_date)); }} ?>"/>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group form-group-default required">
                                         <label>End Date</label>
-                                        <input type="text" class="form-control datepicker" name="termination_date" id="termination_date" onchange="calculatedate(); instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { if($editrent[0]->termination_date!=null && $editrent[0]->termination_date!='') echo date('d/m/Y',strtotime($editrent[0]->termination_date)); }} ?>"/>
+                                        <input type="text" class="form-control datepicker" name="termination_date" id="termination_date" onchange="calculatedate(); instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { if($rent[0]->termination_date!=null && $rent[0]->termination_date!='') echo date('d/m/Y',strtotime($rent[0]->termination_date)); }} ?>"/>
                                     </div>
                                 </div>
 								
 								  <div class="col-md-4">
                                     <div class="form-group form-group-default ">
                                         <label>Period In Months</label>
-                                        <input type="text" class="form-control format_number" name="locking_period" id="locking_period" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { echo $editrent[0]->period; }} ?>" />
+                                         <input type="text" class="form-control format_number" name="locking_period" id="locking_period" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo $rent[0]->locking_period; }} ?>" />
                                       
                                     </div>
                                 </div>
@@ -322,13 +322,14 @@
                                         <label class="">Client</label>
                                         <select class="form-control full-width" name="tenant[]" id="client" data-error="#err_client" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                             <option value="">Select</option>
-                                             <option value="">Select</option>
-                                                 <?php for ($k=0; $k < count($contact) ; $k++) { ?>
-                                                    <option value="<?php echo $contact[$k]->c_id; ?>"><?php echo $contact[$k]->contact_name; ?></option>
+                                             <?php for ($k=0; $k < count($contact) ; $k++) { ?>
+                                                    <option value="<?php echo $contact[$k]->c_id; ?>" <?php if($contact[$k]->c_id==$tenants[0]->contact_id) { echo 'selected'; } ?>><?php echo $contact[$k]->contact_name; ?></option>
                                                 <?php } ?>
                                         </select>
                                         <div id="err_client"></div>
                                     </div>
+
+
                                 </div>
                             </div>
                             </div>
@@ -347,7 +348,7 @@
 							  <div class="col-md-3">
                                         <div class="form-group form-group-default ">
                                             <label>amount</label>
-                                            <input type="text" class="form-control format_number rent_amount" name="rent_amount" id="rent_amount" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>=0) { echo format_money($editrent[0]->rent_amount,2); }} ?>" />
+                                            <input type="text" class="form-control format_number rent_amount" name="rent_amount" id="rent_amount" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->rent_amount,2); }} ?>" />
                                         </div>
                                     </div>
                             <div class="col-md-5">
@@ -367,7 +368,7 @@
 												 <div id="err_gst_rate"></div>
                                             </div>
                                             <div class="input-group-addon bg-transparent h-c-50">
-                                                <input type="checkbox" class ="toggle" name="gst" id="gst" value="yes" onchange="set_gst();"<?php if(isset($editrent)) { if($editrent[0]->gst==1) echo 'checked'; } ?> />
+                                                <input type="checkbox" class ="toggle" name="gst" id="gst" value="yes" onchange="set_gst();"<?php if(isset($rent)) { if($rent[0]->gst==1) echo 'checked'; } ?> />
                                             </div>
                                         </div>
                                     </div>
@@ -375,10 +376,10 @@
                                         <div class="form-group form-group-default input-group">
                                              <div class="form-input-group" style="width:90px;">
                                                 <label style="float:left!important;padding-left:3px!important;">TDS Rate In %</label>
-                                                <input type="text" class="form-control format_number" name="tds_rate[]" id="tds_rate" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>=0) { echo format_money($editrent[0]->tds_rate,2); }} ?>" <?php if(isset($editrent)) { if($editrent[0]->tds==1) echo '';   } else { echo "disabled" ;} ?>    style="width: 90px;padding-left:3px!important" /></label>
+                                                <input type="text" class="form-control format_number" name="tds_rate[]" id="tds_rate" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->tds_rate,2); }} ?>" <?php if(isset($rent)) { if($rent[0]->tds==1) echo '';   } else { echo "disabled" ;} ?>    style="width: 90px;padding-left:3px!important" /></label>
                                             </div>
                                             <div class="input-group-addon bg-transparent h-c-50">
-                                                <input type="checkbox" name="tds" id="tds" value="yes" onchange="set_tds();" class="toggle"  <?php if(isset($editrent)) { if($editrent[0]->tds==1) echo 'checked'; } ?> />
+                                                <input type="checkbox" name="tds" id="tds" value="yes" onchange="set_tds();" class="toggle"  <?php if(isset($rent)) { if($rent[0]->tds==1) echo 'checked'; } ?> />
                                             </div>
                                         </div>
                                         </div>
@@ -411,14 +412,14 @@
 							  <div class="col-md-6" style="">
                                     <div class="form-group form-group-default required">
                                         <label class="">Category </label>
-                                        <input type="text" class="form-control" name="deposit_category" id="deposit_category" placeholder="Enter Here" value="<?php if(isset($editrent)) echo $editrent[0]->deposit_category; else echo 'Deposit'; ?>" readonly />
+                                        <input type="text" class="form-control" name="deposit_category" id="deposit_category" placeholder="Enter Here" value="<?php if(isset($rent)) echo $rent[0]->deposit_category; else echo 'Deposit'; ?>" readonly />
                                     </div>
                                 </div>
 							
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default required">
                                         <label>Amount In &#x20B9;</label>
-                                        <input type="text" class="form-control format_number" name="deposit_amount" id="deposit_amount" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>0) { echo format_money($editrent[0]->deposit_amount,2); }} ?>"/>
+                                        <input type="text" class="form-control format_number" name="deposit_amount" id="deposit_amount" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo format_money($rent[0]->deposit_amount,2); }} ?>"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6" style="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo ''; } else echo 'display: none;'; } else echo 'display: none;'; ?>">

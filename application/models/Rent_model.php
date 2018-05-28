@@ -980,7 +980,7 @@ class Rent_model Extends CI_Model{
             $cond = "";
         }
 
-        if ($property_type_id!='0') {
+        if ($property_type_id!='') {
             $cond2 = " and property_typ_id=".$property_type_id;
         } else {
             $cond2 = "";
@@ -1544,6 +1544,102 @@ class Rent_model Extends CI_Model{
         $mailSent=send_email($from_email,  $from_email_sender, $to_email, $subject, $message);
 
         // echo $owner_name . ' ';
+    }
+
+
+    public function rent_3rd_party($status='',$property_id,$rent_id="")
+    {
+        $status;
+        $cond="";
+        if($status=='InProcess')
+        {
+            $cond =" Andrt.txn_status='In Process'";
+
+        }else if($status=='Pending')
+        {
+              $cond="And (rt.txn_status='Pending' or rt.txn_status='Delete')";
+        }else if($status=='All')
+        {
+            $cond = "";
+        }else{
+            
+             $cond="And  rt.txn_status='$status'";
+        }
+
+        if($property_id!=""){
+
+            $cond =" And pt.property_txn_id=".$property_id;    
+        }
+
+        if($rent_id!=""){
+
+            $cond=" And rt.txn_id=".$rent_id;
+        }
+
+        $sql = "Select pt.*,rt.* from rent_txn rt
+                left join sales_txn st  on rt.property_id =st.property_id
+                left join property_txn pt  on rt.property_id =pt.property_txn_id
+                Where  st.property_id In(Select property_id from sales_txn)".$cond;
+       $query = $this->db->query($sql);
+       $result = $query->result();
+       return $result;
+    }
+
+    public function rent_revenue_sharing($status='',$property_id)
+    {
+        $status;
+        $cond="";
+        if($status=='InProcess')
+        {
+            if($cond=="")
+                    $cond = "Where C.txn_status='In Process'";
+            else
+                    $cond.=" And C.txn_status='In Process'";
+
+        }else if($status=='Pending')
+        {
+             if($cond=="")
+                   $cond="Where (C.txn_status='Pending' or rt.txn_status='Delete')";
+            else
+                    $cond="And (C.txn_status='Pending' or rt.txn_status='Delete')";
+        }else if($status=='All')
+        {
+            $cond = "";
+        }else{
+            
+             if($cond=="")
+                   $cond="Where C.txn_status='$status'";
+            else
+                    $cond="And  C.txn_status='$status'";
+        }
+
+       
+
+        if($property_id!=""){
+
+            if($cond=="")
+                    $cond = " Where C.property_txn_id=".$property_id;
+            else
+                    $cond.=" And C.property_txn_id=".$property_id;    
+        }
+
+        /*$sql = "Select * from (Select * from 
+                (Select Distinct(property_id) as property_id from revenue_schedule ) A
+                left join  
+                (Select * from property_txn ) B 
+                on A.property_id=B.property_txn_id) C".$cond;*/
+
+        $sql = "Select * from (Select  * from 
+                (Select property_id as property_id,rent_id as txn_id from revenue_schedule GROUP BY property_id,rent_id) A
+                left join  
+                (Select * from property_txn ) B 
+                on A.property_id=B.property_txn_id) C".$cond;
+
+
+
+       $query = $this->db->query($sql);
+       $result = $query->result();
+       return $result;
     }
 }
 ?>

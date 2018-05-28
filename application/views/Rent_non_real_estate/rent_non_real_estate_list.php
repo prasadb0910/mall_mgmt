@@ -36,20 +36,21 @@
 
             <div id="rootwizard">
                 <ul class="nav nav-tabs nav-tabs-linetriangle nav-tabs-separator nav-stack-sm" role="tablist" data-init-reponsive-tabs="dropdownfx">
-                    <li class="nav-item all">
-                        <a class=""  href="index/purchase/checkstatus/All">All()</a>
+                    
+                     <li class="nav-item all">
+                        <a class="<?php if($checkstatus=='All') echo 'active'; ?>" href="<?=base_url('index.php/Rent_non_real_estate/checkstatus/ALL/2')?>">ALL(<?php echo $all; ?>)</a>
                     </li>
                     <li class="nav-item approved">
-                        <a class=""  href="index/purchase/checkstatus/Approved">Approved()</a>
+                        <a class="<?php if($checkstatus=='Approved') echo 'active'; ?>"  href="<?=base_url('index.php/Rent_non_real_estate/checkstatus/Approved/2')?>">Approved(<?php echo $approved; ?>)</a>
                     </li>
                     <li class="nav-item pending">
-                        <a class="" href="index/purchase/checkstatus/Pending">Pending()</a>
+                        <a class="<?php if($checkstatus=='Pending') echo 'active'; ?>" href="<?=base_url('index.php/Rent_non_real_estate/checkstatus/Pending/2')?>">Pending(<?php echo $pending; ?>)</a>
                     </li>
                     <li class="nav-item rejected">
-                        <a class="" href="index/purchase/checkstatus/Rejected">Rejected()</a>
+                        <a class="<?php if($checkstatus=='Rejected') echo 'active'; ?>" href="<?=base_url('index.php/Rent_non_real_estate/checkstatus/Rejected/2')?>">Rejected(<?php echo $rejected; ?>)</a>
                     </li>
                     <li class="nav-item inprocess">
-                        <a class=""  href="index/purchase/checkstatus/InProcess">Draft()</a>
+                        <a class="<?php if($checkstatus=='InProcess') echo 'active'; ?>"  href="<?=base_url('index.php/Rent_non_real_estate/checkstatus/InProcess/1')?>">Draft(<?php echo $inprocess; ?>)</a>
                     </li>
                 </ul>
                 <br>
@@ -65,7 +66,13 @@
 
                                           <!--  <a href="index/sale"><button class="btn btn-default pull-right m-r-10" type="submit"> <span>Sold List</span></button></a>
 											<a href="index/sale/addnew"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-minus tab-icon"></i> <span>Sell</span></button></a>-->
-											<a href="Rent_non_real_estate/add"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Rent</span></button></a>
+
+                                           <?php
+                                                $baseurl = base_url("index.php/Rent_non_real_estate/add");
+                                           ?>
+
+
+                                            <a href="<?=$baseurl?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Property</span></button></a>
                                         </div>
                                         <br>
                                       

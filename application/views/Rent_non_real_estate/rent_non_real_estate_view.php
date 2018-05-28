@@ -284,7 +284,7 @@
 	<?php $this->load->view('templates/main_header');?>
 	<div class="page-content-wrapper ">
 		<div class="content ">
-			<form id="form_rent_view" role="form" method ="post" action="<?php //echo base_url().'index.php/Rent/update/'.$r_id; ?>" enctype="multipart/form-data">
+			<form id="form_rent_view" role="form" method ="post" action="<?php echo base_url().'index.php/Rent_non_real_estate/update/'.$r_id; ?>" enctype="multipart/form-data">
 			<div class=" container-fluid   container-fixed-lg">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="<?php echo base_url().'index.php/Dashboard'; ?>">Dashboard</a></li>
@@ -308,7 +308,7 @@
 									</button>
 									<div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu">
 										<?php  if(isset($access)) { if($access[0]->r_edit == 1) {  ?> 
-											<a href="<?php echo base_url().'index.php/Rent/edit/'.$r_id; ?>" class="dropdown-item edit" ><i class="pg-settings_small"></i> Edit</a>
+											<a href="<?php echo base_url().'index.php/Rent_non_real_estate/edit/'.$r_id; ?>" class="dropdown-item edit" ><i class="pg-settings_small"></i> Edit</a>
 										<?php } }  ?>
 
 										<!-- <a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> Delete</a> -->
@@ -566,7 +566,7 @@
 									</a>
 								</div>
 								<div>
-									<a class="btn btn-danger" href="<?php //echo base_url().'index.php/Rent/end_lease/'.$r_id; ?>">
+									<a class="btn btn-danger" href="<?php //echo base_url().'index.php/Rent_non_real_estate/end_lease/'.$r_id; ?>">
 										<span>End lease</span>
 									</a>
 								</div>
