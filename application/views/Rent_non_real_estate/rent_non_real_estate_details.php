@@ -202,6 +202,65 @@
 		{
 			   z-index:0!important;
 		}
+		        .form-group-default1 {
+    background-color: #fff;
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-radius: 2px;
+    padding-top: 7px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 4px;
+    overflow: hidden;
+    width: 100%;
+    -webkit-transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease;
+}
+.form-group-default1 .form-control {
+    border: none;
+    height: 25px;
+    min-height: 25px;
+    padding: 0;
+    margin-top: -4px;
+    background: none;
+}
+.form-group-default1.input-group .input-group-addon {
+    height: 52px;
+    border-radius: 0!important;
+    border: none!important;
+}
+.form-group-default1 label {
+    margin: 0;
+    display: block;
+    opacity: 1;
+    -webkit-transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease;
+}
+.form-group-default1.input-group .form-input-group {
+    width: 100%;
+}
+.form-group-default1.input-group {
+    padding: 0;
+}
+.form-group-default1.input-group label {
+    margin-top: 6px;
+    padding-left: 12px;
+}
+ 
+.form-group-default1 label {
+    margin: 0;
+    display: block;
+    opacity: 1;
+    -webkit-transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease;
+}
+	.recurring .select2-container {
+            height: 26px!important;
+		}
+        .recurring .select2-container .select2-selection.select2-selection--single {
+            height: 26px!important;
+        	padding-top: 0px!important;
+        }
     </style>
 </head>
 <body class="fixed-header ">
@@ -347,7 +406,7 @@
                                             <input type="text" class="form-control format_number rent_amount" name="rent_amount" id="rent_amount" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>=0) { echo format_money($editrent[0]->rent_amount,2); }} ?>" />
                                         </div>
                                     </div>
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                         <div class="form-group form-group-default form-group-default-select2 input-group gst">
                                             <div class="form-input-group">
                                                 <label class="inline" style="float:left!important;">GST Rate</label>

@@ -492,12 +492,14 @@ class Rent_real_estate extends CI_Controller
                 
                 foreach ($data['rent'] as $key => $value) {
                     $gid =  $value->gp_id;
+				
                     $property_id =  $value->property_id;
-                    $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
+                    $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid','')")->result();
                     mysqli_next_result( $this->db->conn_id );
                     $data['rent'][$key]->owner_name=$result; 
                 }
             }
+			
             $data['approved']=$approved;
             $data['pending']=$pending;
             $data['rejected']=$rejected;

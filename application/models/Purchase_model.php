@@ -186,56 +186,37 @@ function getAllCountData(){
     $gid=$this->session->userdata('groupid');
     $roleid=$this->session->userdata('role_id');
     $session_id=$this->session->userdata('session_id');
-
+ 
     $query=$this->db->query("select distinct owner_id from user_role_owners where user_id = '$session_id'");
     $result=$query->result();
 
-    if (count($result)>0) {
-        $sql = "select * from 
-                (select C.*, D.purchase_id, D.pr_client_id, D.owner_name from 
-                (select A.*, B.purchase_price from 
-                (select A.*, B.pr_agreement_area, B.pr_agreement_unit 
-                    from purchase_txn A left join purchase_property_description B on (A.txn_id=B.purchase_id) 
-                    where A.gp_id='$gid') A 
-                left join 
-                (select purchase_id, sum(net_amount) as purchase_price from purchase_schedule where status = '1' or status = '3' group by purchase_id) B 
-                on A.txn_id = B.purchase_id) C 
-                left join 
-                (select A.*, B.owner_name from 
-                (select A.purchase_id, A.pr_client_id from purchase_ownership_details A 
-                where A.ow_id in (select min(ow_id) from purchase_ownership_details where purchase_id=A.purchase_id and 
-                    pr_client_id in (select distinct owner_id from user_role_owners where user_id = '$session_id'))) A 
-                left join 
-                (select A.c_id, case when A.c_owner_type='individual' 
-                    then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                    else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
-                from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-                where A.c_status='Approved' and A.c_gid='$gid') B 
-                on (A.pr_client_id=B.c_id)) D 
-                on C.txn_id=D.purchase_id) E 
-                where E.owner_name is not null and E.owner_name<>''";
+ 
+       if (count($result)>0) {
+       $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
+        case when st.property_id is null then 'Vacant' else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
+         from property_txn E 
+        left JOIN purchase_ownership_details pd on E.property_txn_id=pd.purchase_id
+        left join contact_master A on pd.pr_client_id=A.c_id
+        left join contact_master B on (A.c_contact_id=B.c_id)
+        left join property_type prt on E.property_typ_id=prt.property_type_id
+        left join rent_txn rt on E.property_txn_id=rt.property_id
+        left join sales_txn st on E.property_txn_id=st.property_id
+        Where E.property_typ_id='1'
+      
+        GROUP BY  
+        E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,owner_name,rt.property_id,prt.property_type,E.p_image,E.location";
     } else {
-        $sql = "select * from 
-                (select C.*, D.purchase_id, D.pr_client_id, D.owner_name from 
-                (select A.*, B.purchase_price from 
-                (select A.*, B.pr_agreement_area, B.pr_agreement_unit 
-                    from purchase_txn A left join purchase_property_description B on (A.txn_id=B.purchase_id) 
-                    where A.gp_id='$gid') A 
-                left join 
-                (select purchase_id, sum(net_amount) as purchase_price from purchase_schedule where status = '1' or status = '3' group by purchase_id) B 
-                on A.txn_id = B.purchase_id) C 
-                left join 
-                (select A.*, B.owner_name from 
-                (select A.purchase_id, A.pr_client_id from purchase_ownership_details A 
-                where A.ow_id in (select min(ow_id) from purchase_ownership_details where purchase_id=A.purchase_id)) A 
-                left join 
-                (select A.c_id, case when A.c_owner_type='individual' 
-                    then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                    else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
-                from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-                where A.c_status='Approved' and A.c_gid='$gid') B 
-                on (A.pr_client_id=B.c_id)) D 
-                on C.txn_id=D.purchase_id) E";
+        $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
+        case when st.property_id is null then 'Vacant' else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
+         from property_txn E 
+        left JOIN purchase_ownership_details pd on E.property_txn_id=pd.purchase_id
+        left join property_type prt on E.property_typ_id=prt.property_type_id
+        left join rent_txn rt on E.property_txn_id=rt.property_id
+        left join sales_txn st on E.property_txn_id=st.property_id
+        Where E.property_typ_id='1' 
+     
+        GROUP BY  
+        E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,rt.property_id,prt.property_type,E.p_image,E.location";
     }
 
     $query=$this->db->query($sql);

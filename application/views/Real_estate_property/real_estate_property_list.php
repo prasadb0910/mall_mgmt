@@ -9,17 +9,17 @@
      <link href="<?php echo base_url()?>assets/css/prop_list.css" rel="stylesheet" />
 
     <style>
-         <?php// if($maker_checker!='yes') { ?>
-        // .approved {
-                // display: none !important;
-             // }
-            // .pending {
-                 // display: none !important;
-            // }
-            // .rejected {
-                 // display: none !important;
-             // }
-        <?php //} ?>
+         <?php if($maker_checker!='yes') { ?>
+       .approved {
+               display: none !important;
+            }
+             .pending {
+                 display: none !important;
+           }
+            .rejected {
+                 display: none !important;
+              }
+        <?php } ?>
     </style>
 </head>
 <body class="fixed-header">

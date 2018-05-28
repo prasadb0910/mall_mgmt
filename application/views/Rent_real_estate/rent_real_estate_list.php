@@ -38,7 +38,7 @@
             <div id="rootwizard">
                 <ul class="nav nav-tabs nav-tabs-linetriangle nav-tabs-separator nav-stack-sm" role="tablist" data-init-reponsive-tabs="dropdownfx">
                     <li class="nav-item all">
-                        <a class="<?php if($checkstatus=='All') echo 'active'; ?>" href="<?=base_url('index.php/Rent_real_estate/checkstatus/ALL/1')?>">ALL(<?php echo $all; ?>)</a>
+                        <a class="<?php if($checkstatus=='ALL') echo 'active'; ?>" href="<?=base_url('index.php/Rent_real_estate/checkstatus/ALL/1')?>">ALL(<?php echo $all; ?>)</a>
                     </li>
                     <li class="nav-item approved">
                         <a class="<?php if($checkstatus=='Approved') echo 'active'; ?>"  href="<?=base_url('index.php/Rent_real_estate/checkstatus/Approved/1')?>">Approved(<?php echo $approved; ?>)</a>
