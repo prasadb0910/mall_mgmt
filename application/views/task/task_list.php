@@ -192,12 +192,12 @@
 													<div class="info">
 														<H5 class="title_1 pull-left"><?php echo $row->subject_detail; ?></H5>
 														<p class="pull-right p-t-15 p-r-10"><span style="color: #5cb85c;font-size:16px"><!-- #23920 --></span></p><br>
-													<div class="info-name-property pull-left"><?php echo $row->p_display_name; ?></div><br>
+													<div class="info-name-property pull-left"><?php //echo $row->p_display_name; ?></div><br>
 														<div class="info-name-property pull-left" style="font-size:14px!important"><?php echo $row->priority; ?></div><br>
 														
 														<div class="location-address">
 														
-															<address><?php echo get_address($row->p_address, $row->p_landmark, $row->p_city, $row->p_pincode, $row->p_state, $row->p_country); ?></address>
+															<address><?php// echo get_address($row->p_address, $row->p_landmark, $row->p_city, $row->p_pincode, $row->p_state, $row->p_country); ?></address>
 														</div>
 													</div>
 												</div>
@@ -247,12 +247,12 @@
 													<div class="info">
 														<H5 class="title_1 pull-left"><?php echo $row->subject_detail; ?></H5>
 														<p class="pull-right p-t-15 p-r-10"><span style="color: #5cb85c;font-size:16px"><!-- #23920 --></span></p><br>
-														<div class="info-name-property pull-left"><?php echo $row->p_display_name; ?></div><br>
+														<div class="info-name-property pull-left"><?php// echo $row->p_display_name; ?></div><br>
 														<div class="info-name-property pull-left" style="font-size:14px!important"><?php echo $row->priority; ?></div><br>
 														
 														<div class="location-address">
 														
-															<address><?php echo get_address($row->p_address, $row->p_landmark, $row->p_city, $row->p_pincode, $row->p_state, $row->p_country); ?></address>
+															<address><?php //echo get_address($row->p_address, $row->p_landmark, $row->p_city, $row->p_pincode, $row->p_state, $row->p_country); ?></address>
 														</div>
 													</div>
 												</div>
@@ -301,13 +301,13 @@
 													<div class="info">
 														<H5 class="title_1 pull-left"><?php echo $row->subject_detail; ?></H5>
 														<p class="pull-right p-t-15 p-r-10"><span style="color: #5cb85c;font-size:16px"><!-- #23920 --></span></p><br>
-														<div class="info-name-property pull-left"><?php echo $row->p_display_name; ?></div><br>
+														<div class="info-name-property pull-left"><?php// echo $row->p_display_name; ?></div><br>
 														<div class="info-name-property pull-left" style="font-size:14px!important"><?php echo $row->priority; ?></div><br>
 														
 															
 														<div class="location-address">
 														
-															<address><?php echo get_address($row->p_address, $row->p_landmark, $row->p_city, $row->p_pincode, $row->p_state, $row->p_country); ?></address>
+															<address><?php //echo get_address($row->p_address, $row->p_landmark, $row->p_city, $row->p_pincode, $row->p_state, $row->p_country); ?></address>
 														</div>
 													</div>
 												</div>

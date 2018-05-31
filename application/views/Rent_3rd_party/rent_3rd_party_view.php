@@ -284,7 +284,7 @@
 	<?php $this->load->view('templates/main_header');?>
 	<div class="page-content-wrapper ">
 		<div class="content ">
-			<form id="form_rent_view" role="form" method ="post" action="<?php //echo base_url().'index.php/Rent/update/'.$r_id; ?>" enctype="multipart/form-data">
+			<form id="form_rent_view" role="form" method ="post" action="<?php echo base_url().'index.php/Rent_3rd_party/update/'.$r_id; ?>" enctype="multipart/form-data">
 			<div class=" container-fluid   container-fixed-lg">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="<?php echo base_url().'index.php/Dashboard'; ?>">Dashboard</a></li>
@@ -308,21 +308,25 @@
 									</button>
 									<div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu">
 										<?php  if(isset($access)) { if($access[0]->r_edit == 1) {  ?> 
-											<a href="<?php echo base_url().'index.php/Rent/edit/'.$r_id; ?>" class="dropdown-item edit" ><i class="pg-settings_small"></i> Edit</a>
+											<a href="<?php echo base_url().'index.php/Rent_3rd_party/edit/'.$r_id; ?>" class="dropdown-item edit" ><i class="pg-settings_small"></i> Edit</a>
 										<?php } }  ?>
 
 										<!-- <a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> Delete</a> -->
 
-										<?php if(isset($editrent)) { ?>
-										<?php if($editrent[0]->txn_status == 'Approved') { if(isset($access)) { if($access[0]->r_delete == 1) { ?> 
+										<?php if(isset($rent)) { ?>
+										<?php if($rent[0]->txn_status == 'Approved') { if(isset($access)) { if($access[0]->r_delete == 1) { ?> 
 											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i>  <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> </a>
-										<?php } } } else if($editrent[0]->modified_by != '' && $editrent[0]->modified_by != null) { if($editrent[0]->modified_by!=$rentby) { if($editrent[0]->txn_status != 'In Process') { if(isset($access)) { if($access[0]->r_approvals == 1) { ?> 
-			                              	<a href="#" class="dropdown-item edit" ><i class="pg-settings_small"></i> <input class="dropdown-item edit" type="submit" value="Approve" name="submit"/></a>
-											<a href="#" class="dropdown-item delete" ><i class="fa fa-trash"></i> <input class="dropdown-item delete" type="submit" value="Reject" name="submit"/></a>
+										<?php } } } 
+												else if($rent[0]->modified_by != '' && $rent[0]->modified_by != null)
+												{ 
+												 if($rent[0]->modified_by!=$rentby) { if($rent[0]->txn_status != 'In Process') {
+												 if(isset($access)) { if($access[0]->r_approvals == 1) { ?> 
+				                              	<a href="Javascript:void(0)" class="dropdown-item edit" ><i class="pg-settings_small"></i> <input class="dropdown-item edit" type="submit" value="Approve" name="submit"/></a>
+												<a href="#" class="dropdown-item delete" ><i class="fa fa-trash"></i> <input class="dropdown-item delete" type="submit" value="Reject" name="submit"/></a>
 										<?php } } } } else { ?>
 											<!-- <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> -->
 											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');" /> </a>
-										<?php } } else if($editrent[0]->created_by != '' && $editrent[0]->created_by != null) { if($editrent[0]->created_by!=$rentby && $editrent[0]->txn_status != 'In Process') { if($editrent[0]->txn_status != 'In Process') { if(isset($access)) { if($access[0]->r_approvals == 1) { ?> 
+										<?php } } else if($rent[0]->created_by != '' && $rent[0]->created_by != null) { if($rent[0]->created_by!=$rentby && $rent[0]->txn_status != 'In Process') { if($rent[0]->txn_status != 'In Process') { if(isset($access)) { if($access[0]->r_approvals == 1) { ?> 
 											<a href="#" class="dropdown-item edit" ><i class="pg-settings_small"></i> <input class="dropdown-item edit" type="submit" value="Approve" name="submit"/></a>
 											<a href="#" class="dropdown-item delete" ><i class="fa fa-trash"></i> <input class="dropdown-item delete" type="submit" value="Reject" name="submit"/></a>
 										<?php } } } } else { ?>
@@ -493,7 +497,7 @@
 									</a>
 								</div>
 								<div>
-									<a class="btn btn-danger" href="<?php //echo base_url().'index.php/Rent/end_lease/'.$r_id; ?>">
+									<a class="btn btn-danger" href="<?php //echo base_url().'index.php/Rent_3rd_party/end_lease/'.$r_id; ?>">
 										<span>End lease</span>
 									</a>
 								</div>

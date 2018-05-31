@@ -108,6 +108,69 @@ $("#contact_popup_form").validate({
     }
 });
 
+//--------Revenue Sharing---------//
+$("#form_revenue").validate({
+    rules: {
+        property: {
+            required: true
+        },
+        revenue_schedule_id: {
+            required: true
+        },
+        revenue_amount: {
+            required: true,
+            check_revenue: true
+        }
+    },
+
+    ignore: false,
+
+    errorPlacement: function (error, element) {
+        var placement = $(element).data('error');
+        if (placement) {
+            $(placement).append(error);
+        } else {
+            error.insertAfter(element);
+        }
+    }
+});
+
+$.validator.addMethod("check_revenue", function (value, element) {
+    var result;
+
+    $.ajax({
+            url:BASE_URL+"index.php/Rent_revenue_sharing/check_revenue",
+            data:{'revenue_id':$('#month').val()},
+            dataType:"json",
+            type:"POST",
+            async:false,
+            success:function(response){
+               result = parseInt(response);
+            },
+            error:function(xhr, ajaxOptions, thrownError) {
+                /*alert(xhr.status);
+                alert(thrownError);*/
+            },
+        });
+    if (result) {
+        return false;
+    } else {
+        return true;
+    }
+}, 'It cant be edited as payment is done for this entry');
+
+
+$('#form_revenue').submit(function() {
+    if (!$("#form_revenue").valid()) {
+        return false;
+    } else {
+        return true;
+    }
+});
+
+
+
+
 $.validator.addMethod("checkContactAvailability", function (value, element) {
     var result = 1;
 

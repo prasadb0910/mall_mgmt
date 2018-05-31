@@ -394,6 +394,8 @@
     -webkit-transition: opacity 0.2s ease;
     transition: opacity 0.2s ease;
 }
+
+
     </style>
 </head>
 <body class="fixed-header ">
@@ -402,7 +404,8 @@
 <?php $this->load->view('templates/main_header');?>
 <div class="page-content-wrapper ">
     <div class="content ">
-        <form id="form_rent" role="form" method="post" enctype="multipart/form-data" action="<?=base_url().'index.php/Rent_real_estate/saverecord'?>">
+            <form id="form_rent" role="form" method="POST" enctype="multipart/form-data" 
+            action="<?php if(isset($rent)){ echo base_url().'index.php/Rent_real_estate/updaterecord/'.$r_id; } else { echo base_url().'index.php/Rent_real_estate/saverecord';} ?>">
             <input type="hidden" name="rent_module_type" value="1">
         <div class=" container-fluid container-fixed-lg ">
             <ol class="breadcrumb">
@@ -470,7 +473,7 @@
 								  <div class="col-md-3">
                                     <div class="form-group form-group-default " id="noticep_error">
                                         <label>Lockin Period In Months</label>
-                                        <input type="text" class="form-control format_number" name="locking_period" id="locking_period" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo $rent[0]->lease_period; }} ?>" />
+                                        <input type="text" class="form-control format_number" name="locking_period" id="locking_period" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo $rent[0]->locking_period; }} ?>" />
                                       
                                     </div>
                                 </div>
@@ -523,7 +526,10 @@
                                             <select id="tenant_name_<?php echo $j+1; ?>" name="owners[]" class="form-control tenant full-width select2" data-error="#err_tenant_name_<?php echo $j+1; ?>" data-placeholder="Select" data-init-plugin="select2" >
                                                 <option value="">Select</option>
                                                 <?php for ($k=0; $k < count($contact) ; $k++) { ?>
-                                                    <option value="<?php echo $contact[$k]->c_id; ?>" <?php if($contact[$k]->c_id==$tenants[$j]->contact_id) { echo 'selected'; } ?>><?php echo $contact[$k]->contact_name; ?></option>
+                                                    <option value="<?php echo $contact[$k]->c_id; ?>"
+                                                    <?php if($contact[$k]->c_id==$tenants[$j]->contact_id) 
+                                                    { echo 'selected'; } ?>><?php echo $contact[$k]->contact_name; ?>
+                                                    </option>
                                                 <?php } ?>
                                             </select>
                                             <div id="err_tenant_name_<?php echo $j+1; ?>"></div>
@@ -589,10 +595,10 @@
 								    <div class="col-md-3">
                                         <div class="form-group form-group-default form-group-default-select2 required">
                                             <label class="">Type Of Rent</label>
-                                            <select class="full-width" name="rent_type" id="rent_type" data-error="#err_schedule" data-placeholder="Select" data-init-plugin="select2" onchange="instchange(); opentable();" data-minimum-results-for-search="Infinity">
+                                            <select class="full-width" name="rent_type" id="rent_type" data-error="#err_schedule" data-placeholder="Select" data-init-plugin="select2" onchange="rentype();" data-minimum-results-for-search="Infinity">
                                                 <option value="">Select</option>
-                                                <option value="fixed">Fixed</option>
-                                                <option value="revenue">% Revenue
+                                                <option  <?php   $rent[0]->rent_type=='fixed'; if(isset($rent)) { echo ($rent[0]->rent_type=='fixed'?"selected":"");} else "";  ?>  value="fixed">Fixed</option>
+                                                <option  <?php  if(isset($rent)) { echo ($rent[0]->rent_type=='revenue'?"selected":"");} else "";  ?>   value="revenue">% Revenue
                                                 </option>
                                             </select>
                                             <div id="err_schedule"></div>
@@ -601,13 +607,13 @@
                                     <div class="col-md-3">
                                         <div class="form-group form-group-default ">
                                             <label>Amount</label>
-                                            <input type="text" class="form-control format_number rent_amount" name="rent_amount" id="rent_amount" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->rent_amount,2); }} ?>" />
+                                            <input type="text" class="form-control format_number rent_amount" name="rent_amount" id="rent_amount" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->rent_amount,2); }} ?>" />
                                         </div>
                                     </div>
-                                     <div class="col-md-3">
+                                     <div class="col-md-3" style="display:none"  id="revenue_percentage">
                                         <div class="form-group form-group-default ">
                                             <label>Revenue % </label>
-                                            <input type="text" class="form-control format_number rent_amount" name="revenue_percentage" id="revenue_percentage" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->revenue_percentage,2); }} ?>" />
+                                            <input type="text" class="form-control format_number rent_amount" name="revenue_percentage" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->revenue_percentage,2); }} ?>"  />
                                         </div>
                                     </div>
                                </div>
@@ -630,10 +636,10 @@
                                                 <input type="text" class="form-control datepicker" name="invoice_date" id="invoice_date" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { if($rent[0]->invoice_date!=null && $rent[0]->invoice_date!='') echo date('d/m/Y',strtotime($rent[0]->invoice_date)); }} ?>"/>
                                             </div>
                                      </div>
-                                     <div class="col-md-3">
+                                     <div class="col-md-3" style="display:none" id="revenue_due_day">
                                             <div class="form-group form-group-default form-group-default-select2 required">
                                                 <label> Revenue % input due day</label>
-                                                <select class="full-width" name="revenue_due_day" id="revenue_due_day" data-error="#err_rent_due_day" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
+                                                <select class="full-width" name="revenue_due_day"  data-error="#err_rent_due_day" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                                     <option value="">Select</option>
                                                     <?php if(isset($rent) && count($rent)>0) {
                                                             for($i=1; $i<=31; $i++) { 
@@ -648,7 +654,7 @@
                                             <div class="form-group form-group-default input-group">
                                                 <div class="form-input-group">
                                                     <label class="inline" style="float:left!important;">Advance Rent?</label>
-                                                    <input type="text" class="form-control format_number" name="advance_rent_amount" id="advance_rent_amount" placeholder="Enter Here"  style="" />
+                                                    <input type="text" class="form-control format_number" name="advance_rent_amount" id="advance_rent_amount" placeholder="Enter Here"  style="" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->advance_rent_amount,2); }} ?>" />
                                                 </div>
                                                 <div class="input-group-addon bg-transparent h-c-50">
                                                     <input type="checkbox" name="advance_rent" id="advance_rent" value="yes" onchange="set_advrent()" class="toggle"  <?php if(isset($rent)) { if($rent[0]->advance_rent==1) echo 'checked'; } ?> />
@@ -1073,27 +1079,27 @@
                                     <?php //for ($k=0; $k < count($utility) ; $k++) { ?>
 <tr class="">
                                                 <td>
-                                                    <input type="hidden" id="utility_<?php //echo $k+1; ?>" name="utility[]" value="<?php //echo $utility[$k]->id; ?>">
+                                                    <input type="hidden" id="utility" name="utility" value="2">
 													Property Tax
 
                                                     <?php //if(isset($utility[$k]->utility)) echo $utility[$k]->utility; ?>
                                                 </td>
                                                 <td>
                                                     <div class="checkbox check-success">
-                                                        <input type="checkbox" id="landlord_<?php //echo $k+1; ?>" name="landlord[]" value="<?php //echo $utility[$k]->id; ?>" <?php //if(isset($utility[$k]->landlord)) { if($utility[$k]->landlord=='1') echo 'checked'; } ?> >
-                                                        <label for="landlord_<?php //echo $k+1; ?>"></label>
+                                                        <input type="checkbox" id="landlord_<?php //echo $k+1; ?>" name="landlord" value="1" <?php if(isset($utility[0]->landlord)) { if($utility[0]->landlord=='1') echo 'checked'; } ?> >
+                                                        <label for="landlord"></label>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="checkbox check-success">
-                                                        <input type="checkbox" id="tenant_<?php //echo $k+1; ?>" name="u_tenant[]" value="<?php //echo $utility[$k]->id; ?>" <?php //if(isset($utility[$k]->tenant)) { if($utility[$k]->tenant=='1') echo 'checked'; } ?> >
-                                                        <label for="tenant_<?php //echo $k+1; ?>"></label>
+                                                        <input type="checkbox" id="tenant_<?php //echo $k+1; ?>" name="u_tenant" value="1" <?php if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1') echo 'checked'; } ?> >
+                                                        <label for="tenant"></label>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="checkbox check-success">
-                                                        <input type="checkbox" id="na_<?php //echo $k+1; ?>" name="na[]" value="<?php //echo $utility[$k]->id; ?>" <?php //if(isset($utility[$k]->na)) { if($utility[$k]->na=='1') echo 'checked'; } ?> >
-                                                        <label for="na_<?php //echo $k+1; ?>"></label>
+                                                        <input type="checkbox" id="na" name="na" value="1" <?php if(isset($utility[0]->na)) { if($utility[0]->na=='1') echo 'checked'; } ?> >
+                                                        <label for="na"></label>
                                                     </div>
                                                 </td>
                                             </tr> 
@@ -1123,7 +1129,7 @@
                                     <?php //for ($k=0; $k < count($utility) ; $k++) { ?>
 <tr class="">
                                                 <td>
-                                                    <input type="hidden" id="email_notification_<?php //echo $k+1; ?>" name="email_notification[]" value="<?php //echo $utility[$k]->id; ?>">
+                                                    <input type="hidden" id="email_notification" name="email_notification" value="6">
 													Invoice is Posted			
 
 
@@ -1131,14 +1137,14 @@
                                                 </td>
                                                 <td>
                                                     <div class="checkbox check-success">
-                                                        <input type="checkbox" id="e_owners_<?php //echo $k+1; ?>" name="e_owners[]" value="<?php //echo $utility[$k]->id; ?>" <?php //if(isset($utility[$k]->landlord)) { if($utility[$k]->landlord=='1') echo 'checked'; } ?> >
-                                                        <label for="e_owners_<?php //echo $k+1; ?>"></label>
+                                                        <input type="checkbox" id="e_owners" name="e_owners" value="1" <?php if(isset($notification[0]->owner)) { if($notification[0]->owner=='1') echo 'checked'; } ?> >
+                                                        <label for="e_owners"></label>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="checkbox check-success">
-                                                        <input type="checkbox" id="e_tenant_<?php //echo $k+1; ?>" name="e_tenant[]" value="<?php //echo $utility[$k]->id; ?>" <?php //if(isset($utility[$k]->tenant)) { if($utility[$k]->tenant=='1') echo 'checked'; } ?> >
-                                                        <label for="e_tenant_<?php //echo $k+1; ?>"></label>
+                                                        <input type="checkbox" id="e_tenant" name="e_tenant" value="1" <?php if(isset($notification[0]->tenant)) { if($notification[0]->tenant=='1') echo 'checked'; } ?> >
+                                                        <label for="e_tenant"></label>
                                                     </div>
                                                 </td>
                                             
@@ -1197,8 +1203,8 @@
 
                         <input type="hidden" id="submitVal" value="1" />
                         <a href="index/rent" class="btn btn-danger pull-left" style="margin-left: 10px;" >Cancel</a>
-                        <input type="submit" class="btn btn-success pull-right submit-form" name="submit" value="<?php  echo 'Submit'; ?>" style="margin-right: 10px;" />
-                        <input type="submit" class="btn btn-success pull-right save-form" name="submit" value="Save" style="margin-right: 10px; <?php //if($maker_checker!='yes' && isset($rent)) echo 'display:none'; ?>" />
+                        <input type="submit" class="btn btn-success pull-right submit-form" name="submit" value="<?php if($maker_checker=='yes') echo 'Submit For Approval'; else echo 'Submit'; ?>" style="margin-right: 10px;" />
+                        <input type="submit" class="btn btn-success pull-right save-form" name="submit" value="Save" style="margin-right: 10px; <?php if($maker_checker!='yes' && isset($rent)) echo 'display:none'; ?>" />
                     </fieldset>
 
                     <div class="modal fade" id="myModal2" role="dialog">
@@ -1350,21 +1356,23 @@
 
 <script type="text/javascript">
   $( document ).ready(function() {
-    $("#rent_type").on("change" ,function(){
-        alert($(this).val());
+     rentype();
+  });
 
-        if($(this).val()=="fixed")
+  var rentype = function() {
+        if($('#rent_type').val()=="fixed")
         {
-            $('#revenue_percentage').val('');
-            $('#revenue_percentage').attr('disabled','true');
+            $('#revenue_percentage').hide();
+            $('#revenue_due_day').hide();
         }
         else
         {
-             $('#revenue_percentage').removeAttr("disabled");
-
+            $('#revenue_percentage').show();
+            $('#revenue_due_day').show();
         }
-    })
-  });
+    }
+
+
 </script>
 
 <script type="text/javascript">

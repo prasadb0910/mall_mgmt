@@ -210,145 +210,114 @@
 <?php $this->load->view('templates/main_header');?>
 <div class="page-content-wrapper ">
 <div class="content">
-    <form id="form_revenue_sharing" role="form" method="post" enctype="multipart/form-data" action="<?=base_url().'index.php/Rent_revenue_sharing/save'?>">
-    <div class=" container-fluid   container-fixed-lg ">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="index/Purchase/checkstatus/All">Tenant List</a></li>
-                 <?php if(isset($p_txn)){ ?><li class="breadcrumb-item"><a href="">Tenant View</a></li>
-				  <?php } ?>
-            <li class="breadcrumb-item active">Tenant Details </li>
-            <input type="hidden" id="rent_id" name="rent_id" value="" />
-        </ol>
-        <div class="row">
-           <!-- <div class="col-md-4">
-                <div class="col-lg-12">
-                    <div class="card card-default" style="background:#e6ebf1">
-                        <div class="card-header " style="background:#f6f9fc">
-                            <div class="card-title">
-                                Drag n' drop uploader
-                            </div><span ><a href="#"><i class=" fa fa-trash pull-right" id="img_delete" style="color:#d63b3b;font-size:18px;"></i></a></span>
-                        </div>
-                        <div id="image-preview" class="p-l-20 p-b-20 p-t-20 p-r-20" style="background-image: url('assets/img/demo/preview.jpg'; ?>');">
-                            <input type="file" name="image" id="image-upload" />
-                        </div>
-                        <div id="image-label_field">
-                            <label for="image-upload" id="image-label"><i class="fa fa-cloud-upload"></i><span>Upload Photo</span></label>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-			<div class="col-md-1"></div>
-            <div class="col-md-10">
-                <div class=" container-fluid container-fixed-lg bg-white">
-                    <div class="card card-transparent">
-                      
-    <div class="a m-b-20 allocated_maintenance" id="general_info">
-       <p class="m-t-20">	 <div class="div_heading ">
-                          <h5>Property Information & Terms</h5></div></p>
-                           <p class="panel-description"></p>
-                            <div class="row clearfix">
-                                 <div class="col-md-6">
-                                    <div class="form-group form-group-default form-group-default-select2 required">
-                                        <label class="">Unit Name</label>
-                                      <select class="full-width" name="property" id="property" data-error="#err_unit" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
-                                            <option value="">Select</option>
-                                             <?php if(isset($editrent)) { 
-                                                for($i=0; $i<count($property); $i++) { ?>
-                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($editrent[0]->property_id == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
-                                            <?php } } else { ?>
-                                                    <?php for($i=0; $i<count($property); $i++) { ?>
-                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>"><?php echo $property[$i]->unit_name; ?></option>
-                                            <?php } } ?>
-                                        
-                                        </select>
-                                        <div id="err_property"></div>
-                                    </div>
-                                </div>
-                            </div>
-    					     <div class="row clearfix">
-    								<div class="col-md-3">
-    									<div class="form-group form-group-default form-group-default-select2 required">
-    									<label>Month</label>
-    									<select class="full-width" 
-                                        name="revenue_schedule_id" id="month" data-error="#err_unit" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
+    <form id="form_revenue" role="form" method="POST" enctype="multipart/form-data" 
+    action="<?php if(isset($rent)){ echo base_url().'index.php/Rent_revenue_sharing/updaterecord/'.$r_id; } else { echo base_url().'index.php/Rent_revenue_sharing/saverecord';} ?>">
+        
+        <div class=" container-fluid   container-fixed-lg ">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>index.php/Rent_revenue_sharing">Rent List</a></li>
+                
+                <li class="breadcrumb-item active">Revenue Details </li>
+                <input type="hidden" id="rent_id" name="rent_id" value="<?=(isset($r_id)?$r_id:'')?>" />
+                <input type="hidden" id="edit" name="edit" value="<?=(isset($r_id)?1:0)?>" />
+            </ol>
+            <div class="row">
+               <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div class=" container-fluid container-fixed-lg bg-white">
+                        <div class="card card-transparent">
+                            <div class="a m-b-20 allocated_maintenance" id="general_info">
+                               <p class="m-t-20">	 
+                                <div class="div_heading ">
+                                              <h2><?php echo $this->session->flashdata('message'); ?></h2> 
+                                              <h5>Property Information & Terms</h5></div></p>
+                                               <p class="panel-description"></p>
+                                                <div class="row clearfix">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group form-group-default form-group-default-select2 required">
+                                                            <label class="">Unit Name</label>
+                                                          <select class="full-width" name="property" id="property" data-error="#err_property" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity" onchange="property_selected();">
+                                                                <option value="">Select</option>
+                                                                 <?php if(isset($rent)) { 
+                                                                    for($i=0; $i<count($property); $i++) { ?>
+                                                                        <option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($revenue_sharing[0]['property_id'] == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
+                                                                <?php } } else { ?>
+                                                                        <?php for($i=0; $i<count($property); $i++) { ?>
+                                                                        <option value="<?php echo $property[$i]->property_txn_id; ?>"><?php echo $property[$i]->unit_name; ?></option>
+                                                                <?php } } ?>
+                                                            
+                                                            </select>
+                                                            <div id="err_property"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                        					     <div class="row clearfix">
+                        								<div class="col-md-3">
+                        									<div class="form-group form-group-default form-group-default-select2 required">
+                        									<label>Month</label>
+                        									<select class="full-width" 
+                                                            name="revenue_schedule_id" id="month" data-error="#err_unit" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
 
-                                        </select>
-    								  
-    									</div>
-    								</div>
-    						</div>
-							<div class="row clearfix">
-							
-							
-								<div class="col-md-3">
-										<div class="form-group form-group-default ">
-											<label>Amount</label>
-											<input type="text" class="form-control format_number rent_amount" name="revenue_amount" id="revenue_amount" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($editrent)) { if(count($editrent)>=0) { echo format_money($editrent[0]->rent_amount,2); }} ?>" />
-										</div>
-								</div>
-				
-							</div>
-								 
-                            
-								</div>
-                      
-					
-							
-                 
-					  
-                       
-			
-						   
-	
-						
-				
-                    <div class="form-footer" style="padding-bottom: 60px;">
-                        <input type="hidden" id="submitVal" value="1" />
-                        <a href="index/Purchase" class="btn btn-default-danger pull-left" >Cancel</a>
-                        <input type="submit" class="btn btn-default pull-right submit-form" name="submit" value="Submit" style="margin-right: 10px;" />
-                        <input formnovalidate="formnovalidate" type="submit" class="btn btn-default pull-right save-form m-r-10" name="submit" value="Save" style="<?php// if($maker_checker!='yes' && isset($p_txn)) echo 'display:none'; ?>" />
+                                                            </select>
+                        								    <div id="err_unit"></div>
+                        									</div>
+                        								</div>
+                        						</div>
+                        						<div class="row clearfix">
+                        							<div class="col-md-3">
+                        									<div class="form-group form-group-default ">
+                        										<label>Amount</label>
+                        										<input type="text" class="form-control format_number rent_amount" name="revenue_amount" id="revenue_amount" onchange="instchange(); opentable();" placeholder="Enter Here" value="<?php if(isset($revenue_sharing)) { if(count($revenue_sharing)>=0) { echo format_money($revenue_sharing[0]['revenue_amount'],2); }} ?>" />
+                        									</div>
+                        							</div>
+                        						</div>
+                            </div>
+                            <div class="form-footer" style="padding-bottom: 60px;">
+                                <input type="hidden" id="submitVal" value="1" />
+                                <a href="index/Purchase" class="btn btn-default-danger pull-left" >Cancel</a>
+                                <input type="submit" class="btn btn-default pull-right submit-form" name="submit" value="Submit" style="margin-right: 10px;" />
+                                <input formnovalidate="formnovalidate" type="submit" class="btn btn-default pull-right save-form m-r-10" name="submit" value="Save" style="<?php// if($maker_checker!='yes' && isset($p_txn)) echo 'display:none'; ?>" />
+                            </div>
+                        </div>
                     </div>
                 </div>
+    		   <div class="col-md-1"></div>
             </div>
-        </div>
-			<div class="col-md-1"></div>
-		
-    </div>
     </form>
 </div>
 
-
-
-
-
-   
-  
-
-
 <?php $this->load->view('templates/script');?>
+
 <script type="text/javascript">
-    var BASE_URL="<?php echo base_url(); ?>";
+    var BASE_URL ="<?php echo base_url(); ?>";
+    var selected = "<?php if(isset($revenue_sharing[0]['event_date']))
+                    echo date('F Y',strtotime($revenue_sharing[0]['event_date']));?>";
+    console.log(selected);
 </script>
 <!--script type="text/javascript" src="js/load_autocomplete.js"></script-->
-<!-- <script type="text/javascript" src="js/validations.js"></script>
-<script type="text/javascript" src="js/document.js"></script>
- -->
+<script type="text/javascript" src="<?php echo base_url(); ?>js/validations.js"></script>
+
 <script type="text/javascript">
-    $('#property').on('change',function(){
-        $('#month').empty();
-        $.ajax({
+     $( document ).ready(function() {
+       property_selected();
+      });
+     var property_selected = function() {
+         $.ajax({
             url:BASE_URL+"index.php/Rent_revenue_sharing/get_month",
-            data:{'property_id':$(this).val()},
+            data:{'property_id':$('#property').val(),'edit':$('#edit').val()},
             dataType:"json",
             type:"POST",
             success:function(response){
 
              if(response.length>0)
             {
-                var option='';
+               var option='';
                $.each(response, function (index, data) {
-                option += "<option value='"+data.revenue_schedule_id+"'>"+data.event_date+"</option>";
+                var select = '';
+                if(selected==data.event_date)
+                    select="selected";
+                option += "<option value='"+data.revenue_schedule_id+"' "+select+">"+data.event_date+"</option>";
                })
                $('#month').append(option);  
             }
@@ -361,7 +330,7 @@
                 //alert(responsemydata.data);
             },
         });
-    });
+    }
 </script>
 
 </body>

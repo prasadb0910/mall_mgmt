@@ -163,6 +163,11 @@ class Real_estate_property extends CI_Controller
                         $this->db->where('purchase_id', $pid);
                         $this->db->delete('purchase_ownership_details');
 
+                        
+                        $this->db->where('doc_ref_id', $pid);
+                        $this->db->where('doc_ref_type', 'Property_Purchase');
+                        $this->db->delete('document_details');
+
                         $logarray['table_id']=$pid;
                         $logarray['module_name']='Purchase';
                         $logarray['cnt_name']='Purchase';
@@ -313,16 +318,16 @@ class Real_estate_property extends CI_Controller
                 $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
                 mysqli_next_result( $this->db->conn_id );
                 $data['owner_name']=$result; 
-                
             }
-					$data['approved']=$approved;
-                    $data['pending']=$pending;
-                    $data['rejected']=$rejected;
-                    $data['inprocess']=$inprocess;
-                    $data['all']=count($count_data);
-					$data['checkstatus'] = $status;  
-					$data['maker_checker'] = $this->session->userdata('maker_checker');
-					$data['property_type_id']=$property_type_id;
+            
+            $data['approved']=$approved;
+            $data['pending']=$pending;
+            $data['rejected']=$rejected;
+            $data['inprocess']=$inprocess;
+            $data['all']=count($count_data);
+            $data['checkstatus'] = $status;
+            $data['maker_checker'] = $this->session->userdata('maker_checker');
+            $data['property_type_id']=$property_type_id;
 
             load_view('Real_estate_property/real_estate_property_list', $data);
     }

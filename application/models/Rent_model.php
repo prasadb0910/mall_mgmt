@@ -11,30 +11,25 @@ class Rent_model Extends CI_Model{
 
     public function rentData($status='',$property_type_id='',$property_id,$rent_id="")
     {   
-
+        $status;
         $cond="";
         if($status=='InProcess')
         {
             if($cond=="")
-                    $cond = "Where rt.txn_status='In Process'";
-            else
-                    $cond.=" Andrt.txn_status='In Process'";
+                   $cond.=" And rt.txn_status='In Process'";
 
         }else if($status=='Pending')
         {
              if($cond=="")
-                   $cond="Where (rt.txn_status='Pending' or rt.txn_status='Delete')";
-            else
-                    $cond="And (rt.txn_status='Pending' or rt.txn_status='Delete')";
-        }else if($status=='ALL')
+                    $cond.="And (rt.txn_status='Pending' or rt.txn_status='Delete')";
+        }else if($status=='All' || $status=='ALL')
         {
             $cond = "";
         }else{
             
              if($cond=="")
-                   $cond="Where rt.txn_status='$status'";
-            else
-                    $cond="And  rt.txn_status='$status'";
+                 
+                    $cond.="And  rt.txn_status='$status'";
         }
 
        
@@ -42,44 +37,43 @@ class Rent_model Extends CI_Model{
         if($property_id!=""){
 
             if($cond=="")
-                    $cond = " Where pt.property_txn_id=".$property_id;
-            else
                     $cond.=" And pt.property_txn_id=".$property_id;    
         }
 
-        if($property_id!=""){
+        if($property_type_id!=""){
 
             if($cond=="")
-                    $cond = " Where pt.property_type_id=".$property_type_id;
-            else
-                    $cond.=" And pt.property_type_id=".$property_type_id;    
+                    $cond.=" And pt.property_typ_id=".$property_type_id;    
         }
 
         if($rent_id!=""){
 
             if($cond=="")
-                    $cond = " Where rt.txn_id=".$rent_id;
-            else
                     $cond.=" And rt.txn_id=".$rent_id;
         }
 
-        $sql = "Select rt.*,pt.*,pd.pr_client_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
-                    case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
-                    case when A.c_owner_type='individual' 
-                    then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                    else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as tenant_name
+        $sql = "Select rt.*,pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_name,pt.unit_no,
+                pt.unit_type,pd.pr_client_id,pt.p_image,pt.property_typ_id
                 from rent_txn rt
-                left join property_txn pt on rt.txn_id=pt.property_txn_id
+                left join property_txn pt on rt.property_id=pt.property_txn_id
                 left join purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
-                left join rent_tenant_details  rd on rt.txn_id=rd.rent_id
-                left join contact_master A on (rd.contact_id=A.c_id)
-                left join contact_master B on (A.c_contact_id=B.c_id)".$cond;
+                Where rt.property_id NOT IN(Select property_id from sales_txn) and rt. txn_status <> 'Inactive' ".$cond;
         $query=$this->db->query($sql); 
         return $query->result();       
     }
 
+    public function getallrentdatacount($property_type_id)
+    {   
+        
+        $sql = "Select rt.*,pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_name,pt.unit_no,
+                pt.unit_type,pd.pr_client_id
+                from rent_txn rt
+                left join property_txn pt on rt.property_id=pt.property_txn_id
+                left join purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
+                Where  rt. txn_status <> 'Inactive'  and pt.property_typ_id=".$property_type_id;
+        $query=$this->db->query($sql); 
+        return $query->result();       
+    }
     
 
     public function getAllcount($contact_id='')
@@ -976,7 +970,7 @@ class Rent_model Extends CI_Model{
 		return $result->result();
 	}
 
-    function getPropertyDetails($txn_id='0') {
+    function getPropertyDetails($txn_id='0' ,$property_type_id='') {
         $gid=$this->session->userdata('groupid');
         $roleid=$this->session->userdata('role_id');
         $session_id=$this->session->userdata('session_id');
@@ -988,10 +982,16 @@ class Rent_model Extends CI_Model{
             $cond = "";
         }
 
+        if ($property_type_id!='') {
+            $cond2 = " and property_typ_id=".$property_type_id;
+        } else {
+            $cond2 = "";
+        }
+
         $query=$this->db->query("select distinct owner_id from user_role_owners where user_id = '$session_id'");
         $result=$query->result();
         /*if (count($result)>0) {*/
-            $sql = "Select property_txn_id,unit_name from property_txn Where txn_status='Approved' ".$cond;
+            $sql = "Select property_txn_id,unit_name from property_txn Where txn_status='Approved' ".$cond.$cond2;
             $query=$this->db->query($sql);
             $result=$query->result();
             return $result;
@@ -1125,13 +1125,7 @@ class Rent_model Extends CI_Model{
     function getPropertyUtilities($txn_id='0', $property_id='0') {
         $gid=$this->session->userdata('groupid');
 
-        $sql = "select C.*, D.rent_id, D.landlord, D.tenant, D.na from 
-                (select A.*, B.amenity_id from amenity_master A 
-                left join purchase_amenity_details B on (A.id = B.amenity_id) 
-                where B.purchase_id='$property_id' order by A.amenity) C 
-                left join 
-                (select * from rent_utility_details where rent_id='$txn_id') D 
-                on (C.amenity_id = D.utility_id)";
+        $sql = "select * from rent_utility_details where rent_id='$txn_id'";
         $query=$this->db->query($sql);
         $result=$query->result();
         return $result;
@@ -1338,12 +1332,22 @@ class Rent_model Extends CI_Model{
     }
 
     function insertUtilityDetails($txn_id){
-        $utility=$this->input->post('utility[]');
-        $landlord=$this->input->post('landlord[]');
-        $tenant=$this->input->post('u_tenant[]');
-        $na=$this->input->post('na[]');
+        $utility=$this->input->post('utility');
+        $landlord=$this->input->post('landlord');
+        $tenant=$this->input->post('u_tenant');
+        $na=$this->input->post('na');
 
-        for($i=0;$i<count($utility);$i++) {
+         $data = array(     'utility_id'=>$utility,
+                            'rent_id' => $txn_id,
+                            'landlord' => $landlord,
+                            'tenant' => $landlord,
+                            'na' => $na
+                        );
+
+
+        $this->db->insert('rent_utility_details', $data);
+
+        /*for($i=0;$i<count($utility);$i++) {
             if($utility[$i]!="" && $utility[$i]!=null) {
                 $landlord_val = 0;
                 $tenant_val = 0;
@@ -1376,15 +1380,23 @@ class Rent_model Extends CI_Model{
                         );
                 $this->db->insert('rent_utility_details', $data);
             }
-        }
+        }*/
     }
 
     function insertNotificationDetails($txn_id){
-        $notification=$this->input->post('notification[]');
-        $owner=$this->input->post('owner[]');
-        $tenant=$this->input->post('n_tenant[]');
+        $notification=$this->input->post('email_notification');
+        $owner_val=$this->input->post('e_owners');
+        $tenant_val=$this->input->post('e_tenant');
 
-        for($i=0;$i<count($notification);$i++) {
+        $data = array(
+                            'rent_id' => $txn_id,
+                            'notification_id' => $notification,
+                            'owner' => $owner_val,
+                            'tenant' => $tenant_val
+                        );
+        $this->db->insert('rent_notification_details', $data);
+
+       /* for($i=0;$i<count($notification);$i++) {
             if($notification[$i]!="" && $notification[$i]!=null) {
                 $owner_val = 0;
                 $tenant_val = 0;
@@ -1410,7 +1422,7 @@ class Rent_model Extends CI_Model{
                         );
                 $this->db->insert('rent_notification_details', $data);
             }
-        }
+        }*/
     }
 
     function send_rent_intimation($r_id){
@@ -1546,6 +1558,126 @@ class Rent_model Extends CI_Model{
         $mailSent=send_email($from_email,  $from_email_sender, $to_email, $subject, $message);
 
         // echo $owner_name . ' ';
+    }
+
+
+    public function rent_3rd_party($status='',$property_id,$rent_id="")
+    {
+        $status;
+        $cond="";
+        if($status=='InProcess')
+        {
+            $cond =" Andrt.txn_status='In Process'";
+
+        }else if($status=='Pending')
+        {
+              $cond="And (rt.txn_status='Pending' or rt.txn_status='Delete')";
+        }else if($status=='All' || $status=='ALL')
+        {
+            $cond = "";
+        }else{
+            
+             $cond="And  rt.txn_status='$status'";
+        }
+
+        if($property_id!=""){
+
+            $cond =" And pt.property_txn_id=".$property_id;    
+        }
+
+        if($rent_id!=""){
+
+            $cond=" And rt.txn_id=".$rent_id;
+        }
+
+        $sql = "Select pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_name,pt.unit_no,
+                pt.unit_type,pt.p_image,pt.property_typ_id,rt.* from rent_txn rt
+                left join sales_txn st  on rt.property_id =st.property_id
+                left join property_txn pt  on rt.property_id =pt.property_txn_id
+                Where  st.property_id In(Select property_id from sales_txn) and rt.txn_status <> 'Inactive'".$cond;
+       $query = $this->db->query($sql);
+       $result = $query->result();
+       return $result;
+    }
+
+    public function get_thirdparty_allcount($value='')
+    {
+        $sql = "Select pt.*,rt.* from rent_txn rt
+                left join sales_txn st  on rt.property_id =st.property_id
+                left join property_txn pt  on rt.property_id =pt.property_txn_id
+                Where  rt.txn_status<> 'Inactive' and st.property_id In(Select property_id from sales_txn)";
+       $query = $this->db->query($sql);
+       $result = $query->result();
+       return $result;
+    }
+    public function rent_revenue_sharing($status='',$property_id='')
+    {
+        $status;
+        $cond="";
+        if($status=='InProcess')
+        {
+            if($cond=="")
+                    $cond = " Where C.txn_status='In Process'";
+            else
+                    $cond.=" And C.txn_status='In Process'";
+
+        }else if($status=='Pending')
+        {
+             if($cond=="")
+                   $cond=" Where (C.txn_status='Pending' or C.txn_status='Delete')";
+            else
+                    $cond=" And ( C.txn_status='Pending' or C.txn_status='Delete')";
+        }else if($status=='All' || $status=='ALL')
+        {
+            $cond = "";
+        }else{
+            
+             if($cond=="")
+                   $cond=" Where C.txn_status='$status'";
+            else
+                    $cond=" And  C.txn_status='$status'";
+        }
+
+       
+
+        if($property_id!=""){
+
+            if($cond=="")
+                    $cond = " Where C.property_txn_id=".$property_id;
+            else
+                    $cond.=" And C.property_txn_id=".$property_id;    
+        }
+
+        /*$sql = "Select * from (Select * from 
+                (Select Distinct(property_id) as property_id from revenue_schedule ) A
+                left join  
+                (Select * from property_txn ) B 
+                on A.property_id=B.property_txn_id) C".$cond;*/
+
+        $sql = "Select * from (Select  * from 
+                (Select property_id as property_id,rent_id as txn_id from revenue_schedule GROUP BY property_id,rent_id) A
+                left join  
+                (Select * from property_txn ) B 
+                on A.property_id=B.property_txn_id) C".$cond;
+
+
+
+       $query = $this->db->query($sql);
+       $result = $query->result();
+       return $result;
+    }
+
+    public function countAllrevenuesharing()
+    {
+        $sql = "Select * from (Select  * from 
+                (Select property_id as property_id,rent_id as txn_id from revenue_schedule GROUP BY property_id,rent_id) A
+                left join  
+                (Select * from property_txn ) B 
+                on A.property_id=B.property_txn_id) C";
+
+       $query = $this->db->query($sql);
+       $result = $query->result();
+       return $result;
     }
 }
 ?>

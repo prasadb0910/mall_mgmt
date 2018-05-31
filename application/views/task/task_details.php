@@ -201,10 +201,10 @@
 													<option value="0">Select</option>
 													<?php if(isset($taskdetail)) { 
 														for($i=0; $i<count($property); $i++) { ?>
-															<option value="<?php echo $property[$i]->txn_id; ?>" <?php if($taskdetail->property_id == $property[$i]->txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->p_property_name; ?></option>
+															<option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($taskdetail->property_id == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
 													<?php } } else { ?>
 															<?php for($i=0; $i<count($property); $i++) { ?>
-															<option value="<?php echo $property[$i]->txn_id; ?>"><?php echo $property[$i]->p_property_name; ?></option>
+															<option value="<?php echo $property[$i]->property_txn_id; ?>"><?php echo $property[$i]->unit_name; ?></option>
 													<?php } } ?>
 												</select>
 											</div>
