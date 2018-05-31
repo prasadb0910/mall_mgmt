@@ -31,25 +31,26 @@
         <div class=" container-fluid container-fixed-lg">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="">Dashboard</a></li>
-                <li class="breadcrumb-item active"><a href="#">Purchase List</a></li>
+                <li class="breadcrumb-item active"><a href="#">Revenue LIST</a></li>
             </ol>
 
             <div id="rootwizard">
+               
                 <ul class="nav nav-tabs nav-tabs-linetriangle nav-tabs-separator nav-stack-sm" role="tablist" data-init-reponsive-tabs="dropdownfx">
-                    <li class="nav-item all">
-                        <a class=""  href="index/purchase/checkstatus/All">All()</a>
+                   <li class="nav-item all">
+                        <a class="<?php if($checkstatus=='All') echo 'active'; ?>" href="<?=base_url('index.php/Rent_revenue_sharing/checkstatus/All')?>">ALL(<?php echo $all?>)</a>
                     </li>
                     <li class="nav-item approved">
-                        <a class=""  href="index/purchase/checkstatus/Approved">Approved()</a>
+                        <a class="<?php if($checkstatus=='Approved') echo 'active'; ?>"  href="<?=base_url('index.php/Rent_revenue_sharing/checkstatus/Approved')?>">Approved(<?php echo $approved?>)</a>
                     </li>
                     <li class="nav-item pending">
-                        <a class="" href="index/purchase/checkstatus/Pending">Pending()</a>
+                        <a class="<?php if($checkstatus=='Pending') echo 'active'; ?>" href="<?=base_url('index.php/Rent_revenue_sharing/checkstatus/Pending')?>">Pending(<?php echo $pending?>)</a>
                     </li>
                     <li class="nav-item rejected">
-                        <a class="" href="index/purchase/checkstatus/Rejected">Rejected()</a>
+                        <a class="<?php if($checkstatus=='Rejected') echo 'active'; ?>" href="<?=base_url('index.php/Rent_revenue_sharing/checkstatus/Rejected')?>">Rejected(<?php echo $rejected?>)</a>
                     </li>
                     <li class="nav-item inprocess">
-                        <a class=""  href="index/purchase/checkstatus/InProcess">Draft()</a>
+                        <a class="<?php if($checkstatus=='InProcess') echo 'active'; ?>"  href="<?=base_url('index.php/Rent_revenue_sharing/checkstatus/InProcess')?>">Draft(<?php echo $inprocess?>)</a>
                     </li>
                 </ul>
                 <br>
@@ -63,9 +64,10 @@
                                             <button class="btn1 active1 grid_btn" id="grid_btn_1"><i class="fa fa-th" aria-hidden="true"></i></button>
                                             <button class="btn1 list_btn" id="list_btn_1"><i class="fa fa-list" aria-hidden="true"></i></button>
 
-                                            <!--<a href="index/sale"><button class="btn btn-default pull-right m-r-10" type="submit"> <span>Sold List</span></button></a>
-											<a href="index/sale/addnew"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-minus tab-icon"></i> <span>Sell</span></button></a>-->
-											<a href="Rent_revenue_sharing/add"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Rent</span></button></a>
+                                            <?php
+                                              $baseurl = base_url("index.php/Rent_revenue_sharing/add");
+                                            ?>
+                                            <a href="<?=$baseurl?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Revenue</span></button></a>
                                         </div>
                                         <br>
                                       <div class="row grid">
@@ -73,7 +75,7 @@
                                             <div class=" col-md-6">
                                                 <div class="markup">
                                                     <div class="card card-transparent container-fixed-lg bg-white " style="background:#fff;">
-                                                        <div class="row">
+                                                       <div class="row">
                                                             <div class=" col-md-4">
                                                                 <img src="<?php echo base_url().$rent[$i]->p_image; ?>" alt="Paris" class="prop_img m-t-20 m-l-20" style="width:180px" onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
                                                             </div>
@@ -96,7 +98,6 @@
                                                                        <p class=" flat_info m-t-0 m-b-0"><b><?php echo $name->contact_name; ?></b></p> 
                                                                       <?php  }?>
                                                                       <p class=" flat_info m-t-0 m-b-0"><?php echo $rent[$i]->unit_name . ', ' . $rent[$i]->floor.' ' . 'Floor - ' . $rent[$i]->area.'  '.$rent[$i]->area_unit; ?></p>
-                                                                   
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -122,14 +123,15 @@
                                                             </div>
                                                         </div> 
                                                         <div class="col-md-12">
-                                                            <a href="<?php echo base_url().'index.php/Rent_revenue_sharing/view/'.$rent[$i]->txn_id; ?>" class=" pull-right invoice p-b-5     p-t-5" style="color:#5cb85c;">View <i class="fa fa-angle-right tab-icon"></i> </a>
-                                                            
+                                                            <a href="<?php echo base_url().'index.php/Rent_revenue_sharing/view/'.$rent[$i]->txn_id; ?>" 
+                                                                class=" pull-right invoice p-b-5     p-t-5" style="color:#5cb85c;">
+                                                                View <i class="fa fa-angle-right tab-icon"></i> </a>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                           <?php } ?>
-                                        </div>
+                                       </div>
                                         <div class="row list">
                                          <?php for($i=0; $i<count($rent); $i++) { ?>
                                             <div class=" col-md-12">

@@ -246,11 +246,12 @@ class Rent_real_estate extends CI_Controller
 
                 $data['utility'] = $this->rent_model->getPropertyUtilities($rid, $property_id);
 
-                $sql = "select A.*, B.notification_id, B.owner, B.tenant from 
+                $sql = "select * from rent_notification_details where rent_id = '$rid'";
+                /*$sql = "select A.*, B.notification_id, B.owner, B.tenant from 
                         (select * from notification_master) A 
                         left join 
                         (select * from rent_notification_details where rent_id = '$rid') B 
-                        on (A.id = B.notification_id) order by A.id";
+                        on (A.id = B.notification_id) order by A.id";*/
                 $query=$this->db->query($sql);
                 $result=$query->result();
                 $data['notification']=$result;
@@ -300,6 +301,8 @@ class Rent_real_estate extends CI_Controller
         if(count($result)>0) {
             $now=date('Y-m-d H:i:s');
             $modnow=date('Y-m-d H:i:s');
+
+            //maker_checker = no
 
             if($this->input->post('submit')=='Submit For Approval') {
                 $txn_status='Pending';
@@ -382,6 +385,8 @@ class Rent_real_estate extends CI_Controller
                 'advance_rent' => ($this->input->post('advance_rent')=='yes'?'1':'0'),
                 'advance_rent_amount' => ($this->input->post('advance_rent_amount')!=""?format_number($this->input->post('advance_rent_amount'),2):'')
                  );
+
+
             $this->db->insert('rent_txn', $data);
             $rid=$this->db->insert_id();    
             //$this->db->last_query();        
@@ -526,7 +531,7 @@ class Rent_real_estate extends CI_Controller
                     }
                 }
 
-                redirect(base_url().'index.php/Rent');
+                redirect(base_url().'index.php/Rent_real_estate');
             } else {
                 echo "Unauthorized access.";
             }
@@ -733,6 +738,9 @@ class Rent_real_estate extends CI_Controller
                     echo "Unauthorized access.";
                 }
             } else {
+
+                    
+
                 if($result[0]->r_edit==1) {
                     $deposit_paid_date=$this->input->post('deposit_paid_date');
                     if(validateDate($deposit_paid_date)) {
@@ -798,7 +806,10 @@ class Rent_real_estate extends CI_Controller
                     'advance_rent_amount' => ($this->input->post('advance_rent_amount')!=""?format_number($this->input->post('advance_rent_amount'),2):'')
                      );
                     
+                    /*Case 1 */
                     if ($rec_status=="Approved" && $maker_checker=='yes') {
+
+
                         $txn_fkid = $rid;
                         $data['txn_fkid'] = $txn_fkid;
                         $data['create_date'] = $create_date;
@@ -815,7 +826,12 @@ class Rent_real_estate extends CI_Controller
                         $logarray['action']='Rent Approved Record Updated';
                         $logarray['gp_id']=$gid;
                         $this->user_access_log_model->insertAccessLog($logarray);
+                        /* It will be sent for approval */
                     } else {
+
+                        /*Case 2   
+                         -- if status != approved and maker checker is no dircet updated */
+
                         $data['modified_date'] = $modnow;
                         $data['modified_by'] = $curusr;
 
@@ -830,6 +846,7 @@ class Rent_real_estate extends CI_Controller
                         $this->user_access_log_model->insertAccessLog($logarray);
                     }
 
+                    /*IF rec_status is not approved && maker cehck is no previous entries is  deleted */
                     if ($rec_status!="Approved" || $maker_checker!='yes') {
                         $this->db->where('rent_id', $rid);
                         $this->db->delete('rent_schedule');
@@ -857,6 +874,7 @@ class Rent_real_estate extends CI_Controller
                     }
 
                     // $this->rent_model->insertSchedule($rid, $txn_status);
+                    /*For the entries which is appproved and send for approval new entries is created*/
 
                     $this->rent_model->insertTenantDetails($rid);
                     $this->rent_model->insertEscalationDetails($rid);
@@ -871,10 +889,15 @@ class Rent_real_estate extends CI_Controller
                     $this->rent_model->setSchedule($rid, $txn_status);
 
                     $this->rent_model->setOtherSchedule($rid, $txn_status);
-                     if($this->input->post('revenue_due_day')!="")    
+                     if($this->input->post('revenue_due_day')!="")  
+                     {
+                        $this->db->where('rent_id', $rid);
+                        $this->db->delete('revenue_schedule');    
                         $this->rent_model->revenueSchedule($rid,$this->input->post('property'));
                     
-                    redirect(base_url().'index.php/Rent_real_estate');
+                     }
+                        
+                   redirect(base_url().'index.php/Rent_real_estate');
                 } else {
                     echo "Unauthorized access";
                 }
@@ -958,13 +981,14 @@ class Rent_real_estate extends CI_Controller
         if(count($result)>0) {
             $data['access']=$result;
             $data['rent']=$this->rent_model->rentData($status, $property_type_id,'');
-            $count_data=$this->rent_model->getAllcount();
+            $count_data=$this->rent_model->getallrentdatacount(1);
+
             $approved=0;
             $pending=0;
             $rejected=0;
             $inprocess=0;
 
-            if (count($result)>0){
+            if (count($count_data)>0){
                
                 for($i=0;$i<count($count_data);$i++){
                     if (strtoupper(trim($count_data[$i]->txn_status))=="APPROVED")

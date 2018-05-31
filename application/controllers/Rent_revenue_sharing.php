@@ -14,23 +14,30 @@ class Rent_revenue_sharing extends CI_Controller
     }
 
     public function index() {
-       $this->checkstatus('All');
+      $this->checkstatus('All');
       //$this->load->view('Rent_revenue_sharing/rent_revenue_list');
     }
+
   	public function add() {
          $data['property']= $this->rent_model->getPropertyDetails('',''); 
          load_view('Rent_revenue_sharing/rent_revenue_details',$data);
     }
 
-     public function edit($rid){
-        $this->get_record($rid, 'Rent_revenue_sharing/rent_revenue_details');
+    public function edit($rid,$revenue_id=''){
+      $this->get_record($rid, 'Rent_revenue_sharing/rent_revenue_details',$revenue_id);
     }
 
     public function get_month()
-    {
-        $where = array("property_id"=>$this->input->post("property_id"),
+    {   
+        if($this->input->post('edit')==1)
+            $where = array("property_id"=>$this->input->post("property_id"));
+        else
+            $where = array("property_id"=>$this->input->post("property_id"),
                         "status"=>0);
-        $result = $this->db->select("event_date,revenue_schedule_id")->where($where)->get('revenue_schedule')->result_array();
+
+        $this->db->select("event_date,revenue_schedule_id");
+        $this->db->where($where);
+        $result = $this->db->get('revenue_schedule')->result_array();
         foreach ($result as $key => $value) {
             $result[$key]['event_date']= date("F Y",strtotime($value['event_date']));
         }
@@ -38,7 +45,7 @@ class Rent_revenue_sharing extends CI_Controller
         echo json_encode($result);
     } 
 
-    public function save()
+    public function saverecord()
     {
         if($this->input->post('submit')=='Submit For Approval') {
             $txn_status='Pending';
@@ -105,7 +112,7 @@ class Rent_revenue_sharing extends CI_Controller
           if(count($result)>0) {
               $data['access']=$result;
               $data['rent']=$this->rent_model->rent_revenue_sharing($status,$property_id);
-              $count_data=$this->rent_model->getAllcount();
+              $count_data=$this->rent_model->countAllrevenuesharing();
               $approved=0;
               $pending=0;
               $rejected=0;
@@ -166,7 +173,7 @@ class Rent_revenue_sharing extends CI_Controller
          $this->get_record($rent_id, 'Rent_revenue_sharing/rent_revenue_view');
       }
 
-    public function get_record($rid, $view){
+    public function get_record($rid, $view,$revenue_id=''){
           $data['tax_details']=$this->rent_model->getAllTaxes('rent');
 
           $gid=$this->session->userdata('groupid');
@@ -203,7 +210,9 @@ class Rent_revenue_sharing extends CI_Controller
 
                   $data['maker_checker'] = $this->session->userdata('maker_checker');
                   $where = array("rent_id"=>$rid,"status"=>1);
-                  $result1 = $this->db->select("event_date,revenue_schedule_id,revenue_amount")->where($where)->get('revenue_schedule')->result_array();
+                  if($revenue_id!="")
+                    $where['revenue_schedule_id']=$revenue_id;
+                  $result1 = $this->db->select("event_date,revenue_schedule_id,revenue_amount,property_id")->where($where)->get('revenue_schedule')->result_array();
                   if(count( $result1)>0)
                   {
                     foreach ($result1 as $key => $value) {
@@ -231,6 +240,120 @@ class Rent_revenue_sharing extends CI_Controller
               $this->load->view('login/main_page');
           }
     }
+
+    public function updaterecord($r_id)
+    {
+      $gid=$this->session->userdata('groupid');
+      $roleid=$this->session->userdata('role_id');
+      $curusr=$this->session->userdata('session_id');
+      $modnow=date('Y-m-d H:i:s');
+      $maker_checker = $this->session->userdata('maker_checker');
+
+      $property_id = $this->input->post('property_id');
+      $revenue_id = $this->input->post('revenue_schedule_id');
+      $revenue_amount = format_number($this->input->post('revenue_amount'),2);
+
+      
+      $this->db->select("revenue_percentage,txn_id,revenue_amount,rs.event_date");
+      $this->db->join('revenue_schedule rs', 'rt.txn_id=rs.rent_id','left');
+      $this->db->where("rs.revenue_schedule_id",$revenue_id);
+      $result=$this->db->get("rent_txn rt")->result();
+     
+
+      $curusr=$this->session->userdata('session_id');
+      $now=date('Y-m-d');
+
+      if($result)
+      {   
+         $rent_id = $result[0]->txn_id;
+         $event_date = $result[0]->event_date;
+         $result1 = $this->db->query("Select rent_id,ac.event_name from rent_schedule rs
+                        left join actual_schedule ac on rs.rent_id=ac.fk_txn_id
+                        Where  ac.event_date='$event_date' and ac.event_name=rs.event_name and rs.event_type=ac.event_type
+                        and table_type ='Revenue' and ac.fk_txn_id=$rent_id")->result();
+          $this->db->last_query();
+          if(count($result1)==0)
+          {
+            $revenue_percentage = number_format($result[0]->revenue_percentage, 2);
+            $newprice = ($revenue_amount * $revenue_percentage)/100;
+
+            $data = array("event_name"=>'Revenue',
+                          "event_type"=>'Revenue',
+                          "rent_id" => $result[0]->txn_id,
+                          "event_date"=>$result[0]->event_date,
+                          "basic_cost"=>$newprice,
+                          "net_amount"=>$newprice,
+                          "net_amount"=>$newprice,
+                          "create_date" => $now,
+                          "create_by" => $curusr);
+
+            $where = array("rent_id"=>$result[0]->txn_id);
+            $this->db->where($where);
+            $this->db->update('rent_schedule', $data);
+            $insert_id = $this->db->insert_id();
+
+            $where = array("revenue_schedule_id"=>$revenue_id);
+            $set =   array("revenue_amount"=>$revenue_amount,
+                           "updated_rent_scehdule_id"=>$result[0]->txn_id,
+                           "revenue_sharing_amount"=>$newprice,
+                           "status"=>1);
+            $this->db->where($where);
+            $this->db->update("revenue_schedule",$set);
+
+          }
+          else
+          {
+            $this->session->set_flashdata('message', 'It cannnot be edited as payment is done for this entry');
+          }
+         
+          redirect(base_url().'index.php/Rent_revenue_sharing/add');
+      }
+
+    }
+
+    public function check_revenue()
+    {
+      $revenue_id = $this->input->post('revenue_id');
+      $this->db->select("revenue_percentage,txn_id,revenue_amount,rs.event_date");
+      $this->db->join('revenue_schedule rs', 'rt.txn_id=rs.rent_id','left');
+      $this->db->where("rs.revenue_schedule_id",$revenue_id);
+      $result=$this->db->get("rent_txn rt")->result();
+      $this->db->last_query();
+
+      $rent_id = $result[0]->txn_id;
+      $event_date = $result[0]->event_date;
+
+      $result = $this->db->query("Select rent_id,ac.event_name from rent_schedule rs
+                        left join actual_schedule ac on rs.rent_id=ac.fk_txn_id
+                        Where  ac.event_date='$event_date' and ac.event_name=rs.event_name and rs.event_type=ac.event_type
+                        and table_type ='Revenue' and ac.fk_txn_id=$rent_id")->result();
+     if(count($result)==0)
+        echo 0;
+      else
+        echo 1;
+
+    }
+
+    public function update($rid) {
+        if($this->input->post('submit')=='Approve' || $this->input->post('submit')=='Reject') {
+            $this->approve($rid);
+        } else  {
+            $this->updaterecord($rid);
+        }
+    }
+
+   public function approve($revenue_id)
+   {
+      $where['revenue_schedule_id']=$revenue_id;
+      $result1 = $this->db->select("event_date,revenue_schedule_id,revenue_amount,property_id,rent_id")->where($where)->get('revenue_schedule')->result_array();
+      $event_date = $result1[0]['event_date'];
+      $rent_id = $result1[0]['rent_id'];
+
+      $rent_schedule = $this->db->query("Select * from rent_schedule Where event_type='Revenue' and event_name='Revenue'  and event_date='$event_date' and rent_id='$rent_id' ")->result_array();
+      echo $this->db->last_query();
+      dump($rent_schedule);
+      die();
+   }
 
 }
 ?>

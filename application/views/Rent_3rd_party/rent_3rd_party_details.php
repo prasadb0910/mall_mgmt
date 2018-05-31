@@ -210,8 +210,7 @@
 <?php $this->load->view('templates/main_header');?>
 <div class="page-content-wrapper ">
 <div class="content">
-    <form id="form_rent_3rdparty" role="form" method ="post" action="<?=base_url().'index.php/Rent_3rd_party/saverecord'?>"  enctype="multipart/form-data">
-
+    <form id="form_rent" role="form" method="post" enctype="multipart/form-data" action="<?php if(isset($rent)){ echo base_url().'index.php/Rent_3rd_party/updaterecord/'.$r_id; } else { echo base_url().'index.php/Rent_3rd_party/saverecord';} ?>">        
     <div class=" container-fluid   container-fixed-lg ">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
@@ -331,21 +330,22 @@
                            </div>
 						   
 					  
-					             <div class="a m-b-20 tenant" id="tenant">
-					     <p class="m-t-20"> 	 <div class="div_heading ">
-                          <h5>Tenant </h5></div></p>
-             
-                         
+					      <div class="a m-b-20 tenant" id="tenant">
+					            <p class="m-t-20"> 	 
+                                    <div class="div_heading ">
+                                    <h5>Tenant </h5></div>
+                                </p>
                             <div class="row clearfix">
-                            
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default form-group-default-select2 required">
                                      <label class="">Tenant</label>
                                       <select class="form-control full-width" name="tenant[]" id="client" data-error="#err_client" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                         <option value="">Select</option>
                                          <?php for ($k=0; $k < count($contact) ; $k++) { ?>
-                                                <option value="<?php echo $contact[$k]->c_id; ?>" <?php if($contact[$k]->c_id==$tenants[0]->contact_id) { echo 'selected'; } ?>><?php echo $contact[$k]->contact_name; ?></option>
-                                            <?php } ?>
+                                                <option value="<?php echo $contact[$k]->c_id; ?>" <?php if(isset($tenants)){
+                                                        if($contact[$k]->c_id==$tenants[0]->contact_id) { echo 'selected'; }
+                                                     } ?>><?php echo $contact[$k]->contact_name; ?></option>
+                                                <?php } ?>
                                         </select>
                                         <div id="err_client"></div>
                                     </div>
@@ -363,7 +363,8 @@
                     <div class="form-footer" style="padding-bottom: 60px;">
                         <input type="hidden" id="submitVal" value="1" />
                         <a href="index/Purchase" class="btn btn-default-danger pull-left" >Cancel</a>
-                        <input type="submit" class="btn btn-default pull-right submit-form" name="submit" value="Submit" style="margin-right: 10px;" />
+                        <input type="submit" class="btn btn-success pull-right submit-form" name="submit" value="<?php if($maker_checker=='yes') echo 'Submit For Approval'; else echo 'Submit'; ?>" style="margin-right: 10px;" />
+
                         <input formnovalidate="formnovalidate" type="submit" class="btn btn-default pull-right save-form m-r-10" name="submit" value="Save" style="<?php// if($maker_checker!='yes' && isset($p_txn)) echo 'display:none'; ?>" />
                     </div>
                 </div>

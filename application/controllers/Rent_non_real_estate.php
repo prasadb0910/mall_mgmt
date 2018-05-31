@@ -42,6 +42,9 @@ class Rent_non_real_estate extends CI_Controller
             $result = $this->db->query("call sp_getcontact('Approved','$gid','Tenants')")->result();
             mysqli_next_result( $this->db->conn_id );
             $data['contact']=$result; 
+
+
+            
             $data['tax_details']=$this->rent_model->getAllTaxes('rent');
 
             $query=$this->db->query("select * from notification_master");
@@ -174,11 +177,10 @@ class Rent_non_real_estate extends CI_Controller
             // $response_purchase_consideration=$this->rent_model->insertSchedule($rid, $txn_status);
 
             $this->rent_model->insertTenantDetails($rid);
-            echo $this->document_model->insert_doc($rid, 'Property_Rent');
+            $this->document_model->insert_doc($rid, 'Property_Rent');
             $this->rent_model->setSchedule($rid, $txn_status);
             $this->rent_model->setOtherSchedule($rid, $txn_status);
 
-            die();
             redirect(base_url().'index.php/Rent_non_real_estate');
         } else {
             echo '<script>alert("You donot have access to this page.");</script>';
@@ -402,7 +404,7 @@ class Rent_non_real_estate extends CI_Controller
         if(count($result)>0) {
             $data['access']=$result;
             $data['rent']=$this->rent_model->rentData($status, $property_type_id,'');
-            $count_data=$this->rent_model->getAllcount();
+            $count_data=$this->rent_model->getallrentdatacount(2);
             $approved=0;
             $pending=0;
             $rejected=0;
@@ -872,7 +874,7 @@ class Rent_non_real_estate extends CI_Controller
                     }
                 }
 
-                redirect(base_url().'index.php/Rent');
+                redirect(base_url().'index.php/Rent_non_real_estate');
             } else {
                 echo "Unauthorized access.";
             }

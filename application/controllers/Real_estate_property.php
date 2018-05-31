@@ -299,17 +299,17 @@ class Real_estate_property extends CI_Controller
             {
                 $property_id = $data['property'][0]->property_txn_id;
                 $gid = $data['property'][0]->gp_id;
-                $data['approved']=$approved;
-                $data['pending']=$pending;
-                $data['rejected']=$rejected;
-                $data['inprocess']=$inprocess;
-                $data['all']=count($count_data);
                 $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
                 mysqli_next_result( $this->db->conn_id );
                 $data['owner_name']=$result; 
-                $data['checkstatus'] = $status;
             }
-
+            
+            $data['approved']=$approved;
+            $data['pending']=$pending;
+            $data['rejected']=$rejected;
+            $data['inprocess']=$inprocess;
+            $data['all']=count($count_data);
+            $data['checkstatus'] = $status;
             $data['maker_checker'] = $this->session->userdata('maker_checker');
             $data['property_type_id']=$property_type_id;
 

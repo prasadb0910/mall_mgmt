@@ -160,23 +160,24 @@ class Rent_3rd_party extends CI_Controller
             $this->rent_model->insertTenantDetails($rid);
             $this->rent_model->setSchedule($rid, $txn_status);
 
-            redirect(base_url().'index.php/Rent_real_estate');
+            redirect(base_url().'index.php/Rent_3rd_party');
         } else {
             echo '<script>alert("You donot have access to this page.");</script>';
             $this->load->view('login/main_page');
         }
     }
 
-    public function edit($rid){
-        $this->get_record($rid, 'Rent_3rd_party/rent_3rd_party_details');
-    }
+    public function edit($rid)
+        {
+            $this->get_record($rid, 'Rent_3rd_party/rent_3rd_party_details');
+        }
 
     public function view($rent_id)
-    {
-        $this->get_record($rent_id, 'Rent_3rd_party/rent_3rd_party_view');
-    }
+        {
+            $this->get_record($rent_id, 'Rent_3rd_party/rent_3rd_party_view');
+        }
 
-     public function get_record($rid, $view){
+    public function get_record($rid, $view){
             $data['tax_details']=$this->rent_model->getAllTaxes('rent');
             $gid=$this->session->userdata('groupid');
             $roleid=$this->session->userdata('role_id');
@@ -207,7 +208,8 @@ class Rent_3rd_party extends CI_Controller
                     }
 
 
-                    $result=$this->rent_model->rentData('All', '','',$rid);
+                    //$result=$this->rent_model->rentData('All', '','',$rid);
+                    $result=$this->rent_model->rent_3rd_party('All','',$rid);
                     if(count($result)>0) {
                         $data['rent']=$result;
                         if ($result[0]->txn_status=="Approved") {
@@ -384,7 +386,7 @@ class Rent_3rd_party extends CI_Controller
         if(count($result)>0) {
             $data['access']=$result;
             $data['rent']=$this->rent_model->rent_3rd_party($status,'');
-            $count_data=$this->rent_model->getAllcount();
+            $count_data=$this->rent_model->get_thirdparty_allcount();
             $approved=0;
             $pending=0;
             $rejected=0;
@@ -854,7 +856,7 @@ class Rent_3rd_party extends CI_Controller
                     }
                 }
 
-                redirect(base_url().'index.php/Rent');
+                redirect(base_url().'index.php/Rent_3rd_party');
             } else {
                 echo "Unauthorized access.";
             }

@@ -37,19 +37,19 @@
             <div id="rootwizard">
                 <ul class="nav nav-tabs nav-tabs-linetriangle nav-tabs-separator nav-stack-sm" role="tablist" data-init-reponsive-tabs="dropdownfx">
                     <li class="nav-item all">
-                        <a class=""  href="index.php/purchase/checkstatus/All">All()</a>
+                        <a class="<?php if($checkstatus=='All') echo 'active'; ?>" href="<?=base_url('index.php/Rent_3rd_party/checkstatus/ALL')?>">ALL(<?php echo $all; ?>)</a>
                     </li>
                     <li class="nav-item approved">
-                        <a class=""  href="index.php/purchase/checkstatus/Approved">Approved()</a>
+                        <a class="<?php if($checkstatus=='Approved') echo 'active'; ?>"  href="<?=base_url('index.php/Rent_3rd_party/checkstatus/Approved')?>">Approved(<?php echo $approved; ?>)</a>
                     </li>
                     <li class="nav-item pending">
-                        <a class="" href="index.php/purchase/checkstatus/Pending">Pending()</a>
+                        <a class="<?php if($checkstatus=='Pending') echo 'active'; ?>" href="<?=base_url('index.php/Rent_3rd_party/checkstatus/Pending')?>">Pending(<?php echo $pending; ?>)</a>
                     </li>
                     <li class="nav-item rejected">
-                        <a class="" href="index.php/purchase/checkstatus/Rejected">Rejected()</a>
+                        <a class="<?php if($checkstatus=='Rejected') echo 'active'; ?>" href="<?=base_url('index.php/Rent_3rd_party/checkstatus/Rejected')?>">Rejected(<?php echo $rejected; ?>)</a>
                     </li>
                     <li class="nav-item inprocess">
-                        <a class=""  href="index.php/purchase/checkstatus/InProcess">Draft()</a>
+                        <a class="<?php if($checkstatus=='InProcess') echo 'active'; ?>"  href="<?=base_url('index.php/Rent_3rd_party/checkstatus/InProcess/1')?>">Draft(<?php echo $inprocess; ?>)</a>
                     </li>
                 </ul>
                 <br>
@@ -70,7 +70,7 @@
                                            ?>
 
 
-                                            <a href="<?=$baseurl?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Property</span></button></a>
+                                            <a href="<?=$baseurl?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Rent</span></button></a>
                                         </div>
                                         <br>
                                       <div class="row grid">

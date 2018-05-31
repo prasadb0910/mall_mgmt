@@ -323,7 +323,10 @@
                                         <select class="form-control full-width" name="tenant[]" id="client" data-error="#err_client" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                             <option value="">Select</option>
                                              <?php for ($k=0; $k < count($contact) ; $k++) { ?>
-                                                    <option value="<?php echo $contact[$k]->c_id; ?>" <?php if($contact[$k]->c_id==$tenants[0]->contact_id) { echo 'selected'; } ?>><?php echo $contact[$k]->contact_name; ?></option>
+                                                    <option value="<?php echo $contact[$k]->c_id; ?>"
+                                                     <?php if(isset($tenants)){
+                                                        if($contact[$k]->c_id==$tenants[0]->contact_id) { echo 'selected'; }
+                                                     } ?>><?php echo $contact[$k]->contact_name; ?></option>
                                                 <?php } ?>
                                         </select>
                                         <div id="err_client"></div>
@@ -452,8 +455,9 @@
                     <div class="form-footer" style="padding-bottom: 60px;">
                         <input type="hidden" id="submitVal" value="1" />
                         <a href="index/Purchase" class="btn btn-default-danger pull-left" >Cancel</a>
-                        <input type="submit" class="btn btn-default pull-right submit-form" name="submit" value="Submit" style="margin-right: 10px;" />
-                        <input formnovalidate="formnovalidate" type="submit" class="btn btn-default pull-right save-form m-r-10" name="submit" value="Save" style="<?php// if($maker_checker!='yes' && isset($p_txn)) echo 'display:none'; ?>" />
+                        <input type="submit" class="btn btn-success pull-right submit-form" name="submit" value="<?php if($maker_checker=='yes') echo 'Submit For Approval'; else echo 'Submit'; ?>" style="margin-right: 10px;" />
+
+                        <input formnovalidate="formnovalidate" type="submit" class="btn btn-default pull-right save-form m-r-10" name="submit" value="Save" style="<?php if($maker_checker!='yes' && isset($rent)) echo 'display:none'; ?>" />
                     </div>
                 </div>
             </div>
