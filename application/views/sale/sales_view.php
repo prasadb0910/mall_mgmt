@@ -262,9 +262,15 @@
 
 										<!-- <a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> Delete</a> -->
 
-										<?php if(isset($s_txn)) { ?>
+										
+										
+										
+										
+										
+										
+											<?php if(isset($s_txn)) { ?>
 										<?php if($s_txn[0]->txn_status == 'Approved') { if(isset($access)) { if($access[0]->r_delete == 1) { ?> 
-											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> Delete <!-- <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> --> </a>
+											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i>  <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> </a>
 										<?php } } } else if($s_txn[0]->modified_by != '' && $s_txn[0]->modified_by != null) { if($s_txn[0]->modified_by!=$saleby) { if($s_txn[0]->txn_status != 'In Process') { if(isset($access)) { if($access[0]->r_approvals == 1) { ?> 
 			                              	<a href="#" class="dropdown-item edit" ><i class="pg-settings_small"></i> <input class="dropdown-item edit" type="submit" value="Approve" name="submit"/></a>
 											<a href="#" class="dropdown-item delete" ><i class="fa fa-trash"></i> <input class="dropdown-item delete" type="submit" value="Reject" name="submit"/></a>
@@ -278,6 +284,12 @@
 											<!-- <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> -->
 											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> Delete <!-- <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> --> </a>
 										<?php } } } ?>
+										
+										
+										
+										
+										
+										
 
 										<a href="#" class="dropdown-item print"><i class="fa fa-print"></i> Print</a>
 									</div>
@@ -300,11 +312,11 @@
 							<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2);">
 								<div class="row" style="">
 									<div class="col-md-6 rent">
-										<b style="font-size:22px;"><?=$tenant_count?></b><br>
+										<b style="font-size:22px;"><?php//$tenant_count?></b><br>
 										Tenant
 									</div>
 									<div class="col-md-6 rent" style="border-right:none;">
-										<b style="font-size:22px;" ><?=$maintenance_count?></b><br>
+										<b style="font-size:22px;" ><?php//$maintenance_count?></b><br>
 										Maintenance 
 									</div>
 								
@@ -324,16 +336,17 @@
 													<select  class="form-control full-width" id="property" name="property" onchange="loadclientdetail(); getdocuments();" data-init-plugin="select2" disabled>
 			                                          
 			                                            <?php if(isset($s_txn)) { 
-			                                                for($i=0; $i<count($property); $i++) { ?>
-			                                                    <option value="<?php echo $property[$i]->txn_id; ?>" <?php if($s_txn[0]->property_id == $property[$i]->txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->p_property_name; ?></option>
-			                                            <?php } } else { ?>
-			                                                    <?php for($i=0; $i<count($property); $i++) { ?>
-			                                                    <option value="<?php echo $property[$i]->txn_id; ?>"><?php echo $property[$i]->p_property_name; ?></option>
-			                                            <?php } } ?>
+                                                for($i=0; $i<count($property); $i++) { ?>
+                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($s_txn[0]->property_id == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
+                                            <?php } } else { ?>
+                                                    <?php for($i=0; $i<count($property); $i++) { ?>
+                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>"><?php echo $property[$i]->unit_name; ?></option>
+                                            <?php } } ?>
+											
 			                                        </select>
 												</div>
 											</div>
-											<div class="col-md-6">
+											<div class="col-md-6" style="display:none">
 												<div class="form-group form-group-default form-group-default-select2">
 													<label>Sub Property</label>
 													<select class="form-control full-width" id="sub_property" name="sub_property"   disabled>
@@ -364,7 +377,7 @@
 													<tr>
 														<th>Sr No.</th>
 														<th>Owner Name</th>
-														<th>% Share</th>
+														<!--<th>% Share</th>-->
 													</tr>
 												</thead>
 												<tbody>
@@ -373,7 +386,7 @@
 													<tr class="odd gradeX">
 														<td><?php echo $j+1; ?></td>
 														<td><?php echo $s_owner[$j]->c_name . ' ' . $s_owner[$j]->c_last_name; ?></td>
-														<td><?php if(isset($s_owner[$j]->pr_ownership_percent)){ echo format_money($s_owner[$j]->pr_ownership_percent,2); } else { echo ''; }?></td>
+														<!--<td><?php// if(isset($s_owner[$j]->pr_ownership_percent)){ echo format_money($s_owner[$j]->pr_ownership_percent,2); } else { echo ''; }?></td>-->
 													</tr>
 													<?php }} ?>
 												</tbody>

@@ -196,21 +196,26 @@
                             <p class="m-t-20"><b>Property Details<b></p>
                             <div class="row clearfix">
                                 <div class="col-md-6">
-                                    <div class="form-group form-group-default form-group-default-select2 required">
+                                    <div class="form-group form-group-default form-group-default-select2 ">
                                         <label class="">Property </label>
                                         <select  class="form-control full-width" id="property" name="property" onchange="loadclientdetail(); getdocuments();" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity" data-error="#property-error">
                                             <option value="">Select Property</option>
-                                            <?php if(isset($s_txn)) { 
+                                         
+											
+											
+											 <?php if(isset($s_txn)) { 
                                                 for($i=0; $i<count($property); $i++) { ?>
-                                                    <option value="<?php echo $property[$i]->txn_id; ?>" <?php if($s_txn[0]->property_id == $property[$i]->txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->p_property_name; ?></option>
+                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($s_txn[0]->property_id == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
                                             <?php } } else { ?>
                                                     <?php for($i=0; $i<count($property); $i++) { ?>
-                                                    <option value="<?php echo $property[$i]->txn_id; ?>"><?php echo $property[$i]->p_property_name; ?></option>
+                                                    <option value="<?php echo $property[$i]->property_txn_id; ?>"><?php echo $property[$i]->unit_name; ?></option>
                                             <?php } } ?>
+											
+											
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6" style="display:none">
                                     <div class="form-group form-group-default form-group-default-select2 required" id="subproperty" style="display:none;">
                                         <label class="">Sub Property </label>
                                         <select class="form-control full-width" id="sub_property" name="sub_property" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">

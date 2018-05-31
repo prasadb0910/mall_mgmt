@@ -205,11 +205,19 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default form-group-default-select2 required">
                                         <label class="">Type </label>
-                                        <select class="form-control full-width" name="unit_type" id="unit_type" data-error="#err_unit_type" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
+                                        <select class="form-control full-width" name="unit_type_id" id="unit_type_id" data-error="#err_unit_type" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                             <option value="">Select</option>
-                                           <option value="Hoarding" <?=(isset($p_txn[0]->unit_type) && $p_txn[0]->unit_type=='Hoarding'?'selected':'')?>>Hoarding</option>
-                                            <option value="Kiosks"  <?=(isset($p_txn[0]->unit_type) && $p_txn[0]->unit_type=='Kiosks'?'selected':'')?>>Kiosks</option>
+                                          
                                             
+											
+												 <?php if(isset($p_txn)) { 
+                                                for($i=0; $i<count($p_unit_type ); $i++) { ?>
+                                                    <option value="<?php echo $p_unit_type[$i]->id; ?>" <?php if($p_txn[0]->unit_type_id == $p_unit_type[$i]->id) { echo 'selected';} ?> ><?php echo $p_unit_type[$i]->unit_type; ?></option>
+                                            <?php } } else { ?>
+                                                    <?php for($i=0; $i<count($p_unit_type); $i++) { ?>
+                                                    <option value="<?php echo $p_unit_type[$i]->id; ?>"><?php echo $p_unit_type[$i]->unit_type; ?></option>
+                                            <?php } } ?>
+											
                                         </select>
                                         <div id="err_unit_type"></div>
                                     </div>
@@ -252,14 +260,14 @@
                         </div>
                       
                      
-             
-
-                    <div class="form-footer" style="padding-bottom: 60px;">
+             <div class="form-footer" style="padding-bottom: 60px;">
                         <input type="hidden" id="submitVal" value="1" />
-                        <a href="index/Purchase" class="btn btn-default-danger pull-left" >Cancel</a>
-                        <input type="submit" class="btn btn-default pull-right submit-form" name="submit" value="Submit" style="margin-right: 10px;" />
-                        <input formnovalidate="formnovalidate" type="submit" class="btn btn-default pull-right save-form m-r-10" name="submit" value="Save" style="<?php// if($maker_checker!='yes' && isset($p_txn)) echo 'display:none'; ?>" />
+                        <a href="<?php echo base_url(); ?>index.php/Sale" class="btn btn-default-danger pull-left" >Cancel</a>
+                        <input type="submit" class="btn btn-default pull-right submit-form" name="submit" value="<?php if($maker_checker=='yes') echo 'Submit For Approval'; else echo 'Submit'; ?>" style="margin-right: 10px;" />
+                        <input formnovalidate="formnovalidate" type="submit" class="btn btn-default pull-right save-form m-r-10" name="submit" value="Save" style="<?php if($maker_checker!='yes' && isset($p_txn)) echo 'display:none'; ?>" />
                     </div>
+
+                   
                 </div>
             </div>
         </div>

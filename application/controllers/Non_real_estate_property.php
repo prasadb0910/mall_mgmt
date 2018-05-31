@@ -17,7 +17,11 @@ class Non_real_estate_property extends CI_Controller
        $this->checkstatus('All','2');
     }
 	public function add() {
-       $this->load->view('Non_real_estate_property/non_real_estate_prop_details');
+			$query=$this->db->query("SELECT * FROM nrp_unit_type_master" );
+                $result=$query->result();
+                $data['p_unit_type']=$result;
+			  $data['maker_checker'] = $this->session->userdata('maker_checker');	
+       $this->load->view('Non_real_estate_property/non_real_estate_prop_details',$data);
     }
 
     public function saverecord()
@@ -46,6 +50,10 @@ class Non_real_estate_property extends CI_Controller
                 $query=$this->db->query("SELECT * FROM purchase_ownership_details WHERE purchase_id = '$pid'");
                 $result=$query->result();
                 $data['p_ownership']=$result;
+				$query=$this->db->query("SELECT * FROM nrp_unit_type_master" );
+                $result=$query->result();
+                $data['p_unit_type']=$result;
+				  $data['maker_checker'] = $this->session->userdata('maker_checker');
                 load_view('Non_real_estate_property/non_real_estate_prop_details',$data);
             } 
           else {
@@ -132,7 +140,7 @@ class Non_real_estate_property extends CI_Controller
                               $data = array('gp_id' => $gid,
                                   'property_typ_id'=>($this->input->post('type_id')?$this->input->post('type_id'):''),
                                   'unit_name'=> ($this->input->post('unit')?$this->input->post('unit'):''),
-                                  'unit_type'=> ($this->input->post('unit_type')?$this->input->post('unit_type'):''),
+                                  'unit_type_id'=> ($this->input->post('unit_type_id')?$this->input->post('unit_type_id'):''),
                                   'unit_no'=> ($this->input->post('unit_no')?$this->input->post('unit_no'):''),
                                   'floor'=> ($this->input->post('floor')?$this->input->post('floor'):''),
                                   'area'=> ($this->input->post('area')?$this->input->post('area'):''),
@@ -187,7 +195,7 @@ class Non_real_estate_property extends CI_Controller
                      $data = array('gp_id' => $gid,
                                   'property_typ_id'=>($this->input->post('type_id')?$this->input->post('type_id'):''),
                                   'unit_name'=> ($this->input->post('unit')?$this->input->post('unit'):''),
-                                  'unit_type'=> ($this->input->post('unit_type')?$this->input->post('unit_type'):''),
+                                  'unit_type_id'=> ($this->input->post('unit_type_id')?$this->input->post('unit_type_id'):''),
                                   'unit_no'=> ($this->input->post('unit_no')?$this->input->post('unit_no'):''),
                                   'floor'=> ($this->input->post('floor')?$this->input->post('floor'):''),
                                   'area'=> ($this->input->post('area')?$this->input->post('area'):''),
@@ -261,9 +269,9 @@ class Non_real_estate_property extends CI_Controller
     public function checkstatus($status='',$property_type_id=''){
             $result=$this->purchase_model->getAccess();
             $data['access']=$result;
-                $data['property']=$this->purchase_model->purchaseData($status,'',$property_type_id);
+            $data['property']=$this->purchase_model->purchaseData($status,'',$property_type_id);
 
-                $count_data=$this->purchase_model->getAllCountData();
+                $count_data=$this->purchase_model->getAllCountData($property_type_id);
                 $approved=0;
                 $pending=0;
                 $rejected=0;
@@ -287,20 +295,21 @@ class Non_real_estate_property extends CI_Controller
                 {
                     $property_id = $data['property'][0]->property_txn_id;
                     $gid = $data['property'][0]->gp_id;
-                    $data['approved']=$approved;
+                   
+                    $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
+                    mysqli_next_result( $this->db->conn_id );
+                    $data['owner_name']=$result; 
+                    
+                }
+					$data['approved']=$approved;
                     $data['pending']=$pending;
                     $data['rejected']=$rejected;
                     $data['inprocess']=$inprocess;
                     $data['all']=count($count_data);
-                    $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
-                    mysqli_next_result( $this->db->conn_id );
-                    $data['owner_name']=$result; 
-                    $data['checkstatus'] = $status;  
-                }
-                
+					$data['checkstatus'] = $status;  
                 $data['maker_checker'] = $this->session->userdata('maker_checker');
                 $data['property_type_id']=$property_type_id;
-
+		
                 load_view('Non_real_estate_property/non_real_estate_prop_list', $data);
     }
 

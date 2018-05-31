@@ -319,7 +319,7 @@
 										    <div class="col-md-6">
 			                                    <div class="form-group form-group-default">
 			                                        <label>Unit Type</label>
-			                                        <span class="label_addr"><?=$property[0]->unit_type?></span>
+			                                        <span class="label_addr"><?=$property[0]->np_unit_type?></span>
 			                                    </div>
 			                                </div>
 										   

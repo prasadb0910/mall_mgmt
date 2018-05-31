@@ -13,7 +13,7 @@ function getPropertyDetails($txn_id='0') {
     $roleid=$this->session->userdata('role_id');
     $session_id=$this->session->userdata('session_id');
 
-    $sql="select * from purchase_txn where gp_id = '$gid' and txn_status = 'Approved'";
+    $sql="select * from property_txn where gp_id = '$gid' and txn_status = 'Approved'";
     $query=$this->db->query($sql);
     $result=$query->result();
     return $result;

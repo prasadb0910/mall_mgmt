@@ -197,13 +197,13 @@
                                     </div>
                                 </div>
 							
-                                <div class="col-md-4">
+                                <div class="col-md-4" style="<?php if (isset($contact_type)) { if($contact_type!='All') echo 'padding-left: 0px!important'; }else if (isset($editcontact[0]->c_type)) { if($editcontact[0]->c_type!='All') echo 'padding-left: 0px!important'; } ?>">
                                     <div class="form-group form-group-default">
                                         <label>Date Of Birth</label>
                                         <input type="text" class="form-control date1" id="dob"  data-date-end-date="0d" name="date_of_birth" placeholder="Enter Here" value="<?php if (isset($editcontact)) { if($editcontact[0]->c_dob!='' && $editcontact[0]->c_dob!=null) echo date('d/m/Y',strtotime($editcontact[0]->c_dob)); } ?>">
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4" style="<?php if (isset($contact_type)) { if($contact_type!='All') echo 'padding-right:7px!important'; }else if (isset($editcontact[0]->c_type)) { if($editcontact[0]->c_type!='All')echo 'padding-right: 7px!important'; } ?>">
                                     <div class="form-group form-group-default">
                                         <label>Anniversary Date</label>
                                         <input type="text" class="form-control date1" id="date_of_anniversary" data-date-end-date="0d" name="date_of_anniversary" placeholder="Enter Here" value="<?php if (isset($editcontact)) { if($editcontact[0]->c_anniversarydate!='' && $editcontact[0]->c_anniversarydate!=null) echo date('d/m/Y',strtotime($editcontact[0]->c_anniversarydate)); } ?>">

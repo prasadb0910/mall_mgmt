@@ -73,16 +73,19 @@
                                                     <div class="card card-transparent container-fixed-lg bg-white " style="background:#fff;">
                                                         <div class="row">
                                                             <div class=" col-md-4">
-                                                                <img src="<?php echo base_url().$sales[0]->p_image; ?>" alt="Paris" class="prop_img m-t-20 m-l-20" style="width:180px" onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
+                                                                <img src="<?php echo base_url().$sales[$i]->p_image; ?>" alt="Paris" class="prop_img m-t-20 m-l-20" style="width:180px" onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
                                                             </div>
                                                             <div class=" col-md-8">
                                                                 <div class="card-header ">
-																 <div class="building_name"><b><?php echo $sales[$i]->p_display_name; ?></b></div>
-                                                                    <div class="owner_name"><H4 class="m-t-0 m-b-0"><?php echo $sales[$i]->owner_name; ?></H4></div>
+																 <div class="building_name"><b><?php echo $sales[$i]->unit_name; ?></b></div>
+                                                                    
+                                                                 <div class="owner_name"><H4 class="m-t-0 m-b-0">
+                                                                        
+                                                                    </H4></div>
                                                                 </div>
                                                                 <div class="card-block">
-                                                                    <p class=" flat_info m-t-0 m-b-0"><?php echo $sales[$i]->p_type . ', ' . $sales[$i]->pr_agreement_area . ' sf , ' . $sales[$i]->p_status; ?></p>
-																	<div class="address"><i class="fa fa-map-marker"></i> <?php if(isset($sales)) { echo $sales[0]->p_apartment . ' ' . $sales[0]->p_flatno . ' ' . $sales[0]->p_floor . ' ' . $sales[0]->p_wing . ' ' . $sales[0]->p_address . ' ' . $sales[0]->p_landmark . ' ' . $sales[0]->p_state . ' ' . $sales[0]->p_city . ' ' . $sales[0]->p_pincode . ' ' . $sales[0]->p_country; } ?></div>
+                                                                 
+                                                                    <p class=" flat_info m-t-0 m-b-0"><?php echo $sales[$i]->unit_name . ', ' . $sales[$i]->floor.' ' . 'Floor - ' . $sales[$i]->area.'  '.$sales[$i]->area_unit; ?></p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -108,14 +111,14 @@
                                             <div class=" col-md-12">
                                                 <div class="card card-transparent container-fixed-lg bg-white " style="background:#fff;">
                                                     <div class="row">
-                                                      <img src="<?php echo base_url().$sales[0]->p_image; ?>" alt="Paris" class="prop_img" style="max-width:100%;width:100px;max-height:100%;height:100px; border:none;padding: 8px;" onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
+                                                      <img src="<?php echo base_url().$sales[$i]->p_image; ?>" alt="Paris" class="prop_img" style="max-width:100%;width:100px;max-height:100%;height:100px; border:none;padding: 8px;" onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
                                                         <div class="info pull-left p-l-10" style="margin-top: 20px;text-align:left;width:35%">
-														 <div class="building_name"><?php echo $sales[$i]->p_display_name; ?></div>
-                                                            <div class="owner_name"><H4 class="m-t-0 m-b-0"><?php echo $sales[$i]->owner_name; ?></H4></div>
+														 <div class="building_name"><?php echo $sales[$i]->unit_name; ?></div>
+                                                         
                                                            
-                                                            <div class="address"><i class="fa fa-map-marker"></i> <?php if(isset($sales)) { echo $sales[0]->p_apartment . ' ' . $sales[0]->p_flatno . ' ' . $sales[0]->p_floor . ' ' . $sales[0]->p_wing . ' ' . $sales[0]->p_address . ' ' . $sales[0]->p_landmark . ' ' . $sales[0]->p_state . ' ' . $sales[0]->p_city . ' ' . $sales[0]->p_pincode . ' ' . $sales[0]->p_country; } ?></div>
+                                                          
                                                         </div>
-                                                        <p class=" flat_info m-t-0 m-b-0 pull-left" style="margin-top: 45px;padding-left: 20px;"><?php echo $sales[$i]->p_type . ', ' . $sales[$i]->pr_agreement_area . ' sf , ' . $sales[$i]->p_status; ?></p>
+                                                        <p class=" flat_info m-t-0 m-b-0 pull-left" style="margin-top: 45px;padding-left: 20px;"><?php echo $sales[$i]->unit_name . ', ' . $sales[$i]->floor.' ' . 'Floor - ' . $sales[$i]->area.'  '.$sales[$i]->area_unit; ?></p>
                                                         <div class="prop_btns">
                                                             <div class="pull-left" style="margin-top: 40px;padding-left: 20px;">
                                                                 <a href="<?php echo base_url().'index.php/accounting/checkstatus/All/' . $sales[$i]->property_id; ?>" data-toggle="tooltip" data-placement="bottom" title="Accounting"><i style="font-size:22px;" class="fa fa-inr"></i></a>

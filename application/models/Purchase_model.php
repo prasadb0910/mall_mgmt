@@ -145,7 +145,7 @@ function purchaseData($status='', $property_id='',$property_type_id=''){
     $result=$query->result();
 
     if (count($result)>0) {
-       $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
+       $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,ut.unit_type as np_unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
         case when st.property_id is null then 'Vacant' else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
          from property_txn E 
         left JOIN purchase_ownership_details pd on E.property_txn_id=pd.purchase_id
@@ -154,25 +154,27 @@ function purchaseData($status='', $property_id='',$property_type_id=''){
         left join property_type prt on E.property_typ_id=prt.property_type_id
         left join rent_txn rt on E.property_txn_id=rt.property_id
         left join sales_txn st on E.property_txn_id=st.property_id
+        left join nrp_unit_type_master ut on E.unit_type_id=ut.id
         Where E.property_typ_id='$property_type_id'
-        ".$cond.$cond2."
+         ".$cond.$cond2."
         GROUP BY  
-        E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,owner_name,rt.property_id,prt.property_type,E.p_image,E.location";
+        E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_type_id,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,owner_name,rt.property_id,prt.property_type,E.p_image,E.location";
     } else {
-        $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
+        $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,ut.unit_type as np_unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
         case when st.property_id is null then 'Vacant' else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
          from property_txn E 
         left JOIN purchase_ownership_details pd on E.property_txn_id=pd.purchase_id
         left join property_type prt on E.property_typ_id=prt.property_type_id
         left join rent_txn rt on E.property_txn_id=rt.property_id
         left join sales_txn st on E.property_txn_id=st.property_id
+		left join nrp_unit_type_master ut on E.unit_type_id=ut.id
         Where E.property_typ_id='$property_type_id' 
-        ".$cond.$cond2."
+     ".$cond.$cond2."
         GROUP BY  
-        E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,rt.property_id,prt.property_type,E.p_image,E.location";
+        E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_type_id,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,rt.property_id,prt.property_type,E.p_image,E.location";
     }
 
-    $sql;
+
     $query=$this->db->query($sql);
     return $query->result();
 }
@@ -182,7 +184,7 @@ public function get_ownername($property_txn_id)
     return $this->db->select("unit_name,property_txn_id")->get('')->result();
 }
 
-function getAllCountData(){
+function getAllCountData($property_type_id=''){
     $gid=$this->session->userdata('groupid');
     $roleid=$this->session->userdata('role_id');
     $session_id=$this->session->userdata('session_id');
@@ -190,9 +192,9 @@ function getAllCountData(){
     $query=$this->db->query("select distinct owner_id from user_role_owners where user_id = '$session_id'");
     $result=$query->result();
 
- 
-       if (count($result)>0) {
-       $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
+
+      if (count($result)>0) {
+       $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,ut.unit_type as np_unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
         case when st.property_id is null then 'Vacant' else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
          from property_txn E 
         left JOIN purchase_ownership_details pd on E.property_txn_id=pd.purchase_id
@@ -201,28 +203,33 @@ function getAllCountData(){
         left join property_type prt on E.property_typ_id=prt.property_type_id
         left join rent_txn rt on E.property_txn_id=rt.property_id
         left join sales_txn st on E.property_txn_id=st.property_id
-        Where E.property_typ_id='1'
+		left join nrp_unit_type_master ut on E.unit_type_id=ut.id
+        Where E.property_typ_id='$property_type_id'
       
         GROUP BY  
-        E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,owner_name,rt.property_id,prt.property_type,E.p_image,E.location";
+        E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_type_id,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,owner_name,rt.property_id,prt.property_type,E.p_image,E.location";
     } else {
-        $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
+        $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
         case when st.property_id is null then 'Vacant' else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
          from property_txn E 
         left JOIN purchase_ownership_details pd on E.property_txn_id=pd.purchase_id
         left join property_type prt on E.property_typ_id=prt.property_type_id
         left join rent_txn rt on E.property_txn_id=rt.property_id
         left join sales_txn st on E.property_txn_id=st.property_id
-        Where E.property_typ_id='1' 
+		left join nrp_unit_type_master ut on E.unit_type_id=ut.id
+        Where E.property_typ_id='$property_type_id' 
      
         GROUP BY  
-        E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,rt.property_id,prt.property_type,E.p_image,E.location";
+        E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_type_id,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,rt.property_id,prt.property_type,E.p_image,E.location";
     }
+
+	
 
     $query=$this->db->query($sql);
     $result=$query->result();
     return $result;
 }
+
 
 function getAllTaxes($txn_type){
 	$this->db->select('tax_id,tax_name,tax_percent,txn_type');
@@ -257,6 +264,7 @@ function insertRecord($txn_status){
                   'property_typ_id'=>($this->input->post('type_id')?$this->input->post('type_id'):''),
                   'unit_name'=> ($this->input->post('unit')?$this->input->post('unit'):''),
                   'unit_type'=> ($this->input->post('unit_type')?$this->input->post('unit_type'):''),
+                  'unit_type_id'=> ($this->input->post('unit_type_id')?$this->input->post('unit_type_id'):''),
                   'unit_no'=> ($this->input->post('unit_no')?$this->input->post('unit_no'):''),
                   'floor'=> ($this->input->post('floor')?$this->input->post('floor'):''),
                   'area'=> ($this->input->post('area')?$this->input->post('area'):''),

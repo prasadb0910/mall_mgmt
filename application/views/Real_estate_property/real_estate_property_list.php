@@ -10,7 +10,7 @@
 
     <style>
          <?php if($maker_checker!='yes') { ?>
-       .approved {
+			.approved {
                display: none !important;
             }
              .pending {

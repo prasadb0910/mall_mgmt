@@ -70,7 +70,7 @@ class Real_estate_property extends CI_Controller
                 $query=$this->db->query("SELECT * FROM purchase_ownership_details WHERE purchase_id = '$pid'");
                 $result=$query->result();
                 $data['p_ownership']=$result;
-
+				$data['maker_checker'] = $this->session->userdata('maker_checker');
                 load_view('Real_estate_property/real_estate_property_details',$data);
             } 
           else {
@@ -183,7 +183,22 @@ class Real_estate_property extends CI_Controller
                     } else {
                         $purdt=formatdate($purdt);
                     }
-                    
+                    $data = array('gp_id' => $gid,
+                                  'property_typ_id'=>($this->input->post('type_id')?$this->input->post('type_id'):''),
+                                  'unit_name'=> ($this->input->post('unit')?$this->input->post('unit'):''),
+                                  'unit_type'=> ($this->input->post('unit_type')?$this->input->post('unit_type'):''),
+                                  'unit_no'=> ($this->input->post('unit_no')?$this->input->post('unit_no'):''),
+                                  'floor'=> ($this->input->post('floor')?$this->input->post('floor'):''),
+                                  'area'=> ($this->input->post('area')?$this->input->post('area'):''),
+                                  'area_unit'=> ($this->input->post('area_unit')?$this->input->post('area_unit'):''),
+                                  'allocated_cost'=>($this->input->post('allocated_cost')?$this->input->post('allocated_cost'):''),
+                                  'allocated_maintenance'=>($this->input->post('allocated_maintenance')?$this->input->post('allocated_maintenance'):''),
+                                  'txn_status'=>$txn_status,
+                                  'location'=>($this->input->post('location')?$this->input->post('location'):''),
+                                  'added_on' =>date('Y-m-d'),
+                                  'added_by' => $curusr,
+                                  'updated_on'=>date('Y-m-d')
+                                );
                     if ($rec_status=="Approved" && $maker_checker=='yes') {
                         $txn_fkid = $pid;
                         $data['txn_fkid'] = $txn_fkid;
@@ -270,7 +285,7 @@ class Real_estate_property extends CI_Controller
             $data['access']=$result;
             $data['property']=$this->purchase_model->purchaseData($status,'',$property_type_id);
 
-            $count_data=$this->purchase_model->getAllCountData();
+            $count_data=$this->purchase_model->getAllCountData($property_type_id);
             $approved=0;
             $pending=0;
             $rejected=0;
@@ -294,19 +309,20 @@ class Real_estate_property extends CI_Controller
             {
                 $property_id = $data['property'][0]->property_txn_id;
                 $gid = $data['property'][0]->gp_id;
-                $data['approved']=$approved;
-                $data['pending']=$pending;
-                $data['rejected']=$rejected;
-                $data['inprocess']=$inprocess;
-                $data['all']=count($count_data);
+              
                 $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
                 mysqli_next_result( $this->db->conn_id );
                 $data['owner_name']=$result; 
-                $data['checkstatus'] = $status;
+                
             }
-
-            $data['maker_checker'] = $this->session->userdata('maker_checker');
-            $data['property_type_id']=$property_type_id;
+					$data['approved']=$approved;
+                    $data['pending']=$pending;
+                    $data['rejected']=$rejected;
+                    $data['inprocess']=$inprocess;
+                    $data['all']=count($count_data);
+					$data['checkstatus'] = $status;  
+					$data['maker_checker'] = $this->session->userdata('maker_checker');
+					$data['property_type_id']=$property_type_id;
 
             load_view('Real_estate_property/real_estate_property_list', $data);
     }

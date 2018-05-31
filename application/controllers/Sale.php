@@ -161,14 +161,8 @@ class Sale extends CI_Controller
             $docs=$this->document_model->add_new_doc('', 'sale');
             $data=array_merge($data, $docs);
 
-            $sql = "select * from 
-                    (select A.c_id, case when A.c_owner_type='individual' 
-                        then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                        else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as contact_name 
-                    from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-                    where A.c_status='Approved' and A.c_gid='$gid') A order by A.contact_name";
-            $query=$this->db->query($sql);
-            $result=$query->result();
+            $result = $this->db->query("call sp_getcontact('Approved','$gid','Tenants')")->result();
+            mysqli_next_result( $this->db->conn_id );
             $data['contact']=$result;
 
             $data['maker_checker'] = $this->session->userdata('maker_checker');
@@ -409,7 +403,7 @@ class Sale extends CI_Controller
                 $result= $this->sales_model->salesData('All','',$pid);
                 $data['s_txn']=$result;
                 if(count($result)>0) {
-                    $ptype = $result[0]->p_type;
+                   // $ptype = $result[0]->p_type;
 
                     if ($result[0]->txn_status=="Approved") {
                         $txn_status=1;
@@ -751,12 +745,12 @@ class Sale extends CI_Controller
                                 $logarray['gp_id']=$gid;
                                 $this->user_access_log_model->insertAccessLog($logarray);
                             } else {
-                                $this->db->query("Insert into sales_txn (property_id, sub_property_id, date_of_sale, 
+                                $this->db->query("Insert into sales_txn (property_txn_id, sub_property_id, date_of_sale, 
                                                  sales_consideration, cost_of_purchase, cost_of_acquisition, 
                                                  profit_loss, gp_id, txn_status, created_by, create_date, modified_by, 
                                                  modified_date, approved_by, approved_date, remarks, sales_consideration, 
                                                  txn_fkid, rejected_by, rejected_date, maker_remark, p_image, p_image_name) 
-                                                 Select property_id, sub_property_id, date_of_sale, 
+                                                 Select property_txn_id, sub_property_id, date_of_sale, 
                                                  sales_consideration, cost_of_purchase, cost_of_acquisition, 
                                                  profit_loss, '$gp_id', '$txn_status', '$created_by', '$create_date', '$curusr', 
                                                  '$modnow', approved_by, approved_date, '$txnremarks', sales_consideration, 

@@ -40,9 +40,8 @@ class Task extends CI_Controller
                 }
 
                 $sql = "select A.*, B.c_name, B.c_last_name, B.c_full_name from 
-                        (select A.*, B.p_property_name, B.p_display_name, B.p_address, B.p_landmark, B.p_state, B.p_city, 
-                            B.p_pincode, B.p_country, C.sp_name 
-                        from user_task_detail A left join purchase_txn B on (A.property_id = B.txn_id) left join 
+                        (select A.*, B.unit_name,C.sp_name 
+                        from user_task_detail A left join property_txn B on (A.property_id = B.property_txn_id) left join 
                             sub_property_allocation C on (A.sub_property_id = C.txn_id)
                         where A.gp_id = '$gid' ".$cond.") A 
                         left join 
