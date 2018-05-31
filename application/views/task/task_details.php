@@ -197,8 +197,8 @@
 											<h3>Location Information</h3>
 											<div class="form-group form-group-default form-group-default-select2 required">
 												<label class="">Select Property</label>
-												<select class="form-control full-width" id="property" name="property" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
-													<option value="0">Select</option>
+												<select class="form-control full-width" id="property" name="property" data-error="#err_unit_name" data-placeholder="Select" data-init-plugin="select2" >
+													    <option value="">Select</option>
 													<?php if(isset($taskdetail)) { 
 														for($i=0; $i<count($property); $i++) { ?>
 															<option value="<?php echo $property[$i]->property_txn_id; ?>" <?php if($taskdetail->property_id == $property[$i]->property_txn_id) { echo 'selected';} ?> ><?php echo $property[$i]->unit_name; ?></option>
@@ -206,7 +206,9 @@
 															<?php for($i=0; $i<count($property); $i++) { ?>
 															<option value="<?php echo $property[$i]->property_txn_id; ?>"><?php echo $property[$i]->unit_name; ?></option>
 													<?php } } ?>
+													
 												</select>
+												 <div id="err_unit_name"></div>
 											</div>
 											<div class="form-group form-group-default form-group-default-select2 required" id="subproperty" style="display:none;">
 												<label class="">Select Sub Property</label>

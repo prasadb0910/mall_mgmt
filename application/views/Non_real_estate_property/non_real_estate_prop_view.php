@@ -286,7 +286,7 @@
                         </div>
 		                    </div>
 					
-							<!-- <div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2);">
+							<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2);">
 								<div class="row" style="">
 									<div class="col-md-6 rent">
 										<b style="font-size:22px;">1</b><br>
@@ -297,7 +297,7 @@
 										Maintenance 
 									</div>
 								</div>
-							</div> -->
+							</div>
 						</div>
 						
 						<div class="col-md-9">

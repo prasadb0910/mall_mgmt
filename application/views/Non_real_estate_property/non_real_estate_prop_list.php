@@ -77,9 +77,13 @@
 
                                             }
                                             ?>
+										
+											
+										
 
-
+                                            
                                             <a href="<?=$baseurl?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Property</span></button></a>
+												<a href="<?php echo base_url()."index.php/Nrp_unit_type/"?>" style="<?php if($property_type_id==1){echo 'display:none';}?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Unit Type</span></button></a>
                                         </div>
                                         <br>
                                          <div class="row grid">
