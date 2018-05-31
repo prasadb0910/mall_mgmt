@@ -77,11 +77,8 @@
 
                                             }
                                             ?>
-
-
-                                            <a href="<?= base_url("index.php/Nrp_Unit_Type")?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Property Unit Type</span></button></a>
-
-                                             <a href="<?=$baseurl?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Property</span></button></a>
+                                            <a href="<?= base_url("index.php/Nrp_Unit_Type")?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Unit Type</span></button></a>
+                                            <a href="<?=$baseurl?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Property</span></button></a>
                                         </div>
                                         <br>
                                          <div class="row grid">
@@ -171,6 +168,10 @@
         </div>
     </div>
 
+
+
+
+    
     <?php $this->load->view('templates/footer');?>
 </div>
 </div>

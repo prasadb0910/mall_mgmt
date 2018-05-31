@@ -291,7 +291,7 @@
 		                            <label for="image-upload" id="image-label"><i class="fa fa-cloud-upload"></i><span>Upload Photo</span></label>
 		                        </div> -->
 		                    </div>
-					<!-- 
+				
 							<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2);">
 								<div class="row" style="">
 									<div class="col-md-6 rent">
@@ -303,7 +303,7 @@
 										Maintenance 
 									</div>
 								</div>
-							</div> -->
+							</div> 
 						</div>
 						
 						<div class="col-md-9">

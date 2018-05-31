@@ -3790,6 +3790,9 @@ $("#task_detail").validate({
         description: {
             required: true
         },
+		property: {
+            required: true
+        },
         // assigned: {
         //     required: true
         // },
