@@ -1038,6 +1038,7 @@ class Rent_real_estate extends CI_Controller
         } else {
             echo '<script>alert("You donot have access to this page.");</script>';
             $this->load->view('login/main_page');
+            
         }
     }
 

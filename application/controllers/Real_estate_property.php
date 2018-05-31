@@ -328,6 +328,7 @@ class Real_estate_property extends CI_Controller
             $data['checkstatus'] = $status;
             $data['maker_checker'] = $this->session->userdata('maker_checker');
             $data['property_type_id']=$property_type_id;
+            
 
             load_view('Real_estate_property/real_estate_property_list', $data);
     }
