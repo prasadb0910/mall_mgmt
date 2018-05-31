@@ -32,8 +32,6 @@ class Rent_model Extends CI_Model{
                     $cond.="And  rt.txn_status='$status'";
         }
 
-       
-
         if($property_id!=""){
 
             if($cond=="")

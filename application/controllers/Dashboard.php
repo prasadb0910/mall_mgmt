@@ -107,7 +107,7 @@ class Dashboard extends CI_Controller
         $data['rent']=array();
         $data['website']=array();
 
-        $sql="select * from purchase_txn where gp_id = '$gid' and txn_status = 'Approved'";
+        $sql="select * from property_txn where gp_id = '$gid' and txn_status = 'Approved'";
         $query=$this->db->query($sql);
         $result=$query->result();
         if(count($result)>0){
@@ -138,21 +138,19 @@ class Dashboard extends CI_Controller
                 (select E.*, F.txn_id as sale_id from 
                 (select C.*, D.txn_id as rent_id from 
                 (select A.*, 0 as sp_id from 
-                (select txn_id from purchase_txn where gp_id='$gid' and txn_status = 'Approved') A 
+                (select txn_id from property_txn where gp_id='$gid' and txn_status = 'Approved') A 
                 union all
                 select A.txn_id, B.txn_id as sp_id from 
-                (select txn_id from purchase_txn where gp_id='$gid' and txn_status = 'Approved') A 
+                (select txn_id from property_txn where gp_id='$gid' and txn_status = 'Approved') A ) B 
+                on (A.txn_id=B.property_txn_id) where B.txn_id is not null) C 
                 left join 
-                (select txn_id, property_id from sub_property_allocation where gp_id='$gid' and txn_status = 'Approved') B 
-                on (A.txn_id=B.property_id) where B.txn_id is not null) C 
-                left join 
-                (select txn_id, property_id, case when sub_property_id is null then 0 else sub_property_id end as sub_property_id 
+                (select txn_id, '' as sub_property_id 
                     from rent_txn where gp_id='$gid' and txn_status = 'Approved') D 
-                on (C.txn_id = D.property_id and C.sp_id = D.sub_property_id)) E 
+                on (C.txn_id = D.property_txn_id and C.sp_id = D.sub_property_id)) E 
                 left join 
-                (select txn_id, property_id, case when sub_property_id is null then 0 else sub_property_id end as sub_property_id 
+                (select txn_id, property_id,'' as sub_property_id 
                     from sales_txn where gp_id='$gid' and txn_status = 'Approved') F 
-                on (E.txn_id = F.property_id and E.sp_id = F.sub_property_id)) G) H";
+                on (E.txn_id = F.property_id )) G) H";
         $query=$this->db->query($sql);
         $result=$query->result();
         $data['property_cnt']=$result;

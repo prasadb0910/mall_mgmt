@@ -55,6 +55,7 @@ class Nrp_Unit_Type extends CI_Controller
                     'created_date' => $now
                 );
 
+                if($this->input->post('unit_type')!="")
                 $this->db->insert('nrp_unit_type_master',$data);
                 $logarray['table_id']=$this->db->insert_id();
                 $logarray['module_name']='Expense Category';

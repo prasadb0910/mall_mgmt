@@ -21,17 +21,29 @@ class Real_estate_property extends CI_Controller
     }
 
 	public function add() {
+
         $gid=$this->session->userdata('groupid');
-        $result = $this->db->query("call sp_getcontact('Approved','$gid','Owners')")->result();
-        mysqli_next_result( $this->db->conn_id );
-        $data['owner']=$result;
+        $roleid=$this->session->userdata('role_id');
+        $session_id=$this->session->userdata('session_id');
+        $query=$this->db->query("SELECT * FROM user_role_options WHERE section = 'Rent' AND role_id='$roleid' AND r_insert = 1");
+        $result=$query->result();
+        if(count($result)>0) {
+            $gid=$this->session->userdata('groupid');
+            $result = $this->db->query("call sp_getcontact('Approved','$gid','Owners')")->result();
+            mysqli_next_result( $this->db->conn_id );
+            $data['owner']=$result;
+            
+            $sresult = $this->db->query("call sp_getcontact('Approved','$gid','')")->result();
+            mysqli_next_result( $this->db->conn_id );
+            $data['contact']=$sresult;
+            $data['maker_checker'] = $this->session->userdata('maker_checker');
         
-        $sresult = $this->db->query("call sp_getcontact('Approved','$gid','')")->result();
-        mysqli_next_result( $this->db->conn_id );
-        $data['contact']=$sresult;
-        $data['maker_checker'] = $this->session->userdata('maker_checker');
-    
-        load_view('Real_estate_property/real_estate_property_details',$data);
+            load_view('Real_estate_property/real_estate_property_details',$data);
+        }else {
+            echo '<script>alert("You donot have access to this page.");</script>';
+            $this->load->view('login/main_page');
+        }
+        
     }
 
     public function saverecord()
@@ -105,14 +117,14 @@ class Real_estate_property extends CI_Controller
             if(count($res)>0) {
                 $rec_status = $res[0]->txn_status;
                 $gp_id = $res[0]->gp_id;
-                $created_by = $res[0]->added_by;
-                $create_date = $res[0]->added_on;
+                $added_by = $res[0]->added_by;
+                $added_on = $res[0]->added_on;
             } else {
                 $rec_status = 'In Process';
                 $txn_fkid = '';
                 $gp_id = $gid;
-                $created_by = $curusr;
-                $create_date = $now;
+                $added_by = $curusr;
+                $added_on = $now;
             }
 
             if($txn_status=='Delete') {
@@ -207,15 +219,15 @@ class Real_estate_property extends CI_Controller
                     if ($rec_status=="Approved" && $maker_checker=='yes') {
                         $txn_fkid = $pid;
                         $data['txn_fkid'] = $txn_fkid;
-                        $data['create_date'] = $create_date;
-                        $data['created_by'] = $created_by;
-                        $data['modified_date'] = $modnow;
-                        $data['modified_by'] = $curusr;
+                        $data['added_on'] = $added_on;
+                        $data['added_by'] = $added_by;
+                        $data['updated_on'] = $modnow;
+                        $data['updated_by'] = $curusr;
 
-                        $this->db->insert('propert_txn',$data);
+                        $this->db->insert('property_txn',$data);
                         $pid=$this->db->insert_id();
 
-                        $sql = "update propert_txn A, purchase_txn B set A.p_image = B.p_image, A.p_image_name = B.p_image_name 
+                        $sql = "update property_txn A, property_txn B set A.p_image = B.p_image, A.p_image_name = B.p_image_name 
                                 where A.property_txn_id = '$pid' and B.property_txn_id = '$txn_fkid'";
                         $this->db->query($sql);
                         

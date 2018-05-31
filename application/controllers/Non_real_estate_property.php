@@ -17,6 +17,18 @@ class Non_real_estate_property extends CI_Controller
        $this->checkstatus('All','2');
     }
 	public function add() {
+        
+        if(count($result)>0)
+         { 
+            $gid=$this->session->userdata('groupid');
+            $roleid=$this->session->userdata('role_id');
+            $session_id=$this->session->userdata('session_id');
+            $query=$this->db->query("SELECT * FROM user_role_options WHERE section = 'Rent' AND role_id='$roleid' AND r_insert = 1");
+            $result=$query->result();
+        }else {
+            echo '<script>alert("You donot have access to this page.");</script>';
+            $this->load->view('login/main_page');
+        }
 			$query=$this->db->query("SELECT * FROM nrp_unit_type_master" );
                 $result=$query->result();
                 $data['p_unit_type']=$result;

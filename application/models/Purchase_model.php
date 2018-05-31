@@ -145,8 +145,8 @@ function purchaseData($status='', $property_id='',$property_type_id=''){
     $result=$query->result();
 
     if (count($result)>0) {
-       $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,ut.unit_type as np_unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
-        case when st.property_id is null then 'Vacant' else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
+       $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,ut.unit_type as np_unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_date ,
+        case when rt.property_id is not null then 'Occupied' When st.property_id is null then 'Vacant'  else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
          from property_txn E 
         left JOIN purchase_ownership_details pd on E.property_txn_id=pd.purchase_id
         left join contact_master A on pd.pr_client_id=A.c_id
@@ -160,8 +160,8 @@ function purchaseData($status='', $property_id='',$property_type_id=''){
         GROUP BY  
         E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_type_id,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,owner_name,rt.property_id,prt.property_type,E.p_image,E.location";
     } else {
-        $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,ut.unit_type as np_unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
-        case when st.property_id is null then 'Vacant' else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
+        $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,ut.unit_type as np_unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_date ,
+        if(st.property_id is not null ,'Sold', case when  rt.property_id is not null then 'Occupied' else 'Vacant' end) as property_status,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
          from property_txn E 
         left JOIN purchase_ownership_details pd on E.property_txn_id=pd.purchase_id
         left join property_type prt on E.property_typ_id=prt.property_type_id
@@ -194,7 +194,7 @@ function getAllCountData($property_type_id=''){
 
 
       if (count($result)>0) {
-       $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,ut.unit_type as np_unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
+       $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,ut.unit_type as np_unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_date ,
         case when st.property_id is null then 'Vacant' else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
          from property_txn E 
         left JOIN purchase_ownership_details pd on E.property_txn_id=pd.purchase_id
@@ -209,7 +209,7 @@ function getAllCountData($property_type_id=''){
         GROUP BY  
         E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_type_id,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,owner_name,rt.property_id,prt.property_type,E.p_image,E.location";
     } else {
-        $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_dates ,
+        $sql = "Select E.property_txn_id,E.property_typ_id,E.gp_id,E.unit_name,E.unit_type,E.unit_type_id,E.unit_no,E.floor,E.area,E.area_unit,E.allocated_cost,E.allocated_maintenance,E.txn_status,rt.property_id,max(termination_date) as termination_date ,
         case when st.property_id is null then 'Vacant' else 'Sold' end as property_status ,max(date_of_sale) as date_of_sale,prt.property_type,E.p_image,E.location
          from property_txn E 
         left JOIN purchase_ownership_details pd on E.property_txn_id=pd.purchase_id

@@ -56,6 +56,7 @@ table.dataTable thead .sorting_desc:after {
 
 <ol class="breadcrumb">
  <li class="breadcrumb-item"><a href="<?php echo base_url().'index.php/dashboard'; ?>" > Dashboard</a></li>
+<li class="breadcrumb-item"><a href="<?=base_url("index.php/Non_real_estate_property")?>">Non Real Estate</a></li>
 <li class="breadcrumb-item active"><a href="#">Unit Type For Non Real Estate Property</a></li>
 
 </ol>

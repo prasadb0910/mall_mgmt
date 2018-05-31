@@ -79,7 +79,9 @@
                                             ?>
 
 
-                                            <a href="<?=$baseurl?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Property</span></button></a>
+                                            <a href="<?= base_url("index.php/Nrp_Unit_Type")?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Property Unit Type</span></button></a>
+
+                                             <a href="<?=$baseurl?>"><button class="btn btn-default pull-right  m-r-10" type="submit"><i class="fa fa-plus tab-icon"></i> <span>Add Property</span></button></a>
                                         </div>
                                         <br>
                                          <div class="row grid">
@@ -109,23 +111,16 @@
                                                         </div>
                                                         <br>
                                                         <div class="row" style="padding-left:15px;padding-right:15px;">
-                                                            <div class="col-md-4 rent">
+                                                            <div class="col-md-6 rent">
                                                                  <a href="<?php echo base_url() . 'index.php/contacts/checkstatus/All/Tenants/' . $property[$i]->property_txn_id; ?>"><i style="font-size:22px;" class="fa fa-group"></i><br>
                                                                 Tenants
                                                                     </a>
                                                             </div>
-                                                            <div class=" col-md-4 leases">
+                                                            <div class=" col-md-6 leases">
                                                                  <a href="<?php echo base_url().'index.php/Accounting/checkstatus/All/'.$property[$i]->property_txn_id; ?>">
                                                                 <i style="font-size:22px;" class="fa fa-inr "></i><br>
                                                                 Accounting
                                                                     </a>
-                                                            </div>
-                                                       
-                                                            <div class=" col-md-4 leases" style="border-left: 2px solid #edf0f5;">
-                                                             <a href="<?php echo base_url().'index.php/task/checkstatus/'.$property[$i]->property_txn_id; ?>">
-                                                                <i style="font-size:22px;" class="fa fa-file-text-o"></i><br>
-                                                                Maintenance
-                                                                </a>
                                                             </div>
                                                          
                                                         </div> 
@@ -155,10 +150,6 @@
                                                             </div>
                                                             <div class="pull-left" style="margin-top: 40px;padding-left: 20px;">
                                                                 <a href="<?php echo base_url().'index.php/Accounting/checkstatus/All/'.$property[$i]->property_txn_id; ?>" data-toggle="tooltip" data-placement="bottom" title="Accounting"><i style="font-size:22px;" class="fa fa-inr"></i></a>
-                                                            </div>
-                                                           
-                                                            <div class="pull-left" style="margin-top: 40px;padding-left: 20px;">
-                                                                <a href="<?php echo base_url().'index.php/task/checkstatus/'.$property[$i]->property_txn_id; ?>" data-toggle="tooltip" data-placement="bottom" title="Maintenance"><i style="font-size:22px;" class="fa fa-file-text-o"></i></a>
                                                             </div>
                                                             <div class="pull-left" style="margin-top: 40px;padding-left: 20px;">
                                                                 <a href="<?php echo base_url().'index.php/Allocation/checkstatus/All/'.$property[$i]->property_txn_id; ?>" data-toggle="tooltip" data-placement="bottom" title="Sub Property"><i style="font-size:22px;" class="fa fa-building-o"></i></a>
