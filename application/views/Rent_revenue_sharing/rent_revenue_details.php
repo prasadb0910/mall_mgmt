@@ -215,9 +215,11 @@
         
         <div class=" container-fluid   container-fixed-lg ">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>index.php/Rent_revenue_sharing">Rent List</a></li>
-                
+                 <li class="breadcrumb-item"><a href="<?=base_url().'index.php/Dashboard/'?>">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>index.php/Rent_revenue_sharing">Revenue List</a></li>
+                <?php if(isset($r_id)){ ?>
+                <li class="breadcrumb-item"><a href="<?=base_url().'index.php/Rent_revenue_sharing/view/'.$r_id?>">Revenue View</a></li>
+                <?php } ?>
                 <li class="breadcrumb-item active">Revenue Details </li>
                 <input type="hidden" id="rent_id" name="rent_id" value="<?=(isset($r_id)?$r_id:'')?>" />
                 <input type="hidden" id="edit" name="edit" value="<?=(isset($r_id)?1:0)?>" />

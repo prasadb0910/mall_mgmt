@@ -355,25 +355,9 @@
 													<span>, </span>
 												</span>
 											</div>
-											<!-- <div class="info-location">
-												<div class="icon-svg">
-													<i class="fa fa-map-marker" aria-hidden="true"></i>
-												</div>
-												<div class="location-address">
-													<address><?php //echo $rent[0]->p_address; ?></address>
-													<address><?php //echo $rent[0]->p_googlemaplink; ?></address>
-												</div>
-											</div> -->
+											
 										</div>
 										<div class="unit-options">
-											<!-- <div>
-												<span>1</span>
-												<small>bed</small>
-											</div> &nbsp /
-											<div>
-												<span>1</span>
-												<small>bath</small>
-											</div> &nbsp / -->
 											<div>
 												<span>Area - <?=$rent[0]->area?></span>
 												<small><?=$rent[0]->area_unit?></small>
@@ -412,7 +396,7 @@
 											</div>
 										</section>
 									</article>
-							<article class="lease-residents">
+							       <article class="lease-residents">
 										<h5 class="view-title">Residents information</h5>
 		                                <?php $j=0; if(isset($tenants)) { 
 		                                    for ($j=0; $j < count($tenants) ; $j++) { ?>
@@ -526,7 +510,7 @@
 											</div>
 										</section>
 									</article>
-									<article class="lease-utilities" <?php if (count($utility)==0) echo 'style="display: none;"'; else { if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1') echo ''; else echo 'style="display: none;"'; } else echo 'style="display: none;"'; } ?>>
+									<article class="lease-utilities" <?php if (count($utility)==0) echo 'style="display: none;"'; else { if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1') echo 'Yre'; else echo 'style="display: none;"'; } else echo 'style="display: none;"'; } ?>>
 										<h5 class="view-title">
 											<span>Utilities</span>
 											<span  class="icon-fo-ok"></span>
@@ -535,10 +519,7 @@
 											<div class="col-xs-24 col-sm-12" >
 												<div class="utilities-block">
 													<div class="utilities-tag">
-														<?php for ($k=0; $k < count($utility) ; $k++) { 
-																if(isset($utility[$k]->tenant)) { if($utility[$k]->tenant=='1') { ?>
-																	<span class="tag"><?php if(isset($utility[$k]->amenity)) echo $utility[$k]->amenity; ?></span>
-														<?php }}} ?>
+													<?php if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1'){?> <span class="tag"> <?php echo 'Yes'; }else echo ''; } ?></span>
 													</div>
 												</div>
 											</div>

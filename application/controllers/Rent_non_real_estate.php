@@ -403,7 +403,7 @@ class Rent_non_real_estate extends CI_Controller
         $result=$this->rent_model->getAccess();
         if(count($result)>0) {
             $data['access']=$result;
-            $data['rent']=$this->rent_model->rentData($status, $property_type_id,'');
+            $data['rent']=$this->rent_model->rentData($status, 2,'');
             $count_data=$this->rent_model->getallrentdatacount(2);
             $approved=0;
             $pending=0;

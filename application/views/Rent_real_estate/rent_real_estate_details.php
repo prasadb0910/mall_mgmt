@@ -409,10 +409,10 @@
             <input type="hidden" name="rent_module_type" value="1">
         <div class=" container-fluid container-fixed-lg ">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="index/Rent/checkstatus/All">Rent List</a></li>
+                <li class="breadcrumb-item"><a href="<?=base_url().'index.php/Dashboard/'?>">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="<?=base_url().'index.php/Rent_real_estate/'?>">Rent List</a></li>
                 <?php if(isset($rent)){ ?>
-                <li class="breadcrumb-item"><a href="">Rent View</a></li>
+                <li class="breadcrumb-item"><a href="<?=base_url().'index.php/Rent_real_estate/view/'.$r_id?>">Rent View</a></li>
                 <?php } ?>
                 <li class="breadcrumb-item active">Rent Details</li>
                 <input type="hidden" id="r_id" name="r_id" value="<?php if(isset($rent)) echo $r_id; ?>" />
@@ -613,7 +613,7 @@
                                      <div class="col-md-3" style="display:none"  id="revenue_percentage">
                                         <div class="form-group form-group-default ">
                                             <label>Revenue % </label>
-                                            <input type="text" class="form-control format_number rent_amount" name="revenue_percentage" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->revenue_percentage,2); }} ?>"  />
+                                            <input type="text" class="form-control format_number rent_amount" name="revenue_percentage" id="revenue_percentage_id" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->revenue_percentage,2); }} ?>"  />
                                         </div>
                                     </div>
                                </div>
@@ -1362,11 +1362,13 @@
   var rentype = function() {
         if($('#rent_type').val()=="fixed")
         {
+            $('#revenue_percentage_id').val('');
             $('#revenue_percentage').hide();
             $('#revenue_due_day').hide();
         }
         else
         {
+            console.log('revenue_percentage'+$('#revenue_percentage').val());
             $('#revenue_percentage').show();
             $('#revenue_due_day').show();
         }

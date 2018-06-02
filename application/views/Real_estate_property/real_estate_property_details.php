@@ -162,7 +162,7 @@
     <form id="form_real_estate_property" role="form" method ="post" action="<?php if(isset($p_txn)) { echo base_url().'index.php/real_estate_property/updaterecord/'.$p_id; } else { echo base_url().'index.php/real_estate_property/saverecord'; } ?>"  enctype="multipart/form-data">
     <div class=" container-fluid   container-fixed-lg ">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?=base_url('index/Dashboard')?>">">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="<?=base_url('index.php/Real_estate_property')?>">Real Estate</a></li>
             <li class="breadcrumb-item"><a href="<?=base_url('index.php/Real_estate_property')?>">Property List</a></li>
                  <?php if(isset($p_txn)){ ?><li class="breadcrumb-item"><a href="<?=base_url('index.php/Real_estate_property/view/'.$p_txn[0]->property_txn_id)?>">Property View</a></li>
@@ -315,7 +315,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default ">
                                         <label>Allocated Cost(&#x20B9;)</label>
-                                        <input type="text" class="form-control" id="allocated_cost" name="allocated_cost"  placeholder="Enter Here" value="<?php if(isset($p_txn)) { echo $p_txn[0]->allocated_cost; } ?>" />
+                                        <input type="text" class="form-control  format_number" id="allocated_cost" name="allocated_cost"  placeholder="Enter Here" value="<?php if(isset($p_txn)) { echo format_money($p_txn[0]->allocated_cost,2); } ?>" />
                                     </div>
                                 </div>
                             
@@ -324,7 +324,7 @@
 							    <div class="col-md-6">
                                     <div class="form-group form-group-default ">
                                         <label>Allocated Maintenance(&#x20B9;)</label>
-                                        <input type="text" class="form-control" id="allocated_maintenance" name="allocated_maintenance"  placeholder="Enter Here" value="<?php if(isset($p_txn)) { echo $p_txn[0]->allocated_maintenance; } ?>" />
+                                        <input type="text" class="form-control format_number" id="allocated_maintenance" name="allocated_maintenance"  placeholder="Enter Here" value="<?php if(isset($p_txn)) { echo format_money($p_txn[0]->allocated_maintenance,2); } ?>" />
                                     </div>
                                 </div>
                             

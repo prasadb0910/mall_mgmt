@@ -161,7 +161,7 @@
     <form id="form_non_real_estate_property" role="form" method ="post" action="<?php if(isset($p_txn)) { echo base_url().'index.php/non_real_estate_property/updaterecord/'.$p_id; } else { echo base_url().'index.php/non_real_estate_property/saverecord'; } ?>"  enctype="multipart/form-data">
     <div class=" container-fluid   container-fixed-lg ">
          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="<?=base_url('index/Dashboard')?>">">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="<?=base_url('index.php/Non_real_estate_property/checkstatus/All/2')?>">Non Estate Property</a></li>
             <li class="breadcrumb-item"><a href="<?=base_url('index.php/Non_real_estate_property/checkstatus/All/2')?>">Property List</a></li>
                  <?php if(isset($p_txn)){ ?><li class="breadcrumb-item"><a href="<?=base_url('index.php/Non_real_estate_property/view/'.$p_txn[0]->property_txn_id)?>">Property View</a></li>
@@ -268,7 +268,7 @@
                      
              <div class="form-footer" style="padding-bottom: 60px;">
                         <input type="hidden" id="submitVal" value="1" />
-                        <a href="<?php echo base_url(); ?>index.php/Sale" class="btn btn-default-danger pull-left" >Cancel</a>
+                        <a href="<?php echo base_url(); ?>index.php/Non_real_estate_property" class="btn btn-default-danger pull-left" >Cancel</a>
                         <input type="submit" class="btn btn-default pull-right submit-form" name="submit" value="<?php if($maker_checker=='yes') echo 'Submit For Approval'; else echo 'Submit'; ?>" style="margin-right: 10px;" />
                         <input formnovalidate="formnovalidate" type="submit" class="btn btn-default pull-right save-form m-r-10" name="submit" value="Save" style="<?php if($maker_checker!='yes' && isset($p_txn)) echo 'display:none'; ?>" />
                     </div>

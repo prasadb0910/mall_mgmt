@@ -4426,7 +4426,7 @@ $("#form_non_real_estate_property").validate({
             //checkPropertyNameAvailability: true
         },
       
-        unit_type: {
+        unit_type_id: {
             required: function(element) {
                         if($("#submitVal").val()=="0"){
                             return true;

@@ -213,11 +213,11 @@
     <form id="form_rent" role="form" method="post" enctype="multipart/form-data" action="<?php if(isset($rent)){ echo base_url().'index.php/Rent_3rd_party/updaterecord/'.$r_id; } else { echo base_url().'index.php/Rent_3rd_party/saverecord';} ?>">        
     <div class=" container-fluid   container-fixed-lg ">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="index/Purchase/checkstatus/All">Tenant List</a></li>
-                 <?php if(isset($p_txn)){ ?><li class="breadcrumb-item"><a href="">Tenant View</a></li>
+            <li class="breadcrumb-item"><a href="<?=base_url().'index.php/Dashboard/'?>">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="<?=base_url().'index.php/Rent_3rd_party/'?>">Rent 3rd party List</a></li>
+                 <?php if(isset($r_id)){ ?><li class="breadcrumb-item"><a href="<?=base_url().'index.php/Rent_3rd_party/view/'.$r_id?>">Rent 3rd party View</a></li>
 				  <?php } ?>
-            <li class="breadcrumb-item active">Tenant Details </li>
+            <li class="breadcrumb-item active">Rent 3rd party Details </li>
             <input type="hidden" id="p_id" name="p_id" value="<?php if(isset($p_txn)) echo $p_id; ?>" />
         </ol>
         <div class="row">
