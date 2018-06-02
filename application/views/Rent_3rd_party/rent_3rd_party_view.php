@@ -288,8 +288,8 @@
 			<div class=" container-fluid   container-fixed-lg">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="<?php echo base_url().'index.php/Dashboard'; ?>">Dashboard</a></li>
-					<li class="breadcrumb-item"><a href="<?php echo base_url(); ?>index.php/Rent_real_estate">Rent List</a></li>
-					<li class="breadcrumb-item active">Rent View</li>
+					<li class="breadcrumb-item"><a href="<?php echo base_url(); ?>index.php/Rent_3rd_party">Rent 3rd party List</a></li>
+					<li class="breadcrumb-item active">Rent 3rd party View</li>
 				</ol>
 				<div class="container">
 					<div class="row">
@@ -350,36 +350,17 @@
 											<div class="info-name-property">
 												<span>
 													<a class="info-link" href="">
-														Test 22 
+														<?=$rent[0]->unit_name?> , Real Estate
 													</a>
 													<span>, </span>
 												</span>
-												<a  class="info-link" title="" href="">
-													Building
-												</a>
 											</div>
-											<!-- <div class="info-location">
-												<div class="icon-svg">
-													<i class="fa fa-map-marker" aria-hidden="true"></i>
-												</div>
-												<div class="location-address">
-													<address><?php //echo $editrent[0]->p_address; ?></address>
-													<address><?php //echo $editrent[0]->p_googlemaplink; ?></address>
-												</div>
-											</div> -->
+											
 										</div>
 										<div class="unit-options">
-											<!-- <div>
-												<span>1</span>
-												<small>bed</small>
-											</div> &nbsp /
 											<div>
-												<span>1</span>
-												<small>bath</small>
-											</div> &nbsp / -->
-											<div>
-												<span>1,000</span>
-												<small>Sq ft</small>
+												<span>Area - <?=$rent[0]->area?></span>
+												<small><?=$rent[0]->area_unit?></small>
 											</div>
 										</div>
 									</article>
@@ -392,11 +373,11 @@
 															
 															<div class="title-block">
 																<h4>Lease Period</h4>
-																<span class="period"> 3 months</span>
+																<span class="period"> <?=$rent[0]->lease_period?></</span>
 															</div>
 															<div class="title-block">
 																<h4>Lockin Period</h4>
-																<span class="period"> 2 months</span>
+																<span class="period"> <?=$rent[0]->locking_period?></</span>
 															</div>
 															
 														</div>
@@ -407,19 +388,20 @@
 									</article>
 									<article class="lease-residents">
 										<h5 class="view-title">Residents information</h5>
-		                             
+		                                <?php $j=0; if(isset($tenants)) { 
+		                                    for ($j=0; $j < count($tenants) ; $j++) { ?>
 
 										<div class="thumbnail-wrapper d32 circular b-white pull-left" id="contact1" style="margin: 15px;">
-											<div class="bg-master text-center text-white" style=" background: #899be7;text-align: center; padding-top: 14px;font-size:20px;"><span>DM</span>
+											<div class="bg-master text-center text-white" style=" background: #899be7;text-align: center; padding-top: 14px;font-size:20px;"><span><?php echo (strlen($tenants[$j]->c_name)>0?substr($tenants[$j]->c_name, 0, 1):'') . (strlen($tenants[$j]->c_last_name)>0?substr($tenants[$j]->c_last_name, 0, 1):''); ?></span>
 											</div>  
 										</div>
 										<div class="info pull-left p-l-10" style="margin-top: 15px;text-align:left;">
-											<span class="title_1">Dhaval Maru</span><br>
-											<span class="email">dhaval@gmail.com</span><br>
-											<span class="mob_no">9632587412</span>
+											<span class="title_1"><?php echo $tenants[$j]->c_name . ' ' . $tenants[$j]->c_last_name; ?></span><br>
+											<span class="email"><?php echo $tenants[$j]->c_emailid1; ?></span><br>
+											<span class="mob_no"><?php echo $tenants[$j]->c_mobile1; ?></span>
 										</div>
 
-                                		
+                                		<?php }} ?>
 									</article>
 								
 								<article class="lease-transaction">
@@ -431,7 +413,7 @@
 														<div class="view-block m-b-0">
 															<div class="title-block">
 																<h4>Rent</h4>
-																<span>29900 ₹</span></span>
+																<span>₹<?php echo format_money($rent[0]->rent_amount,2); ?></span></span>
 															</div>
 														
 														</div>
@@ -468,24 +450,18 @@
 								<!-- <span class="leases_status">Active</span>
 								<span class="leases_status status_name">#1</span> -->
 							</div>
-							<div class="view_block_type_lease  p-b-20" style=" border-bottom:2px solid #edf0f5;">
-								<div class="m-b-10">
-									<h5  style="font-size:16px;font-weight:600">Lease type</h5>
-									<span class="m-status--leases-type">Monthly</span>
-								</div>
-							</div>
 							<div class="view-block-date p-b-20"  style=" border-bottom:2px solid #edf0f5;">
 								<div class="date-type">
 									<div>
 										<div>
 											<h5  style="font-size:16px;font-weight:600">Start date</h5>
-											<span>12-02-2018</span>
+											<span><?=$rent[0]->possession_date?></span>
 										</div>
 									</div>
 									<div>
 										<div>
 											<h5  style="font-size:16px;font-weight:600">End date</h5>
-												<span>12-04-2018</span>
+												<span><?=$rent[0]->termination_date?></span>
 										</div>
 									</div>
 								</div>
@@ -497,7 +473,7 @@
 									</a>
 								</div>
 								<div>
-									<a class="btn btn-danger" href="<?php //echo base_url().'index.php/Rent_3rd_party/end_lease/'.$r_id; ?>">
+									<a class="btn btn-danger" href="<?php //echo base_url().'index.php/Rent/end_lease/'.$r_id; ?>">
 										<span>End lease</span>
 									</a>
 								</div>

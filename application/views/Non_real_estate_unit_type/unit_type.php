@@ -69,7 +69,7 @@ table.dataTable thead .sorting_desc:after {
 <div class="container" style="background:#f6f9fc;margin:10px;">
 <div class="row m-t-20 p-t-10">
 <div class="col-md-6">
-<div class="form-group form-group-default required">
+<div class="form-group form-group-default">
 <label>Unit Type</label>
 			<input type="hidden" class="form-control" name="unit_type_id" id="unit_type_id" value="<?php if(isset($unit_type_id)){ echo $unit_type_id; } ?>"/>
 			<input type="text" class="form-control" name="unit_type" id="unit_type" placeholder="Unit Type" value="<?php if(isset($edit_unit_type)){ echo $edit_unit_type[0]->unit_type; } ?>"/>

@@ -249,7 +249,7 @@
 					<div class="row">
 						<div class="card card-transparent  bg-white" style="background:#fff;margin-right:8px;">
 							<div class=" " style="padding:10px;">
-								<a href="">
+								<a href="<?=base_url('index.php/real_estate_property');?>">
 									<div class="fileUpload blue-btn btn width100 pull-left">
 										<span><i class="fa fa-arrow-left"></i></span> 
 									</div>
@@ -295,11 +295,11 @@
 							<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2);">
 								<div class="row" style="">
 									<div class="col-md-6 rent">
-										<b style="font-size:22px;">1</b><br>
+										<b style="font-size:22px;"><?=$tenant_count?></b><br>
 										Tenant
 									</div>
 									<div class="col-md-6 rent" style="border-right:none;">
-										<b style="font-size:22px;" >1</b><br>
+										<b style="font-size:22px;" ><?=$maintenance_count?></b><br>
 										Maintenance 
 									</div>
 								</div>
@@ -391,13 +391,13 @@
 			                                <div class="col-md-6">
 			                                    <div class="form-group form-group-default ">
 			                                        <label class=""> Allocated Cost</label>
-													<span class="label_addr"><?=$property[0]->allocated_cost?></span>
+													<span class="label_addr"><?=format_money($property[0]->allocated_cost,2)?></span>
 			                                    </div>
 			                                </div>
 			                                <div class="col-md-6">
 			                                    <div class="form-group form-group-default ">
 			                                        <label class=""> Allocated Maintenance </label>
-													<span class="label_addr"><?=$property[0]->allocated_maintenance?></span>
+													<span class="label_addr"><?=format_money($property[0]->allocated_maintenance,2)?></span>
 			                                    </div>
 			                                </div>
 			                            </div>

@@ -80,6 +80,12 @@ class Non_real_estate_property extends CI_Controller
        $data['p_id']=$id;
        $data['access']=$result;
        $data['property']=$this->purchase_model->purchaseData('All',$id,'2'); 
+       $maintenance_count = $this->db->query("SELECT count(id) as `count` from user_task_detail where property_id=$id")->result_array();
+        $tenant_count = $this->db->query("SELECT count(rt.txn_id) as count from rent_txn rt join rent_tenant_details rtd on  rt.txn_id=rtd.rent_id
+            WHERE rt.property_id=$id")->result_array();
+        $this->db->last_query();
+        $data['maintenance_count'] = $maintenance_count[0]['count'];
+        $data['tenant_count'] = $tenant_count[0]['count'];
        load_view('Non_real_estate_property/non_real_estate_prop_view',$data); 
     }
 

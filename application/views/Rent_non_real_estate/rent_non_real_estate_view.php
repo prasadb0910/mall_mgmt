@@ -288,7 +288,7 @@
 			<div class=" container-fluid   container-fixed-lg">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="<?php echo base_url().'index.php/Dashboard'; ?>">Dashboard</a></li>
-					<li class="breadcrumb-item"><a href="<?php echo base_url(); ?>index.php/Rent_revenue_sharing">Rent List</a></li>
+					<li class="breadcrumb-item"><a href="<?php echo base_url(); ?>index.php/Rent_non_real_estate">Rent List</a></li>
 					<li class="breadcrumb-item active">Rent View</li>
 				</ol>
 				<div class="container">
@@ -377,26 +377,12 @@
 												<div class="col-md-12 col-sm-4">
 													<div class="transaction-item">
 														<div class="view-block m-b-0">
-															<div class="title-block">
-																<h4>Lease Type</h4>
-																<span class="period"><?=$rent[0]->rent_type?></span></span>
-															</div>
-															<div class="title-block">
-																<h4>Lease Period</h4>
-																<span class="period"><?=$rent[0]->lease_period?></span>
-															</div>
+															
 															<div class="title-block">
 																<h4>Lockin Period</h4>
 																<span class="period"><?=$rent[0]->locking_period?></span>
 															</div>
-															<div class="title-block">
-																<h4>Notice Period  </h4>
-																<span class="period"><?=$rent[0]->notice_period?></span>
-															</div>
-															<div class="title-block">
-																<h4>Rent Free Period</h4>
-																<span class="period"><?=$rent[0]->free_rent_period?> </span>
-															</div>
+															
 														</div>
 													</div>
 												</div>
@@ -430,10 +416,6 @@
 															<div class="title-block">
 																<h4>Rent</h4>
 																<span>₹<?php echo format_money($rent[0]->rent_amount,2); ?></span></span>
-															</div>
-															<div class="title-block">
-																<h4>Due day</h4>
-																<span><?php echo $rent[0]->rent_due_day; ?><?php if($rent[0]->rent_due_day=='1') echo 'st'; else if($rent[0]->rent_due_day=='2') echo 'nd'; else if($rent[0]->rent_due_day=='3') echo 'rd'; else echo'th'; ?></span>
 															</div>
 															<div class="title-block">
 																<h4>GST </h4>

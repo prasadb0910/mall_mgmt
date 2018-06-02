@@ -295,6 +295,13 @@ class Real_estate_property extends CI_Controller
         mysqli_next_result( $this->db->conn_id );
         $data['owner_name']=$result;  
 
+        $maintenance_count = $this->db->query("SELECT count(id) as `count` from user_task_detail where property_id=$id")->result_array();
+        $tenant_count = $this->db->query("SELECT count(rt.txn_id) as count from rent_txn rt join rent_tenant_details rtd on  rt.txn_id=rtd.rent_id
+            WHERE rt.property_id=$id")->result_array();
+        $this->db->last_query();
+        $data['maintenance_count'] = $maintenance_count[0]['count'];
+        $data['tenant_count'] = $tenant_count[0]['count'];
+
        load_view('Real_estate_property/real_estate_property_view',$data);
     }
 

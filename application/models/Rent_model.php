@@ -16,40 +16,37 @@ class Rent_model Extends CI_Model{
         $gid=$this->session->userdata('groupid');
         if($status=='InProcess')
         {
-            if($cond=="")
-                   $cond.=" And rt.txn_status='In Process'";
+            $cond.=" And rt.txn_status='In Process'";
 
         }else if($status=='Pending')
         {
-             if($cond=="")
-                    $cond.="And (rt.txn_status='Pending' or rt.txn_status='Delete')";
+            $cond.="And (rt.txn_status='Pending' or rt.txn_status='Delete')";
+
         }else if($status=='All' || $status=='ALL')
         {
             $cond = "";
+
         }else{
             
-             if($cond=="")
-                 
-                    $cond.="And  rt.txn_status='$status'";
+            $cond.="And  rt.txn_status='$status'";
         }
 
         if($property_id!=""){
-
-            if($cond=="")
-                    $cond.=" And pt.property_txn_id=".$property_id;    
+            
+            $cond.=" And rt.txn_id=".$rent_id;   
         }
 
         if($property_type_id!=""){
 
-            if($cond=="")
-                    $cond.=" And pt.property_typ_id=".$property_type_id;    
+            $cond.=" And pt.property_typ_id=".$property_type_id;    
+                   
         }
 
         if($rent_id!=""){
 
-            if($cond=="")
-                    $cond.=" And rt.txn_id=".$rent_id;
+            $cond.=" And rt.txn_id=".$rent_id;
         }
+
 
         $sql = "Select rt.*,pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_name,pt.unit_no,
                 pt.unit_type,pd.pr_client_id,pt.p_image,pt.property_typ_id

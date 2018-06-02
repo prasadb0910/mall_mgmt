@@ -19,6 +19,9 @@ class Rent_real_estate extends CI_Controller
         $this->checkstatus('All','1');
     }
 
+    public function getConRent($status='', $contact_id=''){
+        $this->checkstatus($status, '', $contact_id);
+    }
 	public function add() {
         $gid=$this->session->userdata('groupid');
         $roleid=$this->session->userdata('role_id');
@@ -108,14 +111,6 @@ class Rent_real_estate extends CI_Controller
                     $txn_fkid = $result1[0]->txn_fkid;
                 }
 
-               /* if($txn_fkid!=''){
-                    $data['property']=$this->purchase_model->purchaseData('All',$txn_fkid,'1');
-                } else {
-                    $data['property'] = $this->purchase_model->purchaseData('All',$rid,'1');
-                }*/
-
-                
-
                 $result=$this->rent_model->rentData('All', '','',$rid);
                 if(count($result)>0) {
                     $data['rent']=$result;
@@ -130,13 +125,12 @@ class Rent_real_estate extends CI_Controller
                     mysqli_next_result( $this->db->conn_id );
                     $data['rent'][0]->owner_name=$result; 
 
-                    /*$data['property'] = $this->db->query("Select * from property_txn Where  property_txn_id NOT IN((Select property_id from rent_txn)) 
-                        and property_typ_id=1
-                        OR  property_txn_id IN($property_id)")->result();*/
 
                     $result = $this->db->query("call sp_getpropertynorent(1,$property_id)")->result();
                     mysqli_next_result( $this->db->conn_id );
                     $data['property']=$result; 
+
+
 
                 } else {
                     $txn_status=3;
@@ -733,7 +727,7 @@ class Rent_real_estate extends CI_Controller
                         $this->user_access_log_model->insertAccessLog($logarray);
                     }
 
-                    redirect(base_url().'index.php/Rent');
+                    redirect(base_url().'index.php/Rent_real_estate');
                 } else {
                     echo "Unauthorized access.";
                 }
@@ -801,7 +795,7 @@ class Rent_real_estate extends CI_Controller
                     'rent_type' => $this->input->post('rent_type'),
                     'rent_module_type' => $this->input->post('rent_module_type'),
                     'revenue_percentage' => ($this->input->post('revenue_percentage')!=""?$this->input->post('revenue_percentage'):''),
-                    'revenue_due_day' => ($this->input->post('revenue_due_day')!=""?$this->input->post('revenue_due_day'):NULL),
+                    'revenue_due_day' => ($this->input->post('revenue_percentage')!=""?$this->input->post('revenue_due_day'):NULL),
                     'advance_rent' => ($this->input->post('advance_rent')=='yes'?'1':'0'),
                     'advance_rent_amount' => ($this->input->post('advance_rent_amount')!=""?format_number($this->input->post('advance_rent_amount'),2):'')
                      );
@@ -889,13 +883,10 @@ class Rent_real_estate extends CI_Controller
                     $this->rent_model->setSchedule($rid, $txn_status);
 
                     $this->rent_model->setOtherSchedule($rid, $txn_status);
-                     if($this->input->post('revenue_due_day')!="")  
-                     {
-                        $this->db->where('rent_id', $rid);
-                        $this->db->delete('revenue_schedule');    
+                    $this->db->where('rent_id', $rid);
+                    $this->db->delete('revenue_schedule');   
+                    if($this->input->post('revenue_percentage')!="")
                         $this->rent_model->revenueSchedule($rid,$this->input->post('property'));
-                    
-                     }
                         
                    redirect(base_url().'index.php/Rent_real_estate');
                 } else {

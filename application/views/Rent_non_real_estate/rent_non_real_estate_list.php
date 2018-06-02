@@ -30,8 +30,8 @@
     <div class="content ">
         <div class=" container-fluid container-fixed-lg">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="">Dashboard</a></li>
-                <li class="breadcrumb-item active"><a href="#">Purchase List</a></li>
+                <li class="breadcrumb-item"><a href="<?=base_url().'index.php/Dashboard/'?>">Dashboard</a></li>
+                <li class="breadcrumb-item active">Non Real Estate</li>
             </ol>
 
             <div id="rootwizard">

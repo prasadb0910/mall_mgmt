@@ -276,12 +276,14 @@
     <input type="hidden" name="rent_module_type" value="2">
     <div class=" container-fluid   container-fixed-lg ">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="index/Purchase/checkstatus/All">Tenant List</a></li>
-                 <?php if(isset($p_txn)){ ?><li class="breadcrumb-item"><a href="">Tenant View</a></li>
+            <li class="breadcrumb-item"><a href="<?=base_url().'index.php/Dashboard/'?>">Dashboard</a></li>
+            <li class="breadcrumb-item">
+                <a href="<?=base_url().'index.php/Rent_non_real_estate/'?>">Rent List</a></li>
+                 <?php if(isset($r_id)){ ?>
+                 <li class="breadcrumb-item"><a href="<?=base_url().'index.php/Rent_non_real_estate/view/'.$r_id?>">Rent View </a></li>
 				  <?php } ?>
-            <li class="breadcrumb-item active">Tenant Details </li>
-            <input type="hidden" id="p_id" name="p_id" value="<?php if(isset($p_txn)) echo $p_id; ?>" />
+            <li class="breadcrumb-item active">Rent Details </li>
+            <input type="hidden" id="p_id" name="p_id" value="<?php if(isset($p_id)) echo $p_id; ?>" />
         </ol>
         <div class="row">
            <!-- <div class="col-md-4">
