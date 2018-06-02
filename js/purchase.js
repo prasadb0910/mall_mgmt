@@ -585,7 +585,7 @@ var set_type = function(elem) {
         });
     }
 
-    addMultiInputNamingRules('#form_purchase', 'input[name="owner_contact_name[]"]', { required: function(element) {
+    addMultiInputNamingRules('#form_real_estate_property', 'input[name="owner_contact_name[]"]', { required: function(element) {
                                                                                                 if($("#submitVal").val()=="0"){
                                                                                                     return true;
                                                                                                 } else {

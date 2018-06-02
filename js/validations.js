@@ -4264,16 +4264,16 @@ $.validator.addMethod("checkPropertyNameAvailability", function (value, element)
     }
 }, 'Property Name already in use.');
 
-$('#form_purchase').submit(function() {
-    removeMultiInputNamingRules('#form_purchase', 'select[alt="clientname[]"]');
-    removeMultiInputNamingRules('#form_purchase', 'input[alt="ownership[]"]');
-    removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_type[]"]');
-    removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_event[]"]');
-    removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_date[]"]');
-    removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_basiccost[]"]');
-    removeMultiInputNamingRules('#form_purchase', '.doc_name');
+$('#form_real_estate_property').submit(function() {
+    removeMultiInputNamingRules('#form_real_estate_property', 'select[alt="clientname[]"]');
+    // removeMultiInputNamingRules('#form_purchase', 'input[alt="ownership[]"]');
+    // removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_type[]"]');
+    // removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_event[]"]');
+    // removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_date[]"]');
+    // removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_basiccost[]"]');
+    // removeMultiInputNamingRules('#form_purchase', '.doc_name');
 
-    addMultiInputNamingRules('#form_purchase', 'select[name="clientname[]"]', { required: function(element) {
+    addMultiInputNamingRules('#form_real_estate_property', 'select[name="clientname[]"]', { required: function(element) {
                                                                                                 if($("#submitVal").val()=="0"){
                                                                                                     return true;
                                                                                                 } else {
@@ -4281,26 +4281,26 @@ $('#form_purchase').submit(function() {
                                                                                                 }
                                                                                             }
                                                                                 }, "");
-    addMultiInputNamingRules('#form_purchase', 'input[name="ownership[]"]', { required: function(element) {
-                                                                                            if($("#submitVal").val()=="0"){
-                                                                                                return true;
-                                                                                            } else {
-                                                                                                return false;
-                                                                                            }
-                                                                                        }
-                                                                                }, "");
-    addMultiInputNamingRules('#form_purchase', 'input[name="sch_type[]"]', { required: true }, "");
-    addMultiInputNamingRules('#form_purchase', 'input[name="sch_event[]"]', { required: true }, "");
-    addMultiInputNamingRules('#form_purchase', 'input[name="sch_date[]"]', { required: true }, "");
-    addMultiInputNamingRules('#form_purchase', 'input[name="sch_basiccost[]"]', { required: true }, "");
-    addMultiInputNamingRules('#form_purchase', '.doc_name', { required:function(element) {
-                                                                        if($("#submitVal").val()=="0"){
-                                                                            return true;
-                                                                        } else {
-                                                                            return false;
-                                                                        }
-                                                                    }
-                                                                }, "Document");
+    // addMultiInputNamingRules('#form_purchase', 'input[name="ownership[]"]', { required: function(element) {
+                                                                                            // if($("#submitVal").val()=="0"){
+                                                                                                // return true;
+                                                                                            // } else {
+                                                                                                // return false;
+                                                                                            // }
+                                                                                        // }
+                                                                                // }, "");
+    // addMultiInputNamingRules('#form_purchase', 'input[name="sch_type[]"]', { required: true }, "");
+    // addMultiInputNamingRules('#form_purchase', 'input[name="sch_event[]"]', { required: true }, "");
+    // addMultiInputNamingRules('#form_purchase', 'input[name="sch_date[]"]', { required: true }, "");
+    // addMultiInputNamingRules('#form_purchase', 'input[name="sch_basiccost[]"]', { required: true }, "");
+    // addMultiInputNamingRules('#form_purchase', '.doc_name', { required:function(element) {
+                                                                        // if($("#submitVal").val()=="0"){
+                                                                            // return true;
+                                                                        // } else {
+                                                                            // return false;
+                                                                        // }
+                                                                    // }
+                                                                // }, "Document");
 
     $('input.doc_file').each(function() {
         $(this).rules("remove");
@@ -4323,19 +4323,19 @@ $('#form_purchase').submit(function() {
     });
 
 
-    if (!$("#form_purchase").valid()) {
+    if (!$("#form_real_estate_property").valid()) {
         return false;
     } else {
         if (checkOwnership()==false){
             return false;
         }
-        removeMultiInputNamingRules('#form_purchase', 'select[alt="clientname[]"]');
-        removeMultiInputNamingRules('#form_purchase', 'input[alt="ownership[]"]');
-        removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_type[]"]');
-        removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_event[]"]');
-        removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_date[]"]');
-        removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_basiccost[]"]');
-        removeMultiInputNamingRules('#form_purchase', '.doc_name');
+        removeMultiInputNamingRules('#form_real_estate_property', 'select[alt="clientname[]"]');
+        // removeMultiInputNamingRules('#form_purchase', 'input[alt="ownership[]"]');
+        // removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_type[]"]');
+        // removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_event[]"]');
+        // removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_date[]"]');
+        // removeMultiInputNamingRules('#form_purchase', 'input[alt="sch_basiccost[]"]');
+        // removeMultiInputNamingRules('#form_purchase', '.doc_name');
         return true;
     }
 });

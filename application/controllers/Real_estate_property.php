@@ -25,7 +25,7 @@ class Real_estate_property extends CI_Controller
         $gid=$this->session->userdata('groupid');
         $roleid=$this->session->userdata('role_id');
         $session_id=$this->session->userdata('session_id');
-        $query=$this->db->query("SELECT * FROM user_role_options WHERE section = 'Rent' AND role_id='$roleid' AND r_insert = 1");
+        $query=$this->db->query("SELECT * FROM user_role_options WHERE section = 'purchase' AND role_id='$roleid' AND r_insert = 1");
         $result=$query->result();
         if(count($result)>0) {
             $gid=$this->session->userdata('groupid');
@@ -298,9 +298,15 @@ class Real_estate_property extends CI_Controller
     }
 
     public function checkstatus($status='',$property_type_id=''){
+			// $gid=$this->session->userdata('groupid');
+			// $roleid=$this->session->userdata('role_id');
             $result=$this->purchase_model->getAccess();
-            $data['access']=$result;
+			if(count($result)>0)
+			{
+				 $data['access']=$result;
             $data['property']=$this->purchase_model->purchaseData($status,'',$property_type_id);
+
+           
 
             $count_data=$this->purchase_model->getAllCountData($property_type_id);
             $approved=0;
@@ -324,14 +330,18 @@ class Real_estate_property extends CI_Controller
 
             if(count($data['property'])>0)
             {
-                $property_id = $data['property'][0]->property_txn_id;
-                $gid = $data['property'][0]->gp_id;
+                foreach ($data['property'] as $key => $value) {
+                    $gid =  $value->gp_id;
+                
+                    $property_id =  $value->property_txn_id;
+
+                    $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
+                    mysqli_next_result( $this->db->conn_id );
+                    $data['property'][$key]->owner_name=$result;
+                }
               
-                $result = $this->db->query("call sp_getPropertyOwners('Approved','$gid',$property_id)")->result();
-                mysqli_next_result( $this->db->conn_id );
-                $data['owner_name']=$result; 
+                
             }
-            
             $data['approved']=$approved;
             $data['pending']=$pending;
             $data['rejected']=$rejected;
@@ -343,6 +353,13 @@ class Real_estate_property extends CI_Controller
             
 
             load_view('Real_estate_property/real_estate_property_list', $data);
+			}
+			else
+			{
+				 echo '<script>alert("You donot have access to this page.");</script>';
+				$this->load->view('login/main_page');
+			}
+           
     }
  
 }

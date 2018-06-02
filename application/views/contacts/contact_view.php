@@ -274,11 +274,11 @@
 								<div class="row">
 									<div class=" col-md-12">
 										<div class="thumbnail-wrapper d32 circular b-white "id="contact1" >
-											<div class="bg-master text-center text-white" style=" background: #41c997;text-align: center; -size:28pxalign-items:center;text-align: center;padding-top: 17px;font-size:24px;"><span><?php //echo (strlen($contact_details[0]->c_name)>0?substr($contact_details[0]->c_name, 0, 1):'') . (strlen($contact_details[0]->c_last_name)>0?substr($contact_details[0]->c_last_name, 0, 1):''); ?> DM</span>
+											<div class="bg-master text-center text-white" style=" background: #41c997;text-align: center; -size:28pxalign-items:center;text-align: center;padding-top: 17px;font-size:24px;"><span><?php echo (strlen($contact_details[0]->c_name)>0?substr($contact_details[0]->c_name, 0, 1):'') . (strlen($contact_details[0]->c_last_name)>0?substr($contact_details[0]->c_last_name, 0, 1):''); ?></span>
 											</div>  
 										</div>
 										<div class="info">
-											<H5 class="title_1"> Dhaval Maru <?php //if($editcontact[0]->c_owner_type=='individual') echo $editcontact[0]->c_name . ' ' . $editcontact[0]->c_last_name; else echo $editcontact[0]->c_company_name; ?></H5>
+											<H5 class="title_1"> <?php if($editcontact[0]->c_owner_type=='individual') echo $editcontact[0]->c_name . ' ' . $editcontact[0]->c_last_name; else echo $editcontact[0]->c_company_name; ?></H5>
 											<p class="email"><?php if($contact_details[0]->c_emailid1!='') echo $contact_details[0]->c_emailid1; else echo '&nbsp;'; ?></p>
 										</div>
 									</div>

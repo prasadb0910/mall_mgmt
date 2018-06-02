@@ -27,22 +27,45 @@ function getAccess(){
 }
 
 function salesData($status='' ,$property_id='', $s_id=''){
-       if($status=='All'){
-        $cond="";
-        $cond3="";
-    } else if($status=='InProcess'){
-        $status='In Process';
-        $cond="and A.txn_status='In Process'";
-        $cond3="where A.txn_status='In Process'";
-    } else if($status=='Pending'){
-        $cond="and (A.txn_status='Pending' or A.txn_status='Delete')";
-        $cond3="where (A.txn_status='Pending' or A.txn_status='Delete')";
-    } else {
-        $cond="and A.txn_status='$status'";
-        $cond3="where A.txn_status='$status'";
-    }
+       // if($status=='All'){
+        // $cond="";
+        // $cond3="";
+    // } else if($status=='InProcess'){
+        // $status='In Process';
+        // $cond="and A.txn_status='In Process'";
+        // $cond3="where A.txn_status='In Process'";
+    // } else if($status=='Pending'){
+        // $cond="and (A.txn_status='Pending' or A.txn_status='Delete')";
+        // $cond3="where (A.txn_status='Pending' or A.txn_status='Delete')";
+    // } else {
+        // $cond="and A.txn_status='$status'";
+        // $cond3="where A.txn_status='$status'";
+    // }
 
        
+	    $status;
+        $cond="";
+        if($status=='InProcess')
+        {
+            if($cond=="")
+                   $cond.=" And A.txn_status='In Process'";
+
+        }else if($status=='Pending')
+        {
+             if($cond=="")
+                    $cond.="And (A.txn_status='Pending' or A.txn_status='Delete')";
+        }else if($status=='All' || $status=='ALL')
+        {
+            $cond = "";
+        }else{
+            
+             if($cond=="")
+                 
+                    $cond.="And  A.txn_status='$status'";
+        }
+	   
+	   
+	   
 
         if($property_id!=""){
 
@@ -52,20 +75,20 @@ function salesData($status='' ,$property_id='', $s_id=''){
                     $cond.=" And D.property_txn_id=".$property_id;    
         }
 
-        // if($property_id!=""){
+        if($property_id!=""){
 
-            // if($cond=="")
-                    // $cond = " Where D.property_type_id=".$property_type_id;
-            // else
-                    // $cond.=" And D.property_type_id=".$property_type_id;    
-        // }
+            if($cond=="")
+                    $cond = " Where D.property_type_id=".$property_type_id;
+            else
+                    $cond.=" And D.property_type_id=".$property_type_id;    
+        }
 
         if($s_id!=""){
 
-            if($cond=="")
-                    $cond = " Where A.txn_id=".$s_id;
-            else
-                    $cond.=" And A.txn_id=".$s_id;
+            // if($cond=="")
+                    $cond = " And A.txn_id=".$s_id;
+            // else
+                    // $cond.=" And A.txn_id=".$s_id;
         }
 
     $gid=$this->session->userdata('groupid');
@@ -77,21 +100,38 @@ function salesData($status='' ,$property_id='', $s_id=''){
 	if (count($result)>0) 
 	{
 		$sql="Select  A.*,D.* from 
-            (select * from sales_txn) A 
+            (select * from sales_txn ) A 
             left join 
             (select * from property_txn)D
-            on (A.property_id=D.property_txn_id)".$cond;
+            on (A.property_id=D.property_txn_id)
+			  left join 
+            (SELECT E.*, B.* FROM 
+            (SELECT * FROM sales_buyer_details A WHERE E.buyer_id in (select min(buyer_id) from sales_buyer_details 
+            where sale_id = E.sale_id)) E 
+            LEFT JOIN 
+            (select E.c_id, case when E.c_owner_type='individual' then ifnull(E.c_name,'') else ifnull(B.c_name,'') end as c_name, 
+                case when E.c_owner_type='individual' then ifnull(E.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
+                case when E.c_owner_type='individual' then ifnull(E.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
+                case when E.c_owner_type='individual' then ifnull(E.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
+                case when E.c_owner_type='individual' 
+                then concat(ifnull(E.c_name,''),' ',ifnull(E.c_last_name,'')) 
+                else concat(ifnull(E.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
+            from contact_master E left join contact_master B on (E.c_contact_id=B.c_id) 
+            where E.c_status='Approved' and E.c_gid='$gid') B 
+            ON (E.buyer_id=B.c_id)) D 
+			
+			where E.gp_id = '$gid'".$cond;
 	}
 	else 
 	{
 		$sql="Select  A.*,D.* from 
             (select * from sales_txn) A 
             left join 
-            (select * from property_txn)D
-            on (A.property_id=D.property_txn_id) ".$cond;
+            (select * from property_txn )D
+            on (A.property_id=D.property_txn_id)where A.gp_id = '$gid'".$cond;
            
 	}
-	
+	// echo $sql;
     // if (count($result)>0) {
         // $sql="select * from 
             // (select C.*, D.sale_id, D.buyer_id, D.owner_name from 

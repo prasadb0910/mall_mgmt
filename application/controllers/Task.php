@@ -125,10 +125,17 @@ class Task extends CI_Controller
 
             $sql = "select * from 
                     (select c_id, concat(ifnull(c_name,''),' ',ifnull(c_last_name,'')) as contact_name from contact_master 
-                    where c_status='Approved' and c_gid='$gid' and c_owner_type='individual') A order by A.contact_name";
+                    where c_status='Approved' and c_gid='$gid' and c_owner_type='individual'and c_type='Tenants') A order by A.contact_name";
             $query=$this->db->query($sql);
             $result=$query->result();
             $data['contact']=$result;
+			
+			  $sql = "select * from 
+                    (select c_id, concat(ifnull(c_name,''),' ',ifnull(c_last_name,'')) as contact_name from contact_master 
+                    where c_status='Approved' and c_gid='$gid' and c_owner_type='individual'and c_type='Others') A order by A.contact_name";
+            $query=$this->db->query($sql);
+            $result=$query->result();
+            $data['providers']=$result;
 
             load_view('task/task_details',$data);
 

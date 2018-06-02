@@ -299,13 +299,13 @@
                                                         <div class="row">
                                                             <div class=" col-md-12">
                                                                 <div class="thumbnail-wrapper d32 circular b-white "id="contact1" >
-                                                                    <div class="bg-master text-center text-white" style=" background: #899be7;text-align: center; -size:28pxalign-items:center;text-align: center;padding-top: 17px;font-size:24px;"><span>DM</span>
+                                                                    <div class="bg-master text-center text-white" style=" background: #899be7;text-align: center; -size:28pxalign-items:center;text-align: center;padding-top: 17px;font-size:24px;"><span><?php echo (strlen($contacts[$i]->c_name)>0?substr($contacts[$i]->c_name, 0, 1):'') . (strlen($contacts[$i]->c_last_name)>0?substr($contacts[$i]->c_last_name, 0, 1):''); ?></span>
                                                                     </div>  
                                                                 </div>
                                                              
                                                                 <div class="info">
-                                                                    <H5 class="title_1"> Dhaval Maru </H5>
-                                                                    <p class=""><b><?php $contacts[$i]->c_type?></b></p>
+                                                                    <H5 class="title_1"><?php if($contacts[$i]->c_owner_type=='individual') echo $contacts[$i]->c_name . ' ' . $contacts[$i]->c_last_name; else echo $contacts[$i]->c_company_name; ?></H5>
+                                                                    <p class=""><b><?=$contacts[$i]->c_type?></b></p>
                                                                     <p>
                                                                         <?php if($contacts[$i]->c_owner_type=='individual') echo 'Individual';
                                                                             else if($contacts[$i]->c_owner_type=='huf') echo 'Huf';

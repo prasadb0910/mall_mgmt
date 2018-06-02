@@ -80,7 +80,7 @@
 																 <div class="building_name"><b><?php echo $sales[$i]->unit_name; ?></b></div>
                                                                     
                                                                  <div class="owner_name"><H4 class="m-t-0 m-b-0">
-                                                                        
+                                                                        <div class="building_name"><b><?php echo $sales[$i]->owner_name; ?></b></div> 
                                                                     </H4></div>
                                                                 </div>
                                                                 <div class="card-block">

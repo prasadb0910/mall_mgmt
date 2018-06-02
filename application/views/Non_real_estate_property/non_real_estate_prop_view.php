@@ -241,12 +241,13 @@
 			<div class=" container-fluid   container-fixed-lg">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="">Dashboard</a></li>
-					<li class="breadcrumb-item"><a href="index/Purchase/checkstatus/All">Purchase List</a></li>
+					<li class="breadcrumb-item"><a href="<?=base_url('index.php/Non_real_estate_property/checkstatus/All/2')?>"> Non Real Estate</a></li>
+					<li class="breadcrumb-item"><a href="<?=base_url('index.php/Non_real_estate_property/checkstatus/All/2')?>">Property List</a></li>
 					<li class="breadcrumb-item active">Property View</li>
 				</ol>
 				<div class="container">
 					<div class="row">
-						<div class="card card-transparent  bg-white" style="background:#fff;margin-right:8px;">
+						<div class="card card-transparent  bg-white" style="background:#fff;">
 							<div class=" " style="padding:10px;">
 								<a href="">
 									<div class="fileUpload blue-btn btn width100 pull-left">

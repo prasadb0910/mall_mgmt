@@ -30,8 +30,8 @@
     <div class="content ">
         <div class=" container-fluid container-fixed-lg">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="">Real Estate</a></li>
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="#">Real Estate</a></li>
                 <li class="breadcrumb-item active"><a href="#">Property List</a></li>
             </ol>
 
@@ -91,13 +91,14 @@
                                                     <div class="card card-transparent container-fixed-lg bg-white " style="background:#fff;">
                                                         <div class="row">
                                                             <div class=" col-md-4">
+														
                                                                 <img src="<?php echo base_url().$property[$i]->p_image; ?>" alt="Paris" class="prop_img m-t-20 m-l-20" style="width:180px"onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
                                                             </div>
                                                             <div class=" col-md-8">
                                                                 <div class="card-header ">
                                                                    <div class="building_name"><b><?php echo $property[$i]->unit_name; ?></b></div>
                                                                     <div class="owner_name"><H4 class="m-t-0 m-b-0">
-                                                                    <?php foreach($owner_name as $name)
+                                                                    <?php foreach($property[$i]->owner_name as $name)
                                                                         {
                                                                             echo $name->owner_name;
                                                                         }
@@ -152,11 +153,11 @@
                                                         <div class="info pull-left p-l-10" style="margin-top: 20px;text-align:left;width:40%">
                                                             <div class="building_name"><?php echo $property[$i]->unit_name; ?></div>
                                                             <div class="owner_name"><H4 class="m-t-0 m-b-0">
-																	<?php foreach($owner_name as $name)
+																<?php foreach($property[$i]->owner_name as $name)
                                                                         {
                                                                             echo $name->owner_name;
                                                                         }
-                                                                    ?> </H4></div>
+                                                                    ?>  </H4></div>
                                                             <!--<div class="address"><i class="fa fa-map-marker"></i>  
                                                             <?php if(isset($property)) { echo $property[$i]->p_apartment . ' ' . $property[$i]->p_address . ' ' . $property[$i]->p_landmark . ' ' . $property[$i]->p_state . ' ' . $property[$i]->p_city . ' ' . $property[$i]->p_pincode . ' ' . $property[$i]->p_country; } ?></div>
                                                              -->

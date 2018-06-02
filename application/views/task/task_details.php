@@ -108,8 +108,8 @@
 													<label class="">ASSIGN TO</label>
 													<select id="contact_1_id" name="contact" class="form-control full-width" data-error="#err_contact_name_1" data-placeholder="Select" data-init-plugin="select2" <?php if(isset($taskdetail->self_assigned)) {if($taskdetail->self_assigned=='1') echo 'disabled';} ?>>
 		                                                <option value="">Select</option>
-		                                                <?php for ($k=0; $k < count($contact) ; $k++) { ?>
-		                                                    <option value="<?php echo $contact[$k]->c_id; ?>" <?php if(isset($taskdetail)) { if($taskdetail->self_assigned=='0' || $taskdetail->self_assigned==null) { if($taskdetail->user_id == $contact[$k]->c_id) { echo 'selected'; }}} ?>><?php echo $contact[$k]->contact_name; ?></option>
+		                                                <?php for ($k=0; $k < count($providers) ; $k++) { ?>
+		                                                    <option value="<?php echo $providers[$k]->c_id; ?>" <?php if(isset($taskdetail)) { if($taskdetail->self_assigned=='0' || $taskdetail->self_assigned==null) { if($taskdetail->user_id == $providers[$k]->c_id) { echo 'selected'; }}} ?>><?php echo $providers[$k]->contact_name; ?></option>
 		                                                <?php } ?>
 		                                            </select>
 		                                            <div id="err_contact_name_1"></div>

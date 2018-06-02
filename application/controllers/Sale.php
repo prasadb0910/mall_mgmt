@@ -1086,6 +1086,7 @@ class Sale extends CI_Controller
     }
 
     public function checkstatus($status=''){
+		
         $result=$this->sales_model->getAccess();
         if(count($result)>0) {
             $data['access']=$result;

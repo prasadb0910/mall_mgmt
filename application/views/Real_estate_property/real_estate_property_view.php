@@ -241,8 +241,8 @@
 			<div class=" container-fluid   container-fixed-lg">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="">Dashboard</a></li>
-					<li class="breadcrumb-item"><a href="<?=base_url('index.php/Real_estate_property')?>">Real Estate</a></li>
-					<li class="breadcrumb-item"><a href="index/Purchase/checkstatus/All">Purchase List</a></li>
+					<li class="breadcrumb-item"><a href="<?=base_url('index.php/Real_estate_property/checkstatus/All/1')?>">Real Estate</a></li>
+					<li class="breadcrumb-item"><a href="<?=base_url('index.php/Real_estate_property/checkstatus/All/1')?>">Property List</a></li>
 					<li class="breadcrumb-item active">Property View</li>
 				</ol>
 				<div class="container">

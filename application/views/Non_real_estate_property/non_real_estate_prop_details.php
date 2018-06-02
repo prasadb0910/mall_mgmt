@@ -160,16 +160,22 @@
     <div class="content">
     <form id="form_non_real_estate_property" role="form" method ="post" action="<?php if(isset($p_txn)) { echo base_url().'index.php/non_real_estate_property/updaterecord/'.$p_id; } else { echo base_url().'index.php/non_real_estate_property/saverecord'; } ?>"  enctype="multipart/form-data">
     <div class=" container-fluid   container-fixed-lg ">
-        <ol class="breadcrumb">
+         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index/Dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="">Real Estate</a></li>
-            <li class="breadcrumb-item"><a href="index/">Property List</a></li>
-                 <?php if(isset($p_txn)){ ?><li class="breadcrumb-item"><a href="">Property View</a></li>
-                  <?php } ?>
+            <li class="breadcrumb-item"><a href="<?=base_url('index.php/Non_real_estate_property/checkstatus/All/2')?>">Non Estate Property</a></li>
+            <li class="breadcrumb-item"><a href="<?=base_url('index.php/Non_real_estate_property/checkstatus/All/2')?>">Property List</a></li>
+                 <?php if(isset($p_txn)){ ?><li class="breadcrumb-item"><a href="<?=base_url('index.php/Non_real_estate_property/view/'.$p_txn[0]->property_txn_id)?>">Property View</a></li>
+				  <?php } ?>
             <li class="breadcrumb-item active">Property Details </li>
             <input type="hidden" id="p_id" name="p_id" value="<?php if(isset($p_txn)) echo $p_id; ?>" />
             <input type="hidden" name="type_id" value="2">
         </ol>
+		
+	
+		
+		
+		
+		
         <div class="row">
             <div class="col-md-4">
                 <div class="col-lg-12">
