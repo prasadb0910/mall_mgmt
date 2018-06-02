@@ -300,7 +300,7 @@
 								<div class="col-md-3" style="background: linear-gradient(45deg, #39414d 0%, #39414d 25%, #444c59 51%, #4c5561 78%, #4e5663 100%); padding-right: 15px;padding-left: 15px;">
 							  <div class="p-t-20">
 			                     
-			                        <div id="image-preview" class="p-l-20 p-b-20 p-t-20 p-r-20" style="background-image: url('<?php if (isset($s_txn->p_image)) echo base_url().$s_txn[0]->p_image; else echo base_url().'assets/img/demo/preview.jpg'; ?>');">
+			                        <div id="image-preview" class="p-l-20 p-b-20 p-t-20 p-r-20" style="background-image: url('<?php if (isset($s_txn[0]->p_image)) echo base_url().$s_txn[0]->p_image; else echo base_url().'assets/img/demo/preview.jpg'; ?>');">
 			                            <!-- <input type="file" name="image" id="image-upload" /> -->
 			                            <!-- <img src="<?php //echo base_url().$sub_property[0]->c_image; ?>"> -->
 			                        </div>
@@ -309,14 +309,14 @@
 			                        </div> -->
 			                    </div>
 					
-							<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2);">
+							<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2);display:none;">
 								<div class="row" style="">
 									<div class="col-md-6 rent">
-										<b style="font-size:22px;"><?php//$tenant_count?></b><br>
+										<b style="font-size:22px;"><?php// echo $tenant_count?></b><br>
 										Tenant
 									</div>
 									<div class="col-md-6 rent" style="border-right:none;">
-										<b style="font-size:22px;" ><?php//$maintenance_count?></b><br>
+										<b style="font-size:22px;" ><?php //echo $maintenance_count?></b><br>
 										Maintenance 
 									</div>
 								

@@ -350,21 +350,6 @@ $('#btn_change_password').on('click', function (e) {
 
 
 
-$(document).ready(function() {
-	$('.menu-pin').click(function() {
-		//alert('hi');
-		if($('.vertical_nav').hasClass('vertical_nav__minify')) {
-			//alert('hi');
-			$.cookie("menu","open");
-			$('.mCustomScrollBox').css('overflow','hidden');
-			//$('.mCustomScrollbar _mCS_1').css('overflow','hidden');
-		} else {
-			$.cookie("menu","open");
-			$('.mCustomScrollBox').css('overflow','hidden');
-			//$('.mCustomScrollbar _mCS_1').css('overflow','hidden');
-		}
-	}); 
-});
 
   $("#con_add_city,#pur_add_city").on("change",function()
     {

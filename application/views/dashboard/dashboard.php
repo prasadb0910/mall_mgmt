@@ -676,7 +676,7 @@
                                                     <div class=" col-md-6">
                                                         <div class="started start-property">
                                                             <div class="body">
-                                                                <a title="add property &amp; units" href="<?php echo base_url(); ?>index.php/purchase/addnew" style="<?php if(isset($property)) {if(count($property)==0) echo 'color: #da5050;';} else echo 'color: #da5050;';?>">
+                                                                <a title="add property &amp; units" href="<?php echo base_url(); ?>index.php/real_estate_property/add" style="<?php if(isset($property)) {if(count($property)==0) echo 'color: #da5050;';} else echo 'color: #da5050;';?>">
                                                                     <span>add property &amp; units</span>
                                                                 </a>
                                                                 <small>add apartments, homes, offices</small>
@@ -686,7 +686,7 @@
                                                     <div class=" col-md-6">
                                                         <div class="started start-move-in">
                                                             <div class="body move_tenant">
-                                                                <a  title="move in a tenant" href="<?php echo base_url(); ?>index.php/rent/addnew" style="<?php if(isset($rent)) {if(count($rent)==0) echo 'color: #da5050;';} else echo 'color: #da5050;';?>">
+                                                                <a  title="move in a tenant" href="<?php echo base_url(); ?>index.php/Rent_real_estate/add" style="<?php if(isset($rent)) {if(count($rent)==0) echo 'color: #da5050;';} else echo 'color: #da5050;';?>">
                                                                     <span>move in a tenant</span>
                                                                 </a>
                                                                 <small>create a lease and manage accounting</small>

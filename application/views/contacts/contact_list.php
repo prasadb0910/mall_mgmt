@@ -332,17 +332,13 @@
                                                             <?php $style = ($contacts[$i]->c_type=='Owners' || $contacts[$i]->c_type=='Others'?"display:none":''); ?>
 
                                                              
-                                                            <div class="<?=$class?>  rent" style="<?=$stylerent?>">
+                                                            <div class="col-md-12 rent">
                                                                 <a href="<?php echo base_url() . 'index.php/Accounting/getConAcc/All/' . $contacts[$i]->c_id; ?>">
                                                                 <i style="font-size:22px;" class="fa fa-inr "></i><br>
                                                                 Accounting
 																	</a>
                                                             </div>
-                                                            <div class="col-md-6 leases" style="<?=$style?>">
-															  <a href="<?php echo base_url() . 'index.php/Rent/getConRent/All/' . $contacts[$i]->c_id; ?>">
-                                                                <i style="font-size:22px;" class="fa fa-file-text-o "></i><br>
-                                                              Rent</a>
-                                                            </div>
+                                                           
                                                         </div>
                                                         <div class=" col-md-12">
                                                             <span class="invoice"><a href="<?php echo base_url(); ?>index.php/Accounting/addnew/income"><button class="btn btn-success pull-left btn-xs invoice" type="submit"><i class="fa fa-plus tab-icon"></i> <span>invoice </span></button></a></span>
@@ -388,10 +384,7 @@
                                                                 Accounting
 																	</a>
                                                             </div>
-                                                            <div class="pull-left"  style="margin-top: 25px;padding-left: 50px;">
-                                                                 <a href="<?php echo base_url() . 'index.php/Rent/getConRent/All/' . $contacts[$i]->c_id; ?>"><i style="font-size:22px;" class="fa fa-file-text-o "></i><br>
-                                                                Rent</a>
-                                                            </div>
+                                                           
                                                             <a href="<?php echo base_url().'index.php/Contacts/viewrecord/'.$contacts[$i]->c_id; ?>" class=" pull-right invoice" style="color:#5cb85c!important;margin-top: 37px;padding-right:50px">View <i class="    fa fa-angle-right tab-icon"></i> </a>
                                                             <span class="invoice"  ><a href="<?php echo base_url(); ?>index.php/Accounting/addnew/income"><button class="btn btn-success pull-right btn-xs invoice "style="margin-top: 37px;margin-right:40px" type="submit"><i class="fa fa-plus tab-icon"></i> <span>invoice </span></button></a></span>
                                                         </div>

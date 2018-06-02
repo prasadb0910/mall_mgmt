@@ -249,9 +249,9 @@
 
 										<!-- <a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> Delete</a> -->
 
-										<?php if(isset($editcontact)) { ?>
+									<?php if(isset($editcontact)) { ?>
 										<?php if($editcontact[0]->c_status == 'Approved') { if(isset($access)) { if($access[0]->r_delete == 1) { ?> 
-											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> Delete <!-- <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> --> </a>
+											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i>  <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> </a>
 										<?php } } } else if($editcontact[0]->c_modifiedby != '' && $editcontact[0]->c_modifiedby != null) { if($editcontact[0]->c_modifiedby!=$contactby) { if($editcontact[0]->c_status != 'In Process') { if(isset($access)) { if($access[0]->r_approvals == 1) { ?> 
 			                              	<a href="#" class="dropdown-item edit" ><i class="pg-settings_small"></i> <input class="dropdown-item edit" type="submit" value="Approve" name="submit"/></a>
 											<a href="#" class="dropdown-item delete" ><i class="fa fa-trash"></i> <input class="dropdown-item delete" type="submit" value="Reject" name="submit"/></a>
@@ -263,7 +263,7 @@
 											<a href="#" class="dropdown-item delete" ><i class="fa fa-trash"></i> <input class="dropdown-item delete" type="submit" value="Reject" name="submit"/></a>
 										<?php } } } } else { ?>
 											<!-- <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> -->
-											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> Delete <!-- <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> --> </a>
+											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i>  <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> </a>
 										<?php } } } ?>
 
 										<a href="#" class="dropdown-item print" ><i class="fa fa-print"></i> Print</a>
@@ -292,7 +292,8 @@
 										<span class="invoice"><a href="<?php echo base_url(); ?>index.php/Accounting/addnew/income" class="btn btn-success  btn-xs invoice" ><span>New Invoice </span></a></span>
 								</div>
 							</div>
-							<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2);">
+							
+								<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2); <?php if (isset($editcontact)) { if($editcontact[0]->c_type=='Others')  echo 'display: none;'; } ?>">
 								<div class="row">
 								  <div class="col-md-6 rent">
                                     <a href="<?php echo base_url(); ?>index.php/Accounting">
@@ -309,6 +310,8 @@
 								  </div>
 								</div> 
 							</div>
+					
+							
 						</div>
 						<div class="col-md-9">
 							<div class=" container-fluid   container-fixed-lg bg-white">

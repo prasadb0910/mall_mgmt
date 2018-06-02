@@ -289,7 +289,7 @@
 									<span class="invoice"><a href="<?php echo base_url(); ?>index.php/Accounting/addnew/income" class="btn btn-success  btn-xs invoice" ><span>New Invoice </span></a></span>
 								</div>
 							</div>
-							<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2);">
+						<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2); <?php if (isset($editcontact)) { if($editcontact[0]->c_type=='Others')  echo 'display: none;'; } ?>">
 								<div class="row">
 								  <div class="col-md-6 rent">
                                     <a href="<?php echo base_url() . 'index.php/Accounting/getConAcc/All/' . $editcontact[0]->c_id; ?>">

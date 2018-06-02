@@ -180,7 +180,7 @@
                                 Drag n' drop uploader
                             </div><span ><a href="#"><i class=" fa fa-trash pull-right" id="img_delete" style="color:#d63b3b;font-size:18px;"></i></a></span>
                         </div>
-                        <div id="image-preview" class="p-l-20 p-b-20 p-t-20 p-r-20" style="background-image: url('<?php if (isset($s_txn)) echo base_url().$s_txn[0]->p_image; else echo base_url().'assets/img/demo/preview.jpg'; ?>');">
+                        <div id="image-preview" class="p-l-20 p-b-20 p-t-20 p-r-20" style="background-image: url('<?php if (isset($s_txn[0]->p_image)) echo base_url().$s_txn[0]->p_image; else echo base_url().'assets/img/demo/preview.jpg'; ?>');">
                             <input type="file" name="image" id="image-upload" />
                         </div>
                         <div id="image-label_field">

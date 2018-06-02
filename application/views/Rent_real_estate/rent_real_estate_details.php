@@ -639,7 +639,7 @@
                                      <div class="col-md-3" style="display:none" id="revenue_due_day">
                                             <div class="form-group form-group-default form-group-default-select2 required">
                                                 <label> Revenue % input due day</label>
-                                                <select class="full-width" name="revenue_due_day"  data-error="#err_rent_due_day" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
+                                                <select class="full-width" name="revenue_due_day" id=""  data-error="#err_revenue_due_day" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                                     <option value="">Select</option>
                                                     <?php if(isset($rent) && count($rent)>0) {
                                                             for($i=1; $i<=31; $i++) { 
@@ -647,7 +647,7 @@
                                                                 else echo '<option>'.$i.'</option>';}} 
                                                     else {for($i=1; $i<=31; $i++) { echo '<option>'.$i.'</option>';}} ?>
                                                 </select>
-                                                <div id="err_rent_due_day"></div>
+                                                <div id="err_revenue_due_day"></div>
                                             </div>
                                      </div>
     								 <div class="col-md-3" >
@@ -709,7 +709,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="form-group form-group-default1 input-group">
+                                        <div class="form-group form-group-default input-group">
                                             <div class="form-input-group">
                                                 <label style="">TDS Rate In %</label>
                                                 <input type="text" class="form-control format_number" name="tds_rate" id="tds_rate" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->tds_rate,2); }} ?>" <?php if(isset($rent)) { if($rent[0]->tds==1) echo '';   } else { echo "disabled" ;} ?>    style="" /></label>
@@ -1086,13 +1086,13 @@
                                                 </td>
                                                 <td>
                                                     <div class="checkbox check-success">
-                                                        <input type="checkbox" id="landlord_<?php //echo $k+1; ?>" name="landlord" value="1" <?php if(isset($utility[0]->landlord)) { if($utility[0]->landlord=='1') echo 'checked'; } ?> >
+                                                        <input type="checkbox" id="landlord<?php //echo $k+1; ?>" name="landlord" value="1" <?php if(isset($utility[0]->landlord)) { if($utility[0]->landlord=='1') echo 'checked'; } ?> >
                                                         <label for="landlord"></label>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="checkbox check-success">
-                                                        <input type="checkbox" id="tenant_<?php //echo $k+1; ?>" name="u_tenant" value="1" <?php if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1') echo 'checked'; } ?> >
+                                                        <input type="checkbox" id="tenant<?php //echo $k+1; ?>" name="u_tenant" value="1" <?php if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1') echo 'checked'; } ?> >
                                                         <label for="tenant"></label>
                                                     </div>
                                                 </td>
