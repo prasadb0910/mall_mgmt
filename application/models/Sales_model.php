@@ -417,6 +417,7 @@ function insertRecord($sldt, $txn_status){
     return $pid;
 }
 
+
 function insertImage($pid){
     $file_nm='image';
     if(isset($_FILES[$file_nm])) {
