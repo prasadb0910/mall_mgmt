@@ -131,7 +131,7 @@ class Login extends CI_Controller
             $logarray['gp_id']=$result[0]->gu_gid;
             $this->user_access_log_model->insertAccessLog($logarray);
             // redirect(base_url().'index.php/Dashboard');
-            $redirect_url=base_url().'index.php/Dashboard/home';
+            $redirect_url=base_url().'index.php/Dashboard';
         } else {
             // echo "<script>alert('No Groups Assigned.');</script>";
             // $this->load->view('login/main_page');
@@ -627,7 +627,7 @@ class Login extends CI_Controller
     public function get_dashboard($token){
         $redirect_url = $this->get_session($token);
         
-        $redirect_url = base_url().'index.php/Dashboard/home';
+        $redirect_url = base_url().'index.php/Dashboard';
         redirect($redirect_url);
     }
 

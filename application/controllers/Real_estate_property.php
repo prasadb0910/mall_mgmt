@@ -263,6 +263,7 @@ class Real_estate_property extends CI_Controller
                     $purchase_ownership_details=$this->purchase_model->insertOwnershipDetails($pid);
 
                     $this->purchase_model->insertImage($pid);
+                   
                     redirect(base_url().'index.php/real_estate_property');
                 } else {
                     echo "Unauthorized access";

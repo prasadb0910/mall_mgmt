@@ -597,7 +597,7 @@
                                             <label class="">Type Of Rent</label>
                                             <select class="full-width" name="rent_type" id="rent_type" data-error="#err_schedule" data-placeholder="Select" data-init-plugin="select2" onchange="rentype();" data-minimum-results-for-search="Infinity">
                                                 <option value="">Select</option>
-                                                <option  <?php   $rent[0]->rent_type=='fixed'; if(isset($rent)) { echo ($rent[0]->rent_type=='fixed'?"selected":"");} else "";  ?>  value="fixed">Fixed</option>
+                                                <option  <?php   if(isset($rent)) { $rent[0]->rent_type=='fixed';  echo ($rent[0]->rent_type=='fixed'?"selected":"");} else "";  ?>  value="fixed">Fixed</option>
                                                 <option  <?php  if(isset($rent)) { echo ($rent[0]->rent_type=='revenue'?"selected":"");} else "";  ?>   value="revenue">% Revenue
                                                 </option>
                                             </select>
@@ -1202,7 +1202,7 @@
                         <input type="button" name="previous" class="btn btn-warning previous pull-left" value="Previous" />
 
                         <input type="hidden" id="submitVal" value="1" />
-                        <a href="index/rent" class="btn btn-danger pull-left" style="margin-left: 10px;" >Cancel</a>
+                        <a href="<?php echo base_url(); ?>index.php/Rent_real_estate" class="btn btn-danger pull-left" style="margin-left: 10px;" >Cancel</a>
                         <input type="submit" class="btn btn-success pull-right submit-form" name="submit" value="<?php if($maker_checker=='yes') echo 'Submit For Approval'; else echo 'Submit'; ?>" style="margin-right: 10px;" />
                         <input type="submit" class="btn btn-success pull-right save-form" name="submit" value="Save" style="margin-right: 10px; <?php if($maker_checker!='yes' && isset($rent)) echo 'display:none'; ?>" />
                     </fieldset>

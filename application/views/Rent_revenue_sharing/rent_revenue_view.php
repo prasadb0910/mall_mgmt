@@ -335,207 +335,205 @@
 								</div>
 							</div>
 						</div>
+						<?php if(isset($rent)){?>
 						<div class="card card-transparent  bg-white" style="background:#fff;">
-						<div class="row">
-						<div class="col-md-9">
-							<div class=" container-fluid  container-fixed-lg bg-white p-b-10">
-								<div class="card card-transparent">
-									<article>
-										<h5 class="view-title">Property information &amp; terms</h5>
-										<div class="m-property-info ">
-											<div class="info-name-property">
-												<span>
-													<a class="info-link" href="">
-														<a class="info-link" href="">
-														<?=$rent[0]->unit_name?> 
-													</a>
-													</a>
-													<span>, </span>
-												</span><!-- 
-												<a  class="info-link" title="" href="">
-													Building
-												</a> -->
-											</div>
-											<!-- <div class="info-location">
-												<div class="icon-svg">
-													<i class="fa fa-map-marker" aria-hidden="true"></i>
-												</div>
-												<div class="location-address">
-													<address><?php //echo $editrent[0]->p_address; ?></address>
-													<address><?php //echo $editrent[0]->p_googlemaplink; ?></address>
-												</div>
-											</div> -->
-										</div>
-										<div class="unit-options">
-											<!-- <div>
-												<span>1</span>
-												<small>bed</small>
-											</div> &nbsp /
-											<div>
-												<span>1</span>
-												<small>bath</small>
-											</div> &nbsp / -->
-											<div>
-												<span>Area - <?=$rent[0]->area?></span>
-												<small><?=$rent[0]->area_unit?></small>
-											</div>
-										</div>
-									</article>
-									<article class="period-transaction">
-										<section>
-											<div class="row">
-												<div class="col-md-12 col-sm-4">
-													<div class="transaction-item">
-														<div class="view-block m-b-0">
-															
-															<div class="title-block">
-																<h4>Month</h4>
-																<span class="period"><?=$rent[0]->locking_period?></span>
-															</div>
-														
-															
-														</div>
-													</div>
-												</div>
-											</div>
-										</section>
-									</article>
-									
-								
-								<article class="lease-transaction">
-										<h5 class="view-title">Entered Revenue Amount</h5>
-											<div class="row">
-												<div class="col-md-4 col-sm-4">
-													<div class="transaction-item">
-														<div class="view-block m-b-0">
-															<div class="title-block">
-																<h4>Month</h4>
-															</div>
-														
-														</div>
-													</div>
-												</div>
-											
-												<div class="col-md-4 col-sm-4">
-													<div class="transaction-item">
-														<div class="view-block m-b-0">
-															<div class="title-block">
-																<h4>Revenue Amount</h4>
-																
-															</div>
-														
-														</div>
-													</div>
-												</div>
-
-												<div class="col-md-4 col-sm-4">
-													<div class="transaction-item">
-														<div class="view-block m-b-0">
-															<div class="title-block">
-																<h4>Action</h4>
-																
-															</div>
-														
-														</div>
-													</div>
-												</div>
-
-											</div>
-										<section>
-											<?php 
-											if(isset($revenue_sharing))
-											{
-												foreach ($revenue_sharing as $key => $value) {
-												
-											?>
-											<div class="row">
-												<div class="col-md-4 col-sm-4">
-													<div class="transaction-item">
-														<div class="view-block m-b-0">
-															<div class="title-block">
-																<span><?=$value['event_date']?></span>
-															</div>
-														
-														</div>
-													</div>
-												</div>
-											
-												<div class="col-md-4 col-sm-4">
-													<div class="transaction-item">
-														<div class="view-block m-b-0">
-															<div class="title-block">
-																<span><?=($value['revenue_amount'])!=''?'₹ '.$value['revenue_amount']:'-'?></span>
-															</div>
-														
-														</div>
-													</div>
-												</div>
-
-												<div class="col-md-4 col-sm-4">
-													<div class="transaction-item">
-														<div class="view-block m-b-0">
-															<div class="title-block">
-																<span><a href="<?php echo base_url().'index.php/Rent_revenue_sharing/edit/'.$r_id.'/'.$value['revenue_schedule_id'] ?>" class="dropdown-item edit" ><i class="pg-settings_small"></i> Edit</a></span>
-															</div>
-														
-														</div>
-													</div>
-												</div>
-
-											</div>
-											
-											<?php } }?>	
-										</section>
-								</article>
-									<!--<article class="lease-utilities">
-										<h5 class="view-title">
-											<span>Utilities</span>
-											<span  class="icon-fo-ok"></span>
-										</h5>
-										<div class="row">
-											<div class="col-xs-24 col-sm-12" >
-												<div class="utilities-block">
-													<div class="utilities-tag">
-														
-													</div>
-												</div>
-											</div>
-										</div>
-									</article>-->
+							<div class="row">
+								<div class="col-md-9">
+									<div class=" container-fluid  container-fixed-lg bg-white p-b-10">
 										
-									
-								
-							
-								</div>
-							</div>
-						</div>
-						<div class="col-md-3" style="background-color: #f6f9fc;border-left: 2px solid #edf0f5;padding:20px;">
-							<div class="status" style="float:right">
-								<!-- <span class="leases_status">Active</span>
-								<span class="leases_status status_name">#1</span> -->
-							</div>
-							<div class="view_block_type_lease  p-b-20" style=" border-bottom:2px solid #edf0f5;">
-								<div class="m-b-10">
-									<h5  style="font-size:16px;font-weight:600">Revenue is pending For</h5>
-									<div class="date-type">
-									<div>
-										<?php 
-											if(isset($revenue_sharing_pending))
-											{
-												foreach ($revenue_sharing_pending as $key => $value1) {
-												
-											?>
-										<div>
-											<span><?=$value1['event_date']?></span>
+										<div class="card card-transparent">
+											<article>
+												<h5 class="view-title">Property information &amp; terms</h5>
+												<div class="m-property-info ">
+													<div class="info-name-property">
+														<span>
+															<a class="info-link" href="">
+																<a class="info-link" href="">
+																<?=$rent[0]->unit_name?> 
+															</a>
+															</a>
+															<span>, </span>
+														</span><!-- 
+														<a  class="info-link" title="" href="">
+															Building
+														</a> -->
+													</div>
+													<!-- <div class="info-location">
+														<div class="icon-svg">
+															<i class="fa fa-map-marker" aria-hidden="true"></i>
+														</div>
+														<div class="location-address">
+															<address><?php //echo $editrent[0]->p_address; ?></address>
+															<address><?php //echo $editrent[0]->p_googlemaplink; ?></address>
+														</div>
+													</div> -->
+												</div>
+												<div class="unit-options">
+													<!-- <div>
+														<span>1</span>
+														<small>bed</small>
+													</div> &nbsp /
+													<div>
+														<span>1</span>
+														<small>bath</small>
+													</div> &nbsp / -->
+													<div>
+														<span>Area - <?=$rent[0]->area?></span>
+														<small><?=$rent[0]->area_unit?></small>
+													</div>
+												</div>
+											</article>
+											<article class="period-transaction">
+												<section>
+													<div class="row">
+														<div class="col-md-12 col-sm-4">
+															<div class="transaction-item">
+																<div class="view-block m-b-0">
+																	
+																	<div class="title-block">
+																		<h4>Lease Period</h4>
+																		<span class="period"><?=$rent[0]->locking_period?></span>
+																	</div>
+																
+																	
+																</div>
+															</div>
+														</div>
+													</div>
+												</section>
+											</article>
+											<article class="lease-transaction">
+													<h5 class="view-title">Entered Revenue Amount</h5>
+														<div class="row">
+															<div class="col-md-4 col-sm-4">
+																<div class="transaction-item">
+																	<div class="view-block m-b-0">
+																		<div class="title-block">
+																			<h4>Month</h4>
+																		</div>
+																	
+																	</div>
+																</div>
+															</div>
+														
+															<div class="col-md-4 col-sm-4">
+																<div class="transaction-item">
+																	<div class="view-block m-b-0">
+																		<div class="title-block">
+																			<h4>Revenue Amount</h4>
+																			
+																		</div>
+																	
+																	</div>
+																</div>
+															</div>
+
+															<div class="col-md-4 col-sm-4">
+																<div class="transaction-item">
+																	<div class="view-block m-b-0">
+																		<div class="title-block">
+																			<h4>Action</h4>
+																			
+																		</div>
+																	
+																	</div>
+																</div>
+															</div>
+
+														</div>
+													<section>
+														<?php 
+														if(isset($revenue_sharing))
+														{
+															foreach ($revenue_sharing as $key => $value) {
+															
+														?>
+														<div class="row">
+															<div class="col-md-4 col-sm-4">
+																<div class="transaction-item">
+																	<div class="view-block m-b-0">
+																		<div class="title-block">
+																			<span><?=$value['event_date']?></span>
+																		</div>
+																	
+																	</div>
+																</div>
+															</div>
+														
+															<div class="col-md-4 col-sm-4">
+																<div class="transaction-item">
+																	<div class="view-block m-b-0">
+																		<div class="title-block">
+																			<span><?=($value['revenue_amount'])!=''?'₹ '.$value['revenue_amount']:'-'?></span>
+																		</div>
+																	
+																	</div>
+																</div>
+															</div>
+
+															<div class="col-md-4 col-sm-4">
+																<div class="transaction-item">
+																	<div class="view-block m-b-0">
+																		<div class="title-block">
+																			<span><a href="<?php echo base_url().'index.php/Rent_revenue_sharing/edit/'.$r_id.'/'.$value['revenue_schedule_id'] ?>" class="dropdown-item edit" ><i class="pg-settings_small"></i> Edit</a></span>
+																		</div>
+																	
+																	</div>
+																</div>
+															</div>
+
+														</div>
+														
+														<?php } }?>	
+													</section>
+											</article>
+											<!--<article class="lease-utilities">
+												<h5 class="view-title">
+													<span>Utilities</span>
+													<span  class="icon-fo-ok"></span>
+												</h5>
+												<div class="row">
+													<div class="col-xs-24 col-sm-12" >
+														<div class="utilities-block">
+															<div class="utilities-tag">
+																
+															</div>
+														</div>
+													</div>
+												</div>
+											</article>-->
 										</div>
-										<?php   } } ?>
+										
 									</div>
 								</div>
+								<div class="col-md-3" style="background-color: #f6f9fc;border-left: 2px solid #edf0f5;padding:20px;">
+									<div class="status" style="float:right">
+										<!-- <span class="leases_status">Active</span>
+										<span class="leases_status status_name">#1</span> -->
+									</div>
+									<div class="view_block_type_lease  p-b-20" style=" border-bottom:2px solid #edf0f5;">
+										<div class="m-b-10">
+											<h5  style="font-size:16px;font-weight:600">Revenue is pending For</h5>
+											<div class="date-type">
+											<div>
+												<?php 
+													if(isset($revenue_sharing_pending))
+													{
+														foreach ($revenue_sharing_pending as $key => $value1) {
+														
+													?>
+												<div>
+													<span><?=$value1['event_date']?></span>
+												</div>
+												<?php   } } ?>
+											</div>
+										</div>
+										</div>
+									</div>
+									
 								</div>
-							</div>
-							
 						</div>
-						</div>
+						<?php } ?>
 					</div>
 					</div>
 				</div>
