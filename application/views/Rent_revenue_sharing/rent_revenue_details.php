@@ -275,7 +275,7 @@
                             </div>
                             <div class="form-footer" style="padding-bottom: 60px;">
                                 <input type="hidden" id="submitVal" value="1" />
-                                <a href="index/Purchase" class="btn btn-default-danger pull-left" >Cancel</a>
+                                <a href="<?php echo base_url(); ?>index.php/Rent_revenue_sharing/add" class="btn btn-default-danger pull-left" >Cancel</a>
                                 <input type="submit" class="btn btn-default pull-right submit-form" name="submit" value="Submit" style="margin-right: 10px;" />
                                 <input formnovalidate="formnovalidate" type="submit" class="btn btn-default pull-right save-form m-r-10" name="submit" value="Save" style="<?php// if($maker_checker!='yes' && isset($p_txn)) echo 'display:none'; ?>" />
                             </div>

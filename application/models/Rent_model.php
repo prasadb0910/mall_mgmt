@@ -13,6 +13,7 @@ class Rent_model Extends CI_Model{
     {   
         $status;
         $cond="";
+        $gid=$this->session->userdata('groupid');
         if($status=='InProcess')
         {
             if($cond=="")
@@ -55,20 +56,20 @@ class Rent_model Extends CI_Model{
                 from rent_txn rt
                 left join property_txn pt on rt.property_id=pt.property_txn_id
                 left join purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
-                Where rt.property_id NOT IN(Select property_id from sales_txn) and rt. txn_status <> 'Inactive' ".$cond;
+                Where rt.property_id NOT IN(Select property_id from sales_txn) and rt. txn_status <> 'Inactive' and rt.gp_id = '$gid' ".$cond;
         $query=$this->db->query($sql); 
         return $query->result();       
     }
 
     public function getallrentdatacount($property_type_id)
     {   
-        
+        $gid=$this->session->userdata('groupid');
         $sql = "Select rt.*,pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_name,pt.unit_no,
                 pt.unit_type,pd.pr_client_id
                 from rent_txn rt
                 left join property_txn pt on rt.property_id=pt.property_txn_id
                 left join purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
-                Where  rt. txn_status <> 'Inactive'  and pt.property_typ_id=".$property_type_id;
+                Where  rt. txn_status <> 'Inactive' and rt.gp_id = '$gid' and pt.property_typ_id=".$property_type_id;
         $query=$this->db->query($sql); 
         return $query->result();       
     }
@@ -151,7 +152,8 @@ class Rent_model Extends CI_Model{
                 'sch_status' => $sch_status,
                 'status' => $sch_status,
                 'tax_amount' => $tax_amount,
-                'tds_amount' => $tds_amount
+                'tds_amount' => $tds_amount,
+                'total_amount'=> $net_amount,
             );
 
         // echo json_encode($data);

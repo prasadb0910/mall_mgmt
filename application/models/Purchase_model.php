@@ -174,7 +174,7 @@ function purchaseData($status='', $property_id='',$property_type_id=''){
         E.property_txn_id,property_typ_id,gp_id,unit_name,unit_type,unit_type_id,unit_no,floor,area,area_unit,allocated_cost,allocated_maintenance,txn_status,rt.property_id,prt.property_type,E.p_image,E.location";
     }
 
-
+    
     $query=$this->db->query($sql);
     return $query->result();
 }

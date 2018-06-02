@@ -741,17 +741,17 @@
                                                 </a>
                                             </div>
                                             <div class="col-md-4 rent" style="border-right: 2px solid #f6f9fc;">
-                                                <a href="<?php echo base_url(); ?>index.php/purchase/addnew"><i style="font-size:24px;" class="fa fa-home"></i><br>
+                                                <a href="<?php echo base_url(); ?>index.php/real_estate_property/add"><i style="font-size:24px;" class="fa fa-home"></i><br>
                                                     New Property
                                                 </a>
                                             </div>
                                             <div class=" col-md-4 rent" style="border-right:none;padding:18px">
-                                                <a href="<?php echo base_url(); ?>index.php/rent/addnew"><i style="font-size:24px;" class="fa fa-file-text-o "></i><br>
+                                                <a href="<?php echo base_url(); ?>index.php/Rent_real_estate/add"><i style="font-size:24px;" class="fa fa-file-text-o "></i><br>
                                                     New Rent
                                                 </a>
                                             </div>
                                             <div class="col-md-4 leases" style="border-right: 2px solid #f6f9fc;">
-                                                <a href="<?php echo base_url(); ?>index.php/task/addnew"><i style="font-size:24px;" class="fa fa-wrench"></i><br>
+                                                <a href="<?php echo base_url(); ?>index.php/task/task_edit"><i style="font-size:24px;" class="fa fa-wrench"></i><br>
                                                   New Request
                                                 </a>
                                             </div>
@@ -881,7 +881,6 @@
 <?php $this->load->view('templates/script');?>
 
 <script>
-    var total = <?php if(isset($property_cnt[0]->vacant_cnt)) echo $property_cnt[0]->vacant_cnt; ?>+<?php if(isset($property_cnt[0]->rent_cnt)) echo $property_cnt[0]->rent_cnt; ?>+<?php if(isset($property_cnt[0]->sale_cnt)) echo $property_cnt[0]->sale_cnt; ?>;
 
     var chart = c3.generate({
         type: 'donut',
@@ -907,7 +906,7 @@
                 threshold: 0.01,
              //   show: true, // to turn off the min/max labels.
             },
-            title: total+' Total',
+            /*title: total+' Total',*/
             min: 0,
             max: 100, // 100 is default
             // units: 2,
@@ -933,17 +932,10 @@
 </script>
 
 <script>
-
-    var total = <?php if(isset($task_new_cnt[0]->new)) echo $task_new_cnt[0]->new; ?>+<?php if(isset($task_in_progress_cnt[0]->inprogress)) echo $task_in_progress_cnt[0]->inprogress; ?>+<?php if(isset($task_resolved_cnt[0]->resolved)) echo $task_resolved_cnt[0]->resolved; ?>;
-
     var chart = c3.generate({
         bindto: '#chartMessages1',
         data: {
-            columns: [
-            ['new', <?php if(isset($task_new_cnt[0]->new)) echo $task_new_cnt[0]->new; ?>],
-            ['in progress', <?php if(isset($task_in_progress_cnt[0]->inprogress)) echo $task_in_progress_cnt[0]->inprogress; ?>],
-            [' resolved', <?php if(isset($task_resolved_cnt[0]->resolved)) echo $task_resolved_cnt[0]->resolved; ?>]
-            ],
+            columns:<?php  echo json_encode($mentainanace_cnt)?>,
             type: 'donut',
             onclick: function (d, i) { console.log("onclick", d, i); },
             onmouseover: function (d, i) { console.log("onmouseover", d, i); },
@@ -957,7 +949,7 @@
                 threshold: 0.01,
                 // show: true, // to turn off the min/max labels.
             },
-            title: total+' Total',
+           /* title: total+' Total',*/
             min: 0,
             max: 100, // 100 is default
             // units: 'Remaining',

@@ -36,7 +36,7 @@ class Dashboard extends CI_Controller
         load_view($view, $data);
     }
 
-    public function home(){
+   /* public function home(){
         $cid=$this->session->userdata('session_id');
         $gu_id=$this->session->userdata('gu_id');
         // $result=$this->bank_entry_model->getAccess();
@@ -59,7 +59,7 @@ class Dashboard extends CI_Controller
         $data['contact_details']=$result;
 
         load_view($view, $data);
-    }
+    }*/
 
     public function index(){
         $cid=$this->session->userdata('session_id');
@@ -133,27 +133,47 @@ class Dashboard extends CI_Controller
 
         $data['progress']=$progress;
 
-        $sql = "select (H.total_cnt-H.sale_cnt-H.rent_cnt) as vacant_cnt, total_cnt, sale_cnt, rent_cnt from 
-                (select count(txn_id) as total_cnt, count(sale_id) as sale_cnt, count(rent_id) as rent_cnt from 
-                (select E.*, F.txn_id as sale_id from 
-                (select C.*, D.txn_id as rent_id from 
-                (select A.*, 0 as sp_id from 
-                (select txn_id from property_txn where gp_id='$gid' and txn_status = 'Approved') A 
-                union all
-                select A.txn_id, B.txn_id as sp_id from 
-                (select txn_id from property_txn where gp_id='$gid' and txn_status = 'Approved') A ) B 
-                on (A.txn_id=B.property_txn_id) where B.txn_id is not null) C 
-                left join 
-                (select txn_id, '' as sub_property_id 
-                    from rent_txn where gp_id='$gid' and txn_status = 'Approved') D 
-                on (C.txn_id = D.property_txn_id and C.sp_id = D.sub_property_id)) E 
-                left join 
-                (select txn_id, property_id,'' as sub_property_id 
-                    from sales_txn where gp_id='$gid' and txn_status = 'Approved') F 
-                on (E.txn_id = F.property_id )) G) H";
+        $sql = " SELECT  (total_cnt-sale_cnt-rent_cnt) as vacant_cnt,total_cnt,sale_cnt,rent_cnt from (
+        select count(property_txn_id) as total_cnt, count(sales_id) as sale_cnt, count(txn_id) as rent_cnt from 
+        (Select property_txn_id from property_txn  pt where gp_id='$gid' and txn_status = 'Approved') A
+        left Join 
+        (SELECT txn_id,property_id from rent_txn  rt WHERE rt.property_id  and gp_id='$gid' and txn_status = 'Approved') B
+        on  A.property_txn_id=B.property_id 
+        left join 
+        (select txn_id as sales_id , property_id  from sales_txn where gp_id='$gid' and txn_status = 'Approved') F 
+        on  A.property_txn_id=F.property_id ) C";
         $query=$this->db->query($sql);
         $result=$query->result();
         $data['property_cnt']=$result;
+
+
+        $new=0;
+        $inprogess = 0;
+        $pending = 0;
+        $completed = 0;
+        $resolved = 0;
+
+        $sql1 = "Select * from user_task_detail
+                Where gp_id='$gid'";
+        $query=$this->db->query($sql1);
+        $result1=$query->result_array();
+        for($i=0;$i<count($result1);$i++)
+        {
+            if($result1[$i]['task_status']=='Resolved')
+                 $resolved = $resolved+1;   
+            else if($result1[$i]['task_status']=='Pending')
+                $pending = $pending+1;   
+            else if($result1[$i]['task_status']=='New')
+                $new = $new+1;   
+            else if($result1[$i]['task_status']=='In Progress')
+                $inprogess = $inprogess+1;   
+            else if($result1[$i]['task_status']=='Completed')
+                $completed = $completed+1;   
+        }
+         
+        $resultarray = array(['New',$new] ,['In Progress',$inprogess],['Completed',$completed],['Pending',$pending],['Resolved',$resolved]);
+
+        $data['mentainanace_cnt']=$resultarray;
 
         $sql = "select sum(E.paid_amount) as paid_invoices, sum(E.net_amount-E.paid_amount) as open_invoices from 
                 (select C.txn_id, C.event_type, C.event_name, C.event_date, ifnull(C.net_amount,0) as net_amount, 

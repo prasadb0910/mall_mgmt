@@ -66,7 +66,7 @@ class Rent_revenue_sharing extends CI_Controller
         $revenue_amount = format_number($this->input->post('revenue_amount'),2);
 
         
-        $this->db->select("revenue_percentage,txn_id,revenue_amount,rs.event_date");
+        $this->db->select("revenue_percentage,txn_id,revenue_amount,rs.event_date,rent_id");
         $this->db->join('revenue_schedule rs', 'rt.txn_id=rs.rent_id','left');
         $this->db->where("rs.revenue_schedule_id",$revenue_id);
         $result=$this->db->get("rent_txn rt")->result();
@@ -79,7 +79,15 @@ class Rent_revenue_sharing extends CI_Controller
             $revenue_percentage = number_format($result[0]->revenue_percentage, 2);
             $newprice = ($revenue_amount * $revenue_percentage)/100;
 
-            $data = array("event_name"=>'Revenue',
+            $event_data = $result[0]->event_date;
+            $rent_id = $result[0]->rent_id;
+            $rv_amount =$newprice;    
+
+            $time=strtotime($event_data);
+            echo $month=date("m",$time);
+            echo $year=date("Y",$time);
+  
+            /*$data = array("event_name"=>'Revenue',
                           "event_type"=>'Revenue',
                           "rent_id" => $result[0]->txn_id,
                           "event_date"=>$result[0]->event_date,
@@ -89,14 +97,28 @@ class Rent_revenue_sharing extends CI_Controller
                           "create_date" => $now,
                           "create_by" => $curusr,
                           "sch_status" => $sch_status,
-                          "status" => $sch_status);
+                          "status" => $sch_status);*/
+            $result1 = $this->db->query("Select * from  rent_schedule  WHERE MONTH(event_date) = '$month' AND YEAR(event_date) = '$year' and rent_id='$rent_id'  and event_type='Rent'")->result();
+             $this->db->last_query();
+             $txn_id = $result1[0]->rent_id;
+              $sch_id = $result1[0]->sch_id;
+              $net_amount = $result1[0]->net_amount;
+              $total_amount = $net_amount+$rv_amount;
 
-            $this->db->insert('rent_schedule', $data);
-            $insert_id = $this->db->insert_id();
+            $data = array("revenue_amount"=>$rv_amount,'total_amount'=>$total_amount);
+            $this->db->where('MONTH(event_date)',$month);
+            $this->db->where('YEAR(event_date)',$year);
+            $this->db->where('rent_id',$rent_id);
+            $this->db->where('event_type','Rent');
+            $this->db->update('rent_schedule', $data) ; 
+            $this->db->last_query();
+           
+            /*$this->db->insert('rent_schedule', $data);
+            $insert_id = $this->db->insert_id();*/
             //$this->db->insert('rent_schedule');
             $where = array("revenue_schedule_id"=>$revenue_id);
             $set =   array("revenue_amount"=>$revenue_amount,
-                           "updated_rent_scehdule_id"=>$insert_id,
+                           "updated_rent_scehdule_id"=>$sch_id,
                            "revenue_sharing_amount"=>$newprice,
                            "status"=>1);
             $this->db->where($where);
@@ -187,8 +209,15 @@ class Rent_revenue_sharing extends CI_Controller
                   $ptype = '';
 
                   $data['r_id']=$rid;
-
-                  $result=$this->rent_model->rentData('All', '','',$rid);
+                  
+                  $sql = "Select rt.*,pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_name,pt.unit_no,pt.unit_type,pd.pr_client_id,pt.p_image,pt.property_typ_id
+                    from rent_txn rt
+                    left join property_txn pt on rt.property_id=pt.property_txn_id
+                    left join purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
+                    Where rt.property_id NOT IN(Select property_id from sales_txn) and rt. txn_status <> 'Inactive' and rt.gp_id='$gid' and rt.revenue_percentage!=0;";
+                  $query=$this->db->query($sql);
+                  $result=$query->result();/*
+                  $result=$this->rent_model->rentData('All', '','',$rid);*/
                   if(count($result)>0) {
                       $data['rent']=$result;
                       if ($result[0]->txn_status=="Approved") {
@@ -212,7 +241,7 @@ class Rent_revenue_sharing extends CI_Controller
                   $where = array("rent_id"=>$rid,"status"=>1);
                   if($revenue_id!="")
                     $where['revenue_schedule_id']=$revenue_id;
-                  $result1 = $this->db->select("event_date,revenue_schedule_id,revenue_amount,property_id")->where($where)->get('revenue_schedule')->result_array();
+                  $result1 = $this->db->select("event_date,revenue_schedule_id,revenue_amount,property_id,revenue_sharing_amount")->where($where)->get('revenue_schedule')->result_array();
                   if(count( $result1)>0)
                   {
                     foreach ($result1 as $key => $value) {
@@ -223,6 +252,7 @@ class Rent_revenue_sharing extends CI_Controller
 
                   $where2 = array("rent_id"=>$rid,"status"=>0);
                   $pendings = $this->db->select("event_date")->where($where2)->get('revenue_schedule')->result_array();
+
                   if(count( $pendings)>0)
                   {
                     foreach ($pendings as $key => $value) {
@@ -267,44 +297,54 @@ class Rent_revenue_sharing extends CI_Controller
       {   
          $rent_id = $result[0]->txn_id;
          $event_date = $result[0]->event_date;
-         $result1 = $this->db->query("Select rent_id,ac.event_name from rent_schedule rs
+         /*$result1 = $this->db->query("Select rent_id,ac.event_name from rent_schedule rs
                         left join actual_schedule ac on rs.rent_id=ac.fk_txn_id
                         Where  ac.event_date='$event_date' and ac.event_name=rs.event_name and rs.event_type=ac.event_type
-                        and table_type ='Revenue' and ac.fk_txn_id=$rent_id")->result();
+                        and table_type ='Revenue' and ac.fk_txn_id=$rent_id")->result();*/
+          $revenue_percentage = number_format($result[0]->revenue_percentage, 2);
+          $newprice = ($revenue_amount * $revenue_percentage)/100;
+
+          $time=strtotime($event_date);
+          $month=date("m",$time);
+          $year=date("Y",$time);
+          
+          $result1 = $this->db->query("Select * from  rent_schedule  WHERE MONTH(event_date) = '$month' AND YEAR(event_date) = '$year' and rent_id='$rent_id'  and event_type='Rent'")->result();
+           $this->db->last_query();
+           $txn_id = $result1[0]->rent_id;
+           $sch_id = $result1[0]->sch_id;
+           $net_amount = $result1[0]->net_amount;
+           $total_amount = $net_amount+$rv_amount;
+
+          $data = array("revenue_amount"=>$rv_amount,'total_amount'=>$total_amount);
+          $this->db->where('MONTH(event_date)',$month);
+          $this->db->where('YEAR(event_date)',$year);
+          $this->db->where('rent_id',$rent_id);
+          $this->db->where('event_type','Rent');
+          $this->db->update('rent_schedule', $data) ; 
           $this->db->last_query();
-          if(count($result1)==0)
-          {
-            $revenue_percentage = number_format($result[0]->revenue_percentage, 2);
-            $newprice = ($revenue_amount * $revenue_percentage)/100;
 
-            $data = array("event_name"=>'Revenue',
-                          "event_type"=>'Revenue',
-                          "rent_id" => $result[0]->txn_id,
-                          "event_date"=>$result[0]->event_date,
-                          "basic_cost"=>$newprice,
-                          "net_amount"=>$newprice,
-                          "net_amount"=>$newprice,
-                          "create_date" => $now,
-                          "create_by" => $curusr);
+          /*$data = array("event_name"=>'Revenue',
+                        "event_type"=>'Revenue',
+                        "rent_id" => $result[0]->txn_id,
+                        "event_date"=>$result[0]->event_date,
+                        "basic_cost"=>$newprice,
+                        "net_amount"=>$newprice,
+                        "net_amount"=>$newprice,
+                        "create_date" => $now,
+                        "create_by" => $curusr);
 
-            $where = array("rent_id"=>$result[0]->txn_id);
-            $this->db->where($where);
-            $this->db->update('rent_schedule', $data);
-            $insert_id = $this->db->insert_id();
+          $where = array("rent_id"=>$result[0]->txn_id);
+          $this->db->where($where);
+          $this->db->update('rent_schedule', $data);
+          $insert_id = $this->db->insert_id();*/
 
-            $where = array("revenue_schedule_id"=>$revenue_id);
-            $set =   array("revenue_amount"=>$revenue_amount,
-                           "updated_rent_scehdule_id"=>$result[0]->txn_id,
-                           "revenue_sharing_amount"=>$newprice,
-                           "status"=>1);
-            $this->db->where($where);
-            $this->db->update("revenue_schedule",$set);
-
-          }
-          else
-          {
-            $this->session->set_flashdata('message', 'It cannnot be edited as payment is done for this entry');
-          }
+          $where = array("revenue_schedule_id"=>$revenue_id);
+          $set =   array("revenue_amount"=>$revenue_amount,
+                         "updated_rent_scehdule_id"=>$result[0]->txn_id,
+                         "revenue_sharing_amount"=>$newprice,
+                         "status"=>1);
+          $this->db->where($where);
+          $this->db->update("revenue_schedule",$set);
          
           redirect(base_url().'index.php/Rent_revenue_sharing/add');
       }

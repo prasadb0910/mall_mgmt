@@ -30,8 +30,8 @@
     <div class="content ">
         <div class=" container-fluid container-fixed-lg">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="">Real Estate</a></li>
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="#">Real Estate</a></li>
                 <li class="breadcrumb-item active"><a href="#">Property List</a></li>
             </ol>
 
@@ -97,7 +97,7 @@
                                                                 <div class="card-header ">
                                                                    <div class="building_name"><b><?php echo $property[$i]->unit_name; ?></b></div>
                                                                     <div class="owner_name"><H4 class="m-t-0 m-b-0">
-                                                                    <?php foreach($owner_name as $name)
+                                                                    <?php foreach($property[$i]->owner_name as $name)
                                                                         {
                                                                             echo $name->owner_name;
                                                                         }

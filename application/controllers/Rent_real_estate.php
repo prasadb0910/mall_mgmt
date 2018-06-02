@@ -650,10 +650,10 @@ class Rent_real_estate extends CI_Controller
 
                                         $this->db->query("Insert into rent_schedule (rent_id, event_name, event_type, event_date, basic_cost, 
                                                          net_amount, sch_status, create_date, create_by, modified_date, modified_by, status, 
-                                                         invoice_no, invoice_date, tax_amount, tds_amount) 
+                                                         invoice_no, invoice_date, tax_amount, tds_amount,revenue_amount,total_amount) 
                                                          Select '$new_rid', event_name, event_type, event_date, basic_cost, net_amount, '3', 
                                                          '$sch_create_date', '$sch_create_by', '$modnow', '$curusr', '3', 
-                                                         invoice_no, invoice_date, tax_amount, tds_amount 
+                                                         invoice_no, invoice_date, tax_amount, tds_amount,revenue_amount,total_amount 
                                                          FROM rent_schedule WHERE rent_id = '$rid' and sch_id = '$sch_id' and 
                                                          (invoice_no is null or invoice_no='')");
                                         $new_sch_id=$this->db->insert_id();
