@@ -86,7 +86,7 @@ function salesData($status='' ,$property_id='', $s_id=''){
         if($s_id!=""){
 
             // if($cond=="")
-                    $cond = " And A.txn_id=".$s_id;
+                    $cond = " And H.txn_id=".$s_id;
             // else
                     // $cond.=" And A.txn_id=".$s_id;
         }
@@ -99,15 +99,16 @@ function salesData($status='' ,$property_id='', $s_id=''){
 
 	if (count($result)>0) 
 	{
-		$sql="Select  A.*,D.* from 
+		 $sql="  SELECT H.*, B.* From (SELECT E.*, G.* FROM (Select  A.*,D.unit_name,D.unit_no,D.floor,D.area,D.area_unit from 
             (select * from sales_txn ) A 
             left join 
             (select * from property_txn)D
-            on (A.property_id=D.property_txn_id)
+            on (A.property_id=D.property_txn_id))G
 			  left join 
-            (SELECT E.*, B.* FROM 
-            (SELECT * FROM sales_buyer_details A WHERE E.buyer_id in (select min(buyer_id) from sales_buyer_details 
-            where sale_id = E.sale_id)) E 
+         
+            (SELECT * FROM sales_buyer_details  
+           ) E 
+			  on (E.sale_id=G.txn_id))H
             LEFT JOIN 
             (select E.c_id, case when E.c_owner_type='individual' then ifnull(E.c_name,'') else ifnull(B.c_name,'') end as c_name, 
                 case when E.c_owner_type='individual' then ifnull(E.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
@@ -118,19 +119,49 @@ function salesData($status='' ,$property_id='', $s_id=''){
                 else concat(ifnull(E.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
             from contact_master E left join contact_master B on (E.c_contact_id=B.c_id) 
             where E.c_status='Approved' and E.c_gid='$gid') B 
-            ON (E.buyer_id=B.c_id)) D 
+            ON (H.buyer_id=B.c_id) 
 			
-			where E.gp_id = '$gid'".$cond;
+			 where H.gp_id = '$gid'".$cond;
 	}
 	else 
 	{
-		$sql="Select  A.*,D.* from 
-            (select * from sales_txn) A 
+		// $sql="Select  A.*,D.* from 
+            // (select * from sales_txn) A 
+            // left join 
+            // (select * from property_txn )D
+            // on (A.property_id=D.property_txn_id)where A.gp_id = '$gid'".$cond;
+			
+			
+		 $sql="  SELECT H.*, B.* From (SELECT E.*, G.* FROM (Select  A.*,D.unit_name,D.unit_no,D.floor,D.area,D.area_unit from 
+            (select * from sales_txn ) A 
             left join 
-            (select * from property_txn )D
-            on (A.property_id=D.property_txn_id)where A.gp_id = '$gid'".$cond;
+            (select * from property_txn)D
+            on (A.property_id=D.property_txn_id))G
+			  left join 
+         
+            (SELECT * FROM sales_buyer_details  
+           ) E 
+			  on (E.sale_id=G.txn_id))H
+            LEFT JOIN 
+            (select E.c_id, case when E.c_owner_type='individual' then ifnull(E.c_name,'') else ifnull(B.c_name,'') end as c_name, 
+                case when E.c_owner_type='individual' then ifnull(E.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
+                case when E.c_owner_type='individual' then ifnull(E.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
+                case when E.c_owner_type='individual' then ifnull(E.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
+                case when E.c_owner_type='individual' 
+                then concat(ifnull(E.c_name,''),' ',ifnull(E.c_last_name,'')) 
+                else concat(ifnull(E.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
+            from contact_master E left join contact_master B on (E.c_contact_id=B.c_id) 
+            where E.c_status='Approved' and E.c_gid='$gid') B 
+            ON (H.buyer_id=B.c_id) 
+			
+			 where H.gp_id = '$gid'".$cond;
            
 	}
+	
+	
+	
+	
+	
 	// echo $sql;
     // if (count($result)>0) {
         // $sql="select * from 

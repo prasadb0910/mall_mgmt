@@ -237,7 +237,7 @@
 	<?php $this->load->view('templates/main_header');?>
 	<div class="page-content-wrapper ">
 		<div class="content ">
-			<form id="form_purchase_view" role="form" method ="post" action="" enctype="multipart/form-data">
+			<form id="form_purchase_view" role="form" method ="post" action="<?php echo base_url().'index.php/Non_real_estate_property/update/'.$p_id; ?>" enctype="multipart/form-data">
 			<div class=" container-fluid   container-fixed-lg">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a href="">Dashboard</a></li>
@@ -266,14 +266,25 @@
 											<a href="<?php echo base_url().'index.php/Non_real_estate_property/edit/'.$p_id; ?>" class="dropdown-item edit" ><i class="pg-settings_small"></i> Edit</a>
 										<?php } }  ?>
 										<?php if(isset($property)) { ?>
-										<?php  if(isset($access)) { 
-											if($access[0]->r_delete == 1) {  ?><a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> 
+										<?php if($property[0]->txn_status == 'Approved') { if(isset($access)) { if($access[0]->r_delete == 1) { ?> 
+											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i>  <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> </a>
 										<?php } } } 
-										 	else if($p_txn[0]->txn_status != 'In Process') { 
-											if(isset($access)) { if($access[0]->r_approvals == 1) { ?> 
+												else if($property[0]->updated_by != '' && $property[0]->updated_by != null)
+												{ 
+												 if($property[0]->updated_by!=$purchaseby) { if($property[0]->txn_status != 'In Process') {
+												 if(isset($access)) { if($access[0]->r_approvals == 1) { ?> 
+				                              	<a href="Javascript:void(0)" class="dropdown-item edit" ><i class="pg-settings_small"></i> <input class="dropdown-item edit" type="submit" value="Approve" name="submit"/></a>
+												<a href="#" class="dropdown-item delete" ><i class="fa fa-trash"></i> <input class="dropdown-item delete" type="submit" value="Reject" name="submit"/></a>
+										<?php } } } } else { ?>
+											<!-- <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> -->
+											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');" /> </a>
+										<?php } } else if($property[0]->created_by != '' && $property[0]->created_by != null) { if($property[0]->created_by!=$$propertyby && $property[0]->txn_status != 'In Process') { if($property[0]->txn_status != 'In Process') { if(isset($access)) { if($access[0]->r_approvals == 1) { ?> 
 											<a href="#" class="dropdown-item edit" ><i class="pg-settings_small"></i> <input class="dropdown-item edit" type="submit" value="Approve" name="submit"/></a>
-	                                        <a href="#" class="dropdown-item delete" ><i class="fa fa-trash"></i> <input class="dropdown-item delete" type="submit" value="Reject" name="submit"/></a>
-                                        <?php } } }?>    		
+											<a href="#" class="dropdown-item delete" ><i class="fa fa-trash"></i> <input class="dropdown-item delete" type="submit" value="Reject" name="submit"/></a>
+										<?php } } } } else { ?>
+											<!-- <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> -->
+											<a href="#" class="dropdown-item delete"><i class="fa fa-trash"></i> Delete <!-- <input  type="submit" class="dropdown-item delete" name="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');"/> --> </a>
+										<?php } } } ?>			
 
 										<a href="#" class="dropdown-item print"><i class="fa fa-print"></i> Print</a>
 									</div>
@@ -289,14 +300,11 @@
 					
 							<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2);">
 								<div class="row" style="">
-									<div class="col-md-6 rent">
+									<div class="col-md-12 rent">
 										<b style="font-size:22px;"><?=$tenant_count?></b><br>
 										Tenant
 									</div>
-									<div class="col-md-6 rent" style="border-right:none;">
-										<b style="font-size:22px;" ><?=$maintenance_count?></b><br>
-										Maintenance 
-									</div>
+									
 								</div>
 							</div>
 						</div>

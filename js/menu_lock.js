@@ -33,7 +33,7 @@
 		 {
 			  localStorage.removeItem('hasmenu', 'true');
 			     $("body").removeClass("menu-pin");
-				    $("body").removeClass("sidebar-visible");
+				    //$("body").removeClass("sidebar-visible");
 			  // $( "#form_rent fieldset" ).css({'width':'100%','margin':'0 auto'});
 		 }
         
