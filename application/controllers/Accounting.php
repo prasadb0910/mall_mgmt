@@ -18,14 +18,17 @@ class Accounting extends CI_Controller
         $this->load->model('accounting_model');
     }
 
-    public function index(){
+    public function index()
+    {
         $this->checkstatus('All');
     }
 
-    public function by_daterange()
-    {   
-        $this->checkstatus($status='', $property_id='', $contact_id='');
+    public function acc(){
+       $this->checkstatus('All');
+    }
 
+    public function by_daterange(){   
+        $this->checkstatus($status='', $property_id='', $contact_id='');
     }
 
     function getOwners(){
@@ -39,7 +42,8 @@ class Accounting extends CI_Controller
         $property_id = html_escape($this->input->post('prop_name'));
         $sub_property_id = html_escape($this->input->post('sub_property'));
         $type = html_escape($this->input->post('type'));
-
+        $method = html_escape($this->input->post('method'));
+        $pagetype = html_escape($this->input->post('pagetype'));
         if($txn_status=='' || $txn_status==null){
             $txn_status = 'Approved';
         }
@@ -63,9 +67,9 @@ class Accounting extends CI_Controller
             }
         }
 
+        // $url = base_url()."index.php/accounting/".$method."/".$type."/".$txn_status."/".$payer_id."/".$status."/".$property_id."/".$sub_property_id;
         $url = base_url()."index.php/accounting/edit/".$type."/".$txn_status."/".$payer_id."/".$status."/".$property_id."/".$sub_property_id;
-
-        echo $url;
+         echo $url;  
     }
 
     function getBankEntryDetails($type='', $status='', $contact_id='', $transaction='', $property_id='', $sub_property_id='', $accounting_id=''){
@@ -114,7 +118,7 @@ class Accounting extends CI_Controller
                 $sql = "select * from 
                         (select A.c_id, case when A.c_owner_type='individual' 
                             then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                            else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as contact_name 
+                            else (ifnull(A.c_company_name,'')) end as contact_name 
                         from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
                         where A.c_status='Approved' and A.c_gid='$gid') A order by A.contact_name";
                 $query=$this->db->query($sql);
@@ -139,8 +143,7 @@ class Accounting extends CI_Controller
                     $result=$query->result();
                     $data['banks']=$result;
 
-                    $sql = "select * from purchase_txn where txn_status = 'approved' and gp_id='$gid' and txn_id in (select distinct purchase_id from purchase_ownership_details 
-                            where pr_client_id in (select distinct owner_id from user_role_owners where user_id = '$session_id'))";
+                    $sql = "select * from property_txn where txn_status = 'approved' and gp_id='$gid' and property_txn_id in (select distinct purchase_id from purchase_ownership_details)";
                     $query=$this->db->query($sql);
                     $data['property']=$query->result();
                 } else {
@@ -157,7 +160,7 @@ class Accounting extends CI_Controller
                     $result=$query->result();
                     $data['banks']=$result;
 
-                    $sql = "select * from purchase_txn where txn_status = 'approved' and gp_id='$gid'";
+                    $sql = "select * from property_txn where txn_status = 'approved' and gp_id='$gid'";
                     $query=$this->db->query($sql);
                     $data['property']=$query->result();
                 }
@@ -300,7 +303,7 @@ class Accounting extends CI_Controller
         }
     }
 
-    public function addnew(){
+    public function addnew($type='', $status='', $contact_id='', $transaction='', $property_id='', $sub_property_id='', $accounting_id=''){
         $gid=$this->session->userdata('groupid');
         $roleid=$this->session->userdata('role_id');
         $session_id=$this->session->userdata('session_id');
@@ -313,15 +316,31 @@ class Accounting extends CI_Controller
         $dataarray['other_schedule']='false';
         $dataarray['type']=$type;
 
-        if($type=="payment"){
+        $dataarray['payer_id']=$contact_id;
+        $dataarray['transaction']=$transaction;
+        $dataarray['property_id']=$property_id;
+        $dataarray['sub_property_id']=$sub_property_id;
+        $dataarray['accounting_id']=$accounting_id;
+
+        if($type=="payment"  && $transaction!="adhoc" ){
             $dataarray['payment']='selected';
             $dataarray['receipt']='';
             $dataarray['transaction']='Pay';
-        } else if($type=="receipt"){
+        }else if($type=="payment" && $transaction=="adhoc" )
+        {
+            $dataarray['payment']='selected';
+            $dataarray['receipt']='';
+            $dataarray['transaction']='adhoc';
+        }else if($type=="receipt" && $transaction=="adhoc" ){
+            $dataarray['payment']='';
+            $dataarray['receipt']='selected';
+            $dataarray['transaction']='adhoc';
+        }else if($type=="receipt" && $transaction!="adhoc" ){
             $dataarray['payment']='';
             $dataarray['receipt']='selected';
             $dataarray['transaction']='Receive';
-        } else if($type=="expense"){
+        }
+        else if($type=="expense"){
             $dataarray['payment']='selected';
             $dataarray['receipt']='';
             $dataarray['transaction']='Expense';
@@ -386,7 +405,7 @@ class Accounting extends CI_Controller
             $sql = "select * from 
                     (select A.c_id, case when A.c_owner_type='individual' 
                         then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                        else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as contact_name 
+                        else concat(ifnull(A.c_company_name,'')) end as contact_name 
                     from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
                     where A.c_status='Approved' and A.c_gid='$gid') A order by A.contact_name";
             $query=$this->db->query($sql);
@@ -411,8 +430,7 @@ class Accounting extends CI_Controller
                 $result=$query->result();
                 $data['banks']=$result;
 
-                $sql = "select * from purchase_txn where txn_status = 'approved' and gp_id='$gid' and txn_id in (select distinct purchase_id from purchase_ownership_details 
-                        where pr_client_id in (select distinct owner_id from user_role_owners where user_id = '$session_id'))";
+                $sql = "select * from property_txn where txn_status = 'approved' and gp_id='$gid' and property_txn_id in (select distinct purchase_id from purchase_ownership_details)";
                 $query=$this->db->query($sql);
                 $data['property']=$query->result();
             } else {
@@ -429,7 +447,7 @@ class Accounting extends CI_Controller
                 $result=$query->result();
                 $data['banks']=$result;
 
-                $sql = "select * from purchase_txn where txn_status = 'approved' and gp_id='$gid'";
+                $sql = "select * from property_txn where txn_status = 'approved' and gp_id='$gid'";
                 $query=$this->db->query($sql);
                 $data['property']=$query->result();
             }
@@ -440,7 +458,11 @@ class Accounting extends CI_Controller
 
             $data['maker_checker'] = $this->session->userdata('maker_checker');
 
+            $data['method'] = 'addnew';
+
             // echo json_encode($data['expense_category']);
+
+            // echo json_encode($data); 
 
             load_view('accounting/accounting_details',$data);
         } else {
@@ -461,6 +483,7 @@ class Accounting extends CI_Controller
 
                 $data = $this->getBankEntryDetails($type, $status, $contact_id, $transaction, $property_id, $sub_property_id, $accounting_id);
 
+                $data['method'] = 'edit';
                 load_view('accounting/accounting_details',$data);
             } else {
                 echo "Unauthorized access";
@@ -841,12 +864,12 @@ class Accounting extends CI_Controller
         $session_id=$this->session->userdata('session_id');
         if(count($result)>0) {
             $data['access']=$result;
-            $data['bankentry']=$this->accounting_model->tdsData('Approved');
+            $data['bankentry']=$this->accounting_model->tdsData('Approved','','','tds');
 
              $sql = "select * from 
                     (select A.c_id, case when A.c_owner_type='individual' 
                         then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                        else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as contact_name 
+                        else concat(ifnull(A.c_company_name,'')) end as contact_name 
                     from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
                     where A.c_status='Approved' and A.c_gid='$gid') A order by A.contact_name";
             $query=$this->db->query($sql);
@@ -941,7 +964,7 @@ class Accounting extends CI_Controller
         $session_id=$this->session->userdata('session_id');
         if(count($result)>0) {
             $data['access']=$result;
-            $data['bankentry']=$this->accounting_model->tdsData('Approved');
+            $data['bankentry']=$this->accounting_model->tdsData('Approved','','','gst');
             $data['startdate'] = trim($this->input->post('start'));
             $data['enddate'] = trim($this->input->post('end'));
             load_view('accounting/gst_details', $data);
@@ -1154,7 +1177,7 @@ class Accounting extends CI_Controller
             $sql = "select * from 
                     (select A.c_id, case when A.c_owner_type='individual' 
                         then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                        else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as contact_name 
+                        else  (ifnull(A.c_company_name,'')) end as contact_name 
                     from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
                     where A.c_status='Approved' and A.c_gid='$gid') A order by A.contact_name";
             $query=$this->db->query($sql);
@@ -2487,6 +2510,399 @@ class Accounting extends CI_Controller
         $this->checkstatus($status, '', $contact_id);
     }
 
+    public function checkstatus_receipt($status='', $property_id='', $contact_id=''){
+        $result=$this->accounting_model->getAccess();
+        if(count($result)>0) {
+            $data['access']=$result;
+
+            $data['bankentry']=array();
+            $data['pendingbankentry']=array();
+            $data['pendingotherentry']=array();
+
+            if(strtolower($status)!='unpaid'){
+                $data['bankentry']=$this->accounting_model->bankentryData($status, $property_id, $contact_id);
+            }
+
+            if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
+                $data['pendingbankentry']=$this->accounting_model->getPendingBankEntry($status, $property_id, $contact_id);
+            }
+            if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
+                $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry('Approved', $property_id, $contact_id);
+            } else {
+                $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry($status, $property_id, $contact_id);
+            }
+            
+
+            $data['pendingbankentry']=array_merge($data['pendingbankentry'],$data['pendingotherentry']);
+            
+            // $count_data=$this->accounting_model->getAllCountData();
+
+            $count_data=$this->accounting_model->bankentryData('All', $property_id, $contact_id);
+            $all=0;
+            $unpaid=0;
+            $approved=0;
+            $pending=0;
+            $rejected=0;
+            $inprocess=0;
+
+            if (count($result)>0){
+                for($i=0;$i<count($count_data);$i++){
+                    $all=$all+1;
+                    if (strtoupper(trim($count_data[$i]['txn_status']))=="APPROVED")
+                        $approved=$approved+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="PENDING" || strtoupper(trim($count_data[$i]['txn_status']))=="DELETE")
+                        $pending=$pending+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="REJECTED")
+                        $rejected=$rejected+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="IN PROCESS")
+                        $inprocess=$inprocess+1;
+                }
+            }
+
+            $count_data=$this->accounting_model->getPendingBankEntry('All', $property_id, $contact_id);
+            if (count($result)>0){
+                for($i=0;$i<count($count_data);$i++){
+                    $all=$all+1;
+                    $unpaid=$unpaid+1;
+                }
+            }
+
+            $count_data=$this->accounting_model->getPendingOtherEntry('All', $property_id, $contact_id);
+            if (count($result)>0){
+                for($i=0;$i<count($count_data);$i++){
+                    $all=$all+1;
+                    if (strtoupper(trim($count_data[$i]['txn_status']))=="APPROVED")
+                        $approved=$approved+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="PENDING" || strtoupper(trim($count_data[$i]['txn_status']))=="DELETE")
+                        $pending=$pending+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="REJECTED")
+                        $rejected=$rejected+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="IN PROCESS")
+                        $inprocess=$inprocess+1;
+                }
+            }
+
+            $data['approved']=$approved;
+            $data['pending']=$pending;
+            $data['rejected']=$rejected;
+            $data['inprocess']=$inprocess;
+            $data['unpaid']=$unpaid;
+            $data['all']=$all;
+
+
+            $data['checkstatus'] = $status;
+            $data['maker_checker'] = $this->session->userdata('maker_checker');
+
+            $bankentry = $data['bankentry'];
+            $pendingbankentry=$data['pendingbankentry'];
+            $accounting_data = array();
+
+            $j=0; 
+            for ($i=0; $i < count($bankentry) ; $i++) 
+            { 
+                if($bankentry[$i]['particulars']=='Rent' || $bankentry[$i]['particulars']=='Sale' || $bankentry[$i]['particulars']=='Income' || $bankentry[$i]['particulars']=='Adhoc' && $bankentry[$i]['table_type']=='receipt') {
+                        $duedate =  ($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!='')?date('Y-m-d 00:00:00',strtotime($bankentry[$i]['due_date'])):'';
+
+                        $row = array(
+                                '<span class="btn btn-success paid" >Paid</span>',
+                                '<input type="hidden" id="type_'.$j.'" value="View" />
+                                 <input type="hidden" id="status_'.$j.'" value="paid" />
+                                 <input type="hidden" id="prop_id_'.$j.'" value="'.$bankentry[$i]['prop_id'].'" />
+                                 <input type="hidden" id="particular_'.$j.'" value="'.$bankentry[$i]['particulars'].'" />
+                                 <input type="hidden" id="bal_amount_'.$j.'" value="'.format_money($bankentry[$i]['bal_amount'],2).'" />
+                                 <input type="hidden" id="net_amount_'.$j.'" value="'.format_money($bankentry[$i]['net_amount'],2).'" />
+                                 <input type="hidden" id="due_date_'.$j.'" value="'.($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!=''?date('d/m/Y',strtotime($bankentry[$i]['due_date'])):'').'">
+                                 <input type="hidden" id="link_'.$j.'" value="'.base_url().'index.php/Accounting/view/receipt/'.$bankentry[$i]['txn_status'].'/'.$bankentry[$i]['contact_id'].'/'.$bankentry[$i]['transaction'].'/'.($bankentry[$i]['property_id']==''?'0':$bankentry[$i]['property_id']).'/'.($bankentry[$i]['sub_property_id']==''?'0':$bankentry[$i]['sub_property_id']).'/'.($bankentry[$i]['accounting_id']==''?'0':$bankentry[$i]['accounting_id']).'" />
+                                 <input type="hidden" id="property_name_'.$j.'" value="'.(isset($bankentry[$i]['property'])?$bankentry[$i]['property']:'').'" />
+                                 <input type="hidden" id="sub_property_name_'.$j.'" value="'.(isset($bankentry[$i]['sub_property'])?$bankentry[$i]['sub_property']:'').'" />
+                                 <input type="hidden" id="owner_name_'.$j.'" value='.(isset($bankentry[$i]['owner_name'])?$bankentry[$i]['owner_name']:'').'" />
+                                 <input type="hidden" id="payer_name_'.$j.'" value="'.(isset($bankentry[$i]['payer_name'])?$bankentry[$i]['payer_name']:'').'" />
+                                 <input type="hidden" id="address_'.$j.'" value="'.(isset($bankentry[$i]['p_address'])?$bankentry[$i]['p_address']:'').'" />
+                                 <a  style="color: #41a541!important;cursor: pointer!important;"  id="details_'.$j.'" onclick="get_details(this);" data-target="#modalSlideLeft" data-toggle="modal">Details </a>',
+                                 ''.($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!='')?date('d/m/Y',strtotime($bankentry[$i]['due_date'])):''.'',
+                                 ''.$bankentry[$i]['particulars'].'',
+                                 ''.(isset($bankentry[$i]['payer_name'])?$bankentry[$i]['payer_name']:'').'',
+                                 ''. $bankentry[$i]['property'].'',
+                                 ''. $bankentry[$i]['sub_property'].'',
+                                 ''.format_money($bankentry[$i]['net_amount'],2).'',
+                                 ''.format_money($bankentry[$i]['paid_amount'],2).'',
+                                 ''.isset($bankentry[$i]['bal_amount'])?format_money($bankentry[$i]['bal_amount'],2):''.'',
+                                 ''.$duedate.'',
+                            );
+                        $accounting_data[] = $row;
+                        $j++;
+                }
+            }
+
+          
+            for ($i=0; $i < count($pendingbankentry) ; $i++) 
+            { 
+               if($pendingbankentry[$i]['particulars']=='Rent' || $pendingbankentry[$i]['particulars']=='Sale' || $pendingbankentry[$i]['particulars']=='Income' || $pendingbankentry[$i]['particulars']=='Adhoc' && $pendingbankentry[$i]['table_type']=='receipt')
+                {
+                    $duedate =  ($pendingbankentry[$i]['due_date']!=null && $pendingbankentry[$i]['due_date']!='')?date('Y-m-d 00:00:00',strtotime($pendingbankentry[$i]['due_date'])):''; 
+
+                       if($pendingbankentry[$i]['transaction']=='adhoc'){
+                         $input = ' <input type="hidden" id="link_'.$j.'" value="'.base_url().'index.php/Accounting/edit/receipt/'.$pendingbankentry[$i]['txn_status'].'/'.$pendingbankentry[$i]['contact_id'].'/'.$pendingbankentry[$i]['transaction'].'/'.($pendingbankentry[$i]['property_id']==''?'0':$pendingbankentry[$i]['property_id']).'/'.($pendingbankentry[$i]['sub_property_id']==''?'0':$pendingbankentry[$i]['sub_property_id']).($pendingbankentry[$i]['txn_status']=='Approved'?'/'.$pendingbankentry[$i]['accounting_id']:'').'" />';
+
+                        }else{
+                            $input = ' <input type="hidden" id="link_'.$j.'" value="'.base_url().'index.php/Accounting/edit/receipt/'.$pendingbankentry[$i]['txn_status'].'/'.$pendingbankentry[$i]['contact_id'].'/'.$pendingbankentry[$i]['transaction'].'/'.($pendingbankentry[$i]['property_id']==''?'0':$pendingbankentry[$i]['property_id']).'/'.($pendingbankentry[$i]['sub_property_id']==''?'0':$pendingbankentry[$i]['sub_property_id']).($pendingbankentry[$i]['txn_status']!='Approved'?'/'.$pendingbankentry[$i]['accounting_id']:'').'" />';
+                        }
+                     $row = array(
+                        '<span class="btn btn-danger unpaid" >Unpaid</span>',
+                        '<input type="hidden" id="type_'.$j.'" value="Receive" />
+                        <input type="hidden" id="type_2_'.$j.'" value="View" />
+                        <input type="hidden" id="status_'. $j.'" value="unpaid" />
+                        <input type="hidden" id="txn_status_'. $j.'" value="'.$pendingbankentry[$i]['txn_status'].'"
+                        <input type="hidden" id="prop_id_'.$j.'" value="'.$pendingbankentry[$i]['prop_id'].'" />
+                        <input type="hidden" id="particular_'.$j.'" value="'.$pendingbankentry[$i]['particulars'].'" />
+                        <input type="hidden" id="bal_amount_'.$j.'" value="'.format_money($pendingbankentry[$i]['bal_amount'],2).'" />
+                        <input type="hidden" id="net_amount_'.$j.'" value="'.format_money($pendingbankentry[$i]['net_amount'],2).'" />
+                        <input type="hidden" id="due_date_'.$j.'" value="'.($pendingbankentry[$i]['due_date']!=null && $pendingbankentry[$i]['due_date']!=''?date('d/m/Y',strtotime($pendingbankentry[$i]['due_date'])):'').'" />
+                        '.$input.'
+                        <input type="hidden" id="link_2_'.$j.'" value="'.base_url().'index.php/Accounting/viewOtherSchedule/receipt/'.$pendingbankentry[$i]['txn_status'].'/'.$pendingbankentry[$i]['contact_id'].'/'.$pendingbankentry[$i]['transaction'].'/'.($pendingbankentry[$i]['property_id']==''?'0':$pendingbankentry[$i]['property_id']).'/'.($pendingbankentry[$i]['sub_property_id']==''?'0':$pendingbankentry[$i]['sub_property_id']).($pendingbankentry[$i]['txn_status']!='Approved'?'/'.$pendingbankentry[$i]['accounting_id']:'').'" />
+                        <input type="hidden" id="owner_name_'.$j.'" value="'.(isset($pendingbankentry[$i]['owner_name'])?$pendingbankentry[$i]['owner_name']:'').'"/>
+                        <input type="hidden" id="payer_name_'.$j.'" value="'.(isset($pendingbankentry[$i]['payer_name'])?$pendingbankentry[$i]['payer_name']:'').'"/>
+                        <input type="hidden" id="property_name_'.$j.'" value="'.(isset($pendingbankentry[$i]['property'])?$pendingbankentry[$i]['property']:'').'"/>
+                        <input type="hidden" id="sub_property_name_'.$j.'"  value="'.(isset($pendingbankentry[$i]['sub_property'])?$pendingbankentry[$i]['sub_property']:'').'" />
+                        <input type="hidden" id="address_'.$j.'" value="" />
+                        <a style="color: #41a541!important; cursor: pointer!important;" id="details_'.$j.'" onclick="get_details(this);" data-target="#modalSlideLeft" data-toggle="modal">Details</a>',
+                        ''.($pendingbankentry[$i]['due_date']!=null && $pendingbankentry[$i]['due_date']!=''?date('d/m/Y',strtotime($pendingbankentry[$i]['due_date'])):'').'',
+                        ''. $pendingbankentry[$i]['particulars'].'',
+                        ''.(isset($pendingbankentry[$i]['payer_name'])?$pendingbankentry[$i]['payer_name']:'').'',
+                        ''.$pendingbankentry[$i]['property'].'',
+                        ''.$pendingbankentry[$i]['sub_property'].'',
+                        ''.format_money($pendingbankentry[$i]['net_amount'],2).'',
+                        ''.format_money($pendingbankentry[$i]['paid_amount'],2).'',
+                        ''.isset($pendingbankentry[$i]['bal_amount'])?format_money($pendingbankentry[$i]['bal_amount'],2):''.'',
+                        ''.$duedate.'',
+                    );
+                    $j++;
+                    $accounting_data[] = $row;
+                }
+
+            }
+
+            $total_accounting_data = count($accounting_data);
+
+           foreach ($accounting_data as $key => $row) {
+                 $duedates[$key]= $row['10'];
+            }
+
+            if(count($accounting_data)>0)
+            array_multisort($duedates, SORT_ASC, $accounting_data);
+            $params = $_REQUEST;
+
+            $accounting_data = array_slice($accounting_data,$params['start'],$params['length']);
+             $json_data = array(
+                "draw"            => intval( $params['draw'] ),   
+                "recordsTotal"    => intval($total_accounting_data),  
+                "recordsFiltered" => intval($total_accounting_data),
+                "data"            => $accounting_data
+                );
+
+            echo json_encode($json_data);
+            //load_view('accounting/accounting', $data);
+
+        } else {
+            echo '<script>alert("You donot have access to this page.");</script>';
+            $this->load->view('login/main_page');
+        }
+    }
+
+    public function checkstatus_payment($status='', $property_id='', $contact_id=''){
+        $result=$this->accounting_model->getAccess();
+        if(count($result)>0) {
+            $data['access']=$result;
+
+            $data['bankentry']=array();
+            $data['pendingbankentry']=array();
+            $data['pendingotherentry']=array();
+
+            if(strtolower($status)!='unpaid'){
+                $data['bankentry']=$this->accounting_model->bankentryData($status, $property_id, $contact_id);
+            }
+
+            if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
+                $data['pendingbankentry']=$this->accounting_model->getPendingBankEntry($status, $property_id, $contact_id);
+            }
+            if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
+                $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry('Approved', $property_id, $contact_id);
+            } else {
+                $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry($status, $property_id, $contact_id);
+            }
+            
+
+            $data['pendingbankentry']=array_merge($data['pendingbankentry'],$data['pendingotherentry']);
+            
+            // $count_data=$this->accounting_model->getAllCountData();
+
+            $count_data=$this->accounting_model->bankentryData('All', $property_id, $contact_id);
+            $all=0;
+            $unpaid=0;
+            $approved=0;
+            $pending=0;
+            $rejected=0;
+            $inprocess=0;
+
+            if (count($result)>0){
+                for($i=0;$i<count($count_data);$i++){
+                    $all=$all+1;
+                    if (strtoupper(trim($count_data[$i]['txn_status']))=="APPROVED")
+                        $approved=$approved+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="PENDING" || strtoupper(trim($count_data[$i]['txn_status']))=="DELETE")
+                        $pending=$pending+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="REJECTED")
+                        $rejected=$rejected+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="IN PROCESS")
+                        $inprocess=$inprocess+1;
+                }
+            }
+
+            $count_data=$this->accounting_model->getPendingBankEntry('All', $property_id, $contact_id);
+            if (count($result)>0){
+                for($i=0;$i<count($count_data);$i++){
+                    $all=$all+1;
+                    $unpaid=$unpaid+1;
+                }
+            }
+
+            $count_data=$this->accounting_model->getPendingOtherEntry('All', $property_id, $contact_id);
+            if (count($result)>0){
+                for($i=0;$i<count($count_data);$i++){
+                    $all=$all+1;
+                    if (strtoupper(trim($count_data[$i]['txn_status']))=="APPROVED")
+                        $approved=$approved+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="PENDING" || strtoupper(trim($count_data[$i]['txn_status']))=="DELETE")
+                        $pending=$pending+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="REJECTED")
+                        $rejected=$rejected+1;
+                    else if (strtoupper(trim($count_data[$i]['txn_status']))=="IN PROCESS")
+                        $inprocess=$inprocess+1;
+                }
+            }
+
+            $data['approved']=$approved;
+            $data['pending']=$pending;
+            $data['rejected']=$rejected;
+            $data['inprocess']=$inprocess;
+            $data['unpaid']=$unpaid;
+            $data['all']=$all;
+
+
+            $data['checkstatus'] = $status;
+            $data['maker_checker'] = $this->session->userdata('maker_checker');
+
+            $bankentry = $data['bankentry'];
+            $pendingbankentry=$data['pendingbankentry'];
+            $accounting_data = array();
+
+            $j=0; 
+           for ($i=0; $i < count($bankentry) ; $i++) 
+            { 
+               if($bankentry[$i]['particulars']=='Purchase' || $bankentry[$i]['particulars']=='Loan' || $bankentry[$i]['particulars']=='Expense' || $bankentry[$i]['particulars']=='Maintenance' ||  $bankentry[$i]['particulars']=='Adhoc' && $bankentry[$i]['table_type']=='payment') {
+
+                    $duedate =  ($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!='')?date('Y-m-d 00:00:00',strtotime($bankentry[$i]['due_date'])):'';
+
+                        $row = array(
+                                '<span class="btn btn-success paid" >Paid</span>',
+                                '<input type="hidden" id="type_0'.$j.'" value="View" />
+                                 <input type="hidden" id="status_0'.$j.'" value="paid" />
+                                 <input type="hidden" id="prop_id_0'.$j.'" value="'.$bankentry[$i]['prop_id'].'" />
+                                 <input type="hidden" id="particular_0'.$j.'" value="'.$bankentry[$i]['particulars'].'" />
+                                 <input type="hidden" id="bal_amount_0'.$j.'" value="'.format_money($bankentry[$i]['bal_amount'],2).'" />
+                                 <input type="hidden" id="net_amount_0'.$j.'" value="'.format_money($bankentry[$i]['net_amount'],2).'" />
+                                 <input type="hidden" id="due_date_0'.$j.'" value="'.($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!=''?date('d/m/Y',strtotime($bankentry[$i]['due_date'])):'').'">
+                                 <input type="hidden" id="link_0'.$j.'" value='.base_url().'index.php/Accounting/view/payment/'.$bankentry[$i]['txn_status'].'/'.$bankentry[$i]['contact_id'].'/'.$bankentry[$i]['transaction'].'/'.($bankentry[$i]['property_id']==''?'0':$bankentry[$i]['property_id']).'/'.($bankentry[$i]['sub_property_id']==''?'0':$bankentry[$i]['sub_property_id']).'/'.($bankentry[$i]['accounting_id']==''?'0':$bankentry[$i]['accounting_id']).'" />
+                                 <input type="hidden" id="link_0'.$j.'" value="'.base_url().'index.php/Accounting/view/payment/'.$bankentry[$i]['txn_status'].'/'.$bankentry[$i]['contact_id'].'/'.$bankentry[$i]['transaction'].'/'.($bankentry[$i]['property_id']==''?'0':$bankentry[$i]['property_id']).'/'.($bankentry[$i]['sub_property_id']==''?'0':$bankentry[$i]['sub_property_id']).'/'.($bankentry[$i]['accounting_id']==''?'0':$bankentry[$i]['accounting_id']).'" />
+                                 <input type="hidden" id="property_name_0'.$j.'" value="'.(isset($bankentry[$i]['property'])?$bankentry[$i]['property']:'').'" />
+                                 <input type="hidden" id="sub_property_name_0'.$j.'" value="'.(isset($bankentry[$i]['sub_property'])?$bankentry[$i]['sub_property']:'').'" />
+                                 <input type="hidden" id="owner_name_0'.$j.'" value="'.(isset($bankentry[$i]['owner_name'])?$bankentry[$i]['owner_name']:'').'" />
+                                 <input type="hidden" id="payer_name_0'.$j.'" value="'.(isset($bankentry[$i]['payer_name'])?$bankentry[$i]['payer_name']:'').'" />
+                                 <input type="hidden" id="address_0'.$j.'" value="'.(isset($bankentry[$i]['p_address'])?$bankentry[$i]['p_address']:'').'" />
+                                 <a  style="color: #41a541!important;cursor: pointer!important;"  id="details_0'.$j.'" onclick="get_details(this);" data-target="#modalSlideLeft" data-toggle="modal">Details </a>',
+                                 ''.($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!='')?date('d/m/Y',strtotime($bankentry[$i]['due_date'])):''.'',
+                                 ''.$bankentry[$i]['particulars'].'',
+                                 ''.(isset($bankentry[$i]['payer_name'])?$bankentry[$i]['payer_name']:'').'',
+                                 ''. $bankentry[$i]['property'].'',
+                                 ''. $bankentry[$i]['sub_property'].'',
+                                 ''.format_money($bankentry[$i]['net_amount'],2).'',
+                                 ''.format_money($bankentry[$i]['paid_amount'],2).'',
+                                 ''.isset($bankentry[$i]['bal_amount'])?format_money($bankentry[$i]['bal_amount'],2):''.'',
+                                 ''.$duedate.'',
+                            );
+                        $accounting_data[] = $row;
+                        $j++;
+                }
+            }
+
+            for ($i=0; $i < count($pendingbankentry) ; $i++) 
+            { 
+               if($pendingbankentry[$i]['particulars']=='Purchase' || $pendingbankentry[$i]['particulars']=='Loan' || $pendingbankentry[$i]['particulars']=='Expense' || $pendingbankentry[$i]['particulars']=='Maintenance' || $pendingbankentry[$i]['particulars']=='Adhoc' && $pendingbankentry[$i]['table_type']=='payment') 
+                {
+                    $duedate =  ($pendingbankentry[$i]['due_date']!=null && $pendingbankentry[$i]['due_date']!='')?date('Y-m-d 00:00:00',strtotime($pendingbankentry[$i]['due_date'])):''; 
+
+                     $row = array(
+                        '<span class="btn btn-danger unpaid" >Unpaid</span>',
+                        '<input type="hidden" id="type_0'.$j.'" value="Receive" />
+                        <input type="hidden" id="type_2_0'.$j.'" value="View" />
+                        <input type="hidden" id="status_0'. $j.'" value="unpaid" />
+                        <input type="hidden" id="txn_status_0'. $j.'" value="'.$pendingbankentry[$i]['txn_status'].'"
+                        <input type="hidden" id="prop_id_0'.$j.'" value="'.$pendingbankentry[$i]['prop_id'].'" />
+                        <input type="hidden" id="particular_0'.$j.'" value="'.$pendingbankentry[$i]['particulars'].'" />
+                        <input type="hidden" id="bal_amount_0'.$j.'" value="'.format_money($pendingbankentry[$i]['bal_amount'],2).'" />
+                        <input type="hidden" id="net_amount_0'.$j.'" value="'.format_money($pendingbankentry[$i]['net_amount'],2).'" />
+                        <input type="hidden" id="due_date_0'.$j.'" value="'.($pendingbankentry[$i]['due_date']!=null && $pendingbankentry[$i]['due_date']!=''?date('d/m/Y',strtotime($pendingbankentry[$i]['due_date'])):'').'" />
+                        <input type="hidden" id="link_0'.$j.'" value="'.base_url().'index.php/Accounting/edit/payment/'.$pendingbankentry[$i]['txn_status'].'/'.$pendingbankentry[$i]['contact_id'].'/'.$pendingbankentry[$i]['transaction'].'/'.($pendingbankentry[$i]['property_id']==''?'0':$pendingbankentry[$i]['property_id']).'/'.($pendingbankentry[$i]['sub_property_id']==''?'0':$pendingbankentry[$i]['sub_property_id']).($pendingbankentry[$i]['txn_status']!='Approved'?'/'.$pendingbankentry[$i]['accounting_id']:'').'" />
+                        <input type="hidden" id="link_2_0'.$j.'" value="'.base_url().'index.php/Accounting/viewOtherSchedule/payment/'.$pendingbankentry[$i]['txn_status'].'/'.$pendingbankentry[$i]['contact_id'].'/'.$pendingbankentry[$i]['transaction'].'/'.($pendingbankentry[$i]['property_id']==''?'0':$pendingbankentry[$i]['property_id']).'/'.($pendingbankentry[$i]['sub_property_id']==''?'0':$pendingbankentry[$i]['sub_property_id']).($pendingbankentry[$i]['txn_status']!='Approved'?'/'.$pendingbankentry[$i]['accounting_id']:'').'" />
+                        <input type="hidden" id="owner_name_0'.$j.'" value="'.(isset($pendingbankentry[$i]['owner_name'])?$pendingbankentry[$i]['owner_name']:'').'"/>
+                        <input type="hidden" id="payer_name_0'.$j.'" value="'.(isset($pendingbankentry[$i]['payer_name'])?$pendingbankentry[$i]['payer_name']:'').'"/>
+                        <input type="hidden" id="property_name_0'.$j.'" value="'.(isset($pendingbankentry[$i]['property'])?$pendingbankentry[$i]['property']:'').'"/>
+                        <input type="hidden" id="sub_property_name_0'.$j.'"  value="'.(isset($pendingbankentry[$i]['sub_property'])?$pendingbankentry[$i]['sub_property']:'').'" />
+                        <input type="hidden" id="address_0'.$j.'" value="" />
+                        <a style="color: #41a541!important; cursor: pointer!important;" id="details_0'.$j.'" onclick="get_details(this);" data-target="#modalSlideLeft" data-toggle="modal">Details</a>',
+                        ''.($pendingbankentry[$i]['due_date']!=null && $pendingbankentry[$i]['due_date']!=''?date('d/m/Y',strtotime($pendingbankentry[$i]['due_date'])):'').'',
+                        ''. $pendingbankentry[$i]['particulars'].'',
+                        ''.(isset($pendingbankentry[$i]['payer_name'])?$pendingbankentry[$i]['payer_name']:'').'',
+                        ''.$pendingbankentry[$i]['property'].'',
+                        ''.$pendingbankentry[$i]['sub_property'].'',
+                        ''.format_money($pendingbankentry[$i]['net_amount'],2).'',
+                        ''.format_money($pendingbankentry[$i]['paid_amount'],2).'',
+                        ''.isset($pendingbankentry[$i]['bal_amount'])?format_money($pendingbankentry[$i]['bal_amount'],2):''.'',
+                        ''.$duedate.'',
+                    );
+                    $j++;
+                    $accounting_data[] = $row;
+                }
+
+            }
+
+            $total_accounting_data = count($accounting_data);
+            
+           foreach ($accounting_data as $key => $row) {
+                 $duedates[$key]= $row['10'];
+            }
+
+            if(count($accounting_data)>0)
+            array_multisort($duedates, SORT_ASC, $accounting_data);
+            $params = $_REQUEST;
+
+            $accounting_data = array_slice($accounting_data,$params['start'],$params['length']);
+             $json_data = array(
+                "draw"            => intval( $params['draw'] ),   
+                "recordsTotal"    => intval($total_accounting_data),  
+                "recordsFiltered" => intval($total_accounting_data),
+                "data"            => $accounting_data
+                );
+
+            echo json_encode($json_data);
+            //load_view('accounting/accounting', $data);
+
+        } else {
+            echo '<script>alert("You donot have access to this page.");</script>';
+            $this->load->view('login/main_page');
+        }
+    }
+
     public function checkstatus($status='', $property_id='', $contact_id=''){
         $result=$this->accounting_model->getAccess();
         if(count($result)>0) {
@@ -2570,8 +2986,8 @@ class Accounting extends CI_Controller
             $data['checkstatus'] = $status;
             $data['maker_checker'] = $this->session->userdata('maker_checker');
 
-            $data['startdate'] = trim($this->input->post('start'));
-            $data['enddate'] = trim($this->input->post('end'));
+            $data['startdate'] = trim($this->input->post('startdate'));
+            $data['enddate'] = trim($this->input->post('enddate'));
 
             load_view('accounting/accounting', $data);
 
@@ -2612,7 +3028,9 @@ class Accounting extends CI_Controller
 
         $sql = "select * from contact_master where c_id = '$invoice_issuer'";
         $query = $this->db->query($sql);
+        echo $this->db->last_query();
         $result = $query->result();
+        dump($result);
         if(count($result)>0){
             $format = '';
             $series = 1;
@@ -2654,6 +3072,436 @@ class Accounting extends CI_Controller
         return $invoice_no;
     }
 
+    public function get_contact_personname($c_id){
+        $sql = "Select * from (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
+            case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
+            case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
+            case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
+            case when A.c_owner_type='individual' 
+            then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
+            else concat(ifnull(A.c_company_name,'')) end as owner_name 
+        from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
+        where A.c_status='Approved') as E Where c_id='$c_id'";
+        $query=$this->db->query($sql);
+        $result=$query->result();
+        return $result;
+    }
+
+    public function invoice_postdate(){
+        $currentdate = date("Y-m-d");
+
+        $sql = "Select E.* from (select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.net_amount , B.tax_amount from (select * from rent_txn where txn_status = 'Approved') A left join (select * from rent_schedule where status = '1' and event_type!='Deposit' ) B on (A.txn_id = B.rent_id) where B.sch_id is not null) as E  Where tenant_id is not null and property_id is not null and invoice_date is not null and invoice_date='$currentdate' GROUP BY txn_id";
+        $query = $this->db->query($sql);
+        $result = $query->result();
+        $this->db->last_query();
+        if(count($result)>0){
+
+            for($i=0; $i<count($result); $i++)
+            {
+                $r_id = $result[$i]->txn_id;
+                $sch_id = $result[$i]->sch_id;
+                $invoice_issuer = $result[$i]->invoice_issuer;
+                $invoice_date = $result[$i]->invoice_date;
+                $invoice_month =  date("F", strtotime($invoice_date));
+                if($invoice_date!="")
+                    $invoice_date_5 =  date('Y-m-d',strtotime('-5 days',strtotime($invoice_date)));
+                $event_date = $result[$i]->event_date;
+                $property_id = $result[$i]->property_id;
+                if($property_id!=""){
+                    $result_prop = $this->db->select("p_property_name")->where("txn_id=$property_id")->get("purchase_txn")->result();
+                    if($result_prop>0)
+                      $propert_name=   $result_prop[0]->p_property_name;
+                }
+                $tenant_id = $result[$i]->tenant_id;
+                $net_amount = $result[$i]->net_amount;
+                $basic_cost = $result[$i]->basic_cost;
+                $gst_rate = $result[$i]->gst_rate;
+                $tax_amount = $result[$i]->tax_amount;
+                $sch_id = $result[$i]->sch_id;
+                $owners = $this->purchase_model->get_property_owners($property_id);
+                if(count($owners)>0){
+                      $owner_name = $owners[0]->owner_name;
+                      $owner_email = $owners[0]->c_emailid1;
+                }
+
+                $tenent = $this->get_contact_personname($tenant_id);
+                if(count($tenent)>0){
+                     $tenent_name = $tenent[0]->owner_name;
+                     $tenent_email = $tenent[0]->c_emailid1;
+                } 
+
+                $link = base_url("index.php/accounting/get_invoice/Rent/").'/'.$sch_id;
+                 $message = '<html>
+                                  <head>
+                                  </head>
+                                  <body>
+                                    Hi, <br>
+                                    <p>Please find below link for rent invoice of <b>'.$propert_name.'</b> property for the month of <b>'.$invoice_month.'</b>.</p>
+                                    <p>Link: <a href="'.$link.'">Get Invoice</a></p>
+                                    <h4>Invoice Details:</h4>
+                                    <table border="1" cellpadding="10">
+                                        <th>Particulars</th>
+                                        <th>Amount</th>
+                                        <tbody>
+                                            <tr><td>Rent Amount: </td><td>'.$basic_cost.'</td></tr>
+                                            <tr><td>GST@ '.$gst_rate.'%</td><td>'.$tax_amount.'</td></tr>
+                                            <tr><td>Total Amount: </td><td>'.$net_amount.'</td></tr>
+                                        </tbody>
+                                    </table>
+                                    <p>Please ignore if already received.</p>
+                                    <p>Regards,<br>
+                                    Team Pecan Reams.</p>
+                                    </body>
+                             </html>';                  
+                $subject = "Rent Invoice for the month of  - ".$invoice_month."for".$propert_name;
+                send_email($from_email='',$owner_email, $tenent_email, $subject, $message );
+            }
+                /*$owner_name = "Sangeeta";
+                $table = "";
+                
+                $subject = "Rent Invoice for the month of".$property;
+                $owner_email = "prasad.bhisale@pecanreams.com";
+                $to_email = "yadavsangeeta521@gmail.com";
+
+                if(send_email($from_email='',$owner_email, $owner_email, $subject, $message))
+                    echo "senddata";
+                else
+                    echo "fail";*/
+        }
+    }
+
+    public function invoice_due(){
+        $currentdate = date("Y-m-d");
+        $sql = "Select * from (select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.net_amount  , B.tax_amount  from (select * from rent_txn where txn_status = 'Approved') A left join (select * from rent_schedule where status = '1' and event_type!='Deposit' ) B on (A.txn_id = B.rent_id) where B.sch_id is not null) as E Where tenant_id is not null and property_id is not null and event_date='$currentdate'  GROUP BY txn_id";
+        $query = $this->db->query($sql);
+        $result = $query->result();
+        $this->db->last_query();
+        if(count($result)>0){
+
+            for($i=0; $i<count($result); $i++)
+            {
+                $r_id = $result[$i]->txn_id;
+                $sch_id = $result[$i]->sch_id;
+                $invoice_issuer = $result[$i]->invoice_issuer;
+                $invoice_date = $result[$i]->invoice_date;
+                $event_date = $result[$i]->event_date;
+                $invoice_month =  date("F", strtotime($event_date));
+                $invoice_date =  date("d", strtotime($event_date));
+                $invoice_day = date("D", strtotime($event_date));
+                $net_amount = $result[$i]->net_amount;
+                $basic_cost = $result[$i]->basic_cost;
+                $gst_rate = $result[$i]->gst_rate;
+                $tax_amount = $result[$i]->tax_amount;
+                if($event_date!="")
+                    $event_date_5 =  date('Y-m-d',strtotime('-5 days',strtotime($event_date)));
+                $property_id = $result[$i]->property_id;
+               if($property_id!=""){
+                    $result_prop = $this->db->select("p_property_name")->where("txn_id=$property_id")->get("purchase_txn")->result();
+                    if($result_prop>0)
+                      $property_name=   $result_prop[0]->p_property_name;
+                }
+                $tenant_id = $result[$i]->tenant_id;
+                $net_amount = $result[$i]->net_amount;
+                $owners = $this->purchase_model->get_property_owners($property_id);
+                if(count($owners)>0){
+                      $owner_name = $owners[0]->owner_name;
+                      $owner_email = $owners[0]->c_emailid1;
+                }
+                //$tenant_id = 571;
+                $tenent = $this->get_contact_personname($tenant_id);
+                if(count($tenent)>0){
+                     $tenent_name = $tenent[0]->owner_name;
+                     $tenent_email = $tenent[0]->c_emailid1;
+                } 
+            }
+            $link = base_url("index.php/accounting/get_invoice/Rent/").'/'.$sch_id;
+            $message = '<html>
+                                  <head></head>
+                                  <body>
+                                    Hi, <br>
+                                    <p>Please note invoice of <b>'.$property_name.'</b> property is due for the month of <b>'.$invoice_month.'</b> from  <b>'.$tenent_name.'</b></p>
+                                     <p>Please find below link for rent invoice :</p>
+                                    <p>Link: <a href="'.$link.'">Get Invoice</a></p>
+                                    <h4>Invoice Details:</h4>
+                                    <table border="1" cellpadding="10">
+                                        <th>Particulars</th>
+                                        <th>Amount</th>
+                                        <tbody>
+                                            <tr><td>Rent Amount: </td><td>'.$basic_cost.'</td></tr>
+                                            <tr><td>GST@ '.$gst_rate.'%</td><td>'.$tax_amount.'</td></tr>
+                                            <tr><td>Total Amount: </td><td>'.$net_amount.'</td></tr>
+                                        </tbody>
+                                    </table>
+                                    <p>Please ignore if already received.</p>
+                                    <p>Regards,<br>
+                                    Team Pecan Reams.</p>
+                                    </body>
+                             </html>';                  
+                 $subject = "Rent  Invoice due for the month of   - ".$invoice_month." for ".$property_name;
+                 send_email($from_email='',"Pecan Reams", $owner_email, $subject, $message);
+
+
+                $message_tenant = '<html>
+                                  <head></head>
+                                  <body>
+                                    Hi, <br>
+                                    <p>Please note invoice of <b>'.$property_name.'</b> property is due for the month of <b>'.$invoice_month.'</b> to  <b>'.$owner_name.'</b></p>
+                                    <p>Please find below link for rent invoice :</p>
+                                    <p>Link: <a href="'.$link.'">Get Invoice</a></p>
+                                    <h4>Invoice Details:</h4>
+                                    <table border="1" cellpadding="10">
+                                        <th>Particulars</th>
+                                        <th>Amount</th>
+                                        <tbody>
+                                            <tr><td>Rent Amount: </td><td>'.$basic_cost.'</td></tr>
+                                            <tr><td>GST@ '.$gst_rate.'%</td><td>'.$tax_amount.'</td></tr>
+                                            <tr><td>Total Amount: </td><td>'.$net_amount.'</td></tr>
+                                        </tbody>
+                                    </table>
+                                    <p>Please ignore if already received.</p>
+                                    <p>Regards,<br>
+                                    Team Pecan Reams.</p>
+                                    </body>
+                             </html>';                  
+                 $subject = "Rent  Invoice due for the month of   - ".$invoice_month." for ".$property_name;
+                send_email($from_email='',$owner_name, $tenent_email, $subject, $message);
+        }
+    }
+
+    public function invoice_overdue(){
+        $currentdate = date("Y-m-d");
+
+        $sql = "Select * from (select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.net_amount  , B.tax_amount  from (select * from rent_txn where txn_status = 'Approved') A left join (select * from rent_schedule where status = '1' and event_type!='Deposit' ) B on (A.txn_id = B.rent_id) where B.sch_id is not null) as E Where tenant_id is not null and property_id is not null and event_date > '$currentdate'  GROUP BY txn_id";
+        $query = $this->db->query($sql);
+        $result = $query->result();
+         $this->db->last_query();
+        
+        if(count($result)>0){
+
+            for($i=0; $i<count($result); $i++)
+            {
+                $r_id = $result[$i]->txn_id;
+                $sch_id = $result[$i]->sch_id;
+                $invoice_issuer = $result[$i]->invoice_issuer;
+                $invoice_date = $result[$i]->invoice_date;
+                $event_date = $result[$i]->event_date;
+                $invoice_month =  date("F", strtotime($event_date));
+                $invoice_date =  date("d", strtotime($event_date));
+                $invoice_day = date("D", strtotime($event_date));
+                $net_amount = $result[$i]->net_amount;
+                $basic_cost = $result[$i]->basic_cost;
+                $gst_rate = $result[$i]->gst_rate;
+                $tax_amount = $result[$i]->tax_amount;
+                if($event_date!="")
+                    $event_date_5 =  date('Y-m-d',strtotime('-5 days',strtotime($event_date)));
+                $property_id = $result[$i]->property_id;
+               if($property_id!=""){
+                    $result_prop = $this->db->select("p_property_name")->where("txn_id=$property_id")->get("purchase_txn")->result();
+                    if($result_prop>0)
+                      $property_name=   $result_prop[0]->p_property_name;
+                }
+                $tenant_id = $result[$i]->tenant_id;
+                $net_amount = $result[$i]->net_amount;
+                $owners = $this->purchase_model->get_property_owners($property_id);
+                if(count($owners)>0){
+                      $owner_name = $owners[0]->owner_name;
+                      $owner_email = $owners[0]->c_emailid1;
+                }
+                //$tenant_id = 571;
+                $tenent = $this->get_contact_personname($tenant_id);
+                if(count($tenent)>0){
+                     $tenent_name = $tenent[0]->owner_name;
+                     $tenent_email = $tenent[0]->c_emailid1;
+                } 
+            }
+            $link = base_url("index.php/accounting/get_invoice/Rent/").'/'.$sch_id;
+             $message = '<html>
+                                  <head></head>
+                                  <body>
+                                    Hi, <br>
+                                    <p>Please note invoice of <b>'.$property_name.'</b> property is overdue  for the month of <b>'.$invoice_month.'</b> from  <b>'.$tenent_name.'</b>.</p>
+                                     <p>Please find below link for rent invoice :</p>
+                                    <p>Link: <a href="'.$link.'">Get Invoice</a></p>
+                                    <h4>Invoice Details:</h4>
+                                    <table border="1" cellpadding="10">
+                                        <th>Particulars</th>
+                                        <th>Amount</th>
+                                        <tbody>
+                                            <tr><td>Rent Amount: </td><td>'.$basic_cost.'</td></tr>
+                                            <tr><td>GST@ '.$gst_rate.'%</td><td>'.$tax_amount.'</td></tr>
+                                            <tr><td>Total Amount: </td><td>'.$net_amount.'</td></tr>
+                                        </tbody>
+                                    </table>
+                                    <p>Please ignore if already received.</p>
+                                    <p>Regards,<br>
+                                    Team Pecan Reams.</p>
+                                    </body>
+                             </html>';                  
+                 $subject = "Rent Invoice overdue for the month of    - ".$invoice_month." for ".$property_name;
+                send_email($from_email='',"Pecan Reams", $owner_email, $subject, $message);
+
+                $message_tenant = '<html>
+                                  <head></head>
+                                  <body>
+                                    Hi, <br>
+                                    <p>Please note invoice of <b>'.$property_name.'</b> property is overdue  for the month of <b>'.$invoice_month.'</b> to  <b>'.$owner_name.'</b>. </p>
+                                    <p>Please find below link for rent invoice :</p>
+                                    <p>Link: <a href="'.$link.'">Get Invoice</a></p>
+                                    <h4>Invoice Details:</h4>
+                                    <table border="1" cellpadding="10">
+                                        <th>Particulars</th>
+                                        <th>Amount</th>
+                                        <tbody>
+                                            <tr><td>Rent Amount: </td><td>'.$basic_cost.'</td></tr>
+                                            <tr><td>GST@ '.$gst_rate.'%</td><td>'.$tax_amount.'</td></tr>
+                                            <tr><td>Total Amount: </td><td>'.$net_amount.'</td></tr>
+                                        </tbody>
+                                    </table>
+                                    <p>Please ignore if already received.</p>
+                                    <p>Regards,<br>
+                                    Team Pecan Reams.</p>
+                                    </body>
+                             </html>';                  
+                 $subject = "Rent Invoice overdue for the month of  ".$invoice_month." for ".$property_name;
+                send_email($from_email='',$owner_name, $tenent_email, $subject, $message);
+        }
+    }
+
+    public function lease_expiry(){
+       $currentdate = date("Y-m-d");
+
+        $sql = "Select * from (select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.net_amount from (select * from rent_txn where txn_status = 'Approved') A left join (select * from rent_schedule where status = '1' and event_type!='Deposit' ) B on (A.txn_id = B.rent_id) where B.sch_id is not null) as E Where tenant_id is not null and property_id is not null  GROUP BY txn_id";
+        $query = $this->db->query($sql);
+        $result = $query->result();
+        $this->db->last_query();
+        if(count($result)>0){
+
+            for($i=0; $i<count($result); $i++)
+            {
+                $r_id = $result[$i]->txn_id;
+                $sch_id = $result[$i]->sch_id;
+                $invoice_issuer = $result[$i]->invoice_issuer;
+                $termination_date = $result[$i]->termination_date;
+                $invoice_month =  date("F", strtotime($termination_date));
+                 $termination_date1_40 =  date('Y-m-d',strtotime('-40 days',strtotime($termination_date)));
+                 $termination_date1_30 =  date('Y-m-d',strtotime('-30 days',strtotime($termination_date)));
+                 $termination_date1_10 =  date('Y-m-d',strtotime('-10 days',strtotime($termination_date)));
+
+                $event_date = $result[$i]->event_date;
+                $property_id = $result[$i]->property_id;
+                if($property_id!=""){
+                    $result_prop = $this->db->select("p_property_name")->where("txn_id=$property_id")->get("purchase_txn")->result();
+                    if($result_prop>0)
+                      $property_name=   $result_prop[0]->p_property_name;
+                }
+                $tenant_id = $result[$i]->tenant_id;
+                $net_amount = $result[$i]->net_amount;
+                 $owners = $this->purchase_model->get_property_owners($property_id);
+                if(count($owners)>0){
+                      $owner_name = $owners[0]->owner_name;
+                      $owner_email = $owners[0]->c_emailid1;
+                }
+
+                $tenent = $this->get_contact_personname($tenant_id);
+                if(count($tenent)>0){
+                     $tenent_name = $tenent[0]->owner_name;
+                     $tenent_email = $tenent[0]->c_emailid1;
+                } 
+
+                if($termination_date1_40==$currentdate || $termination_date1_30==$currentdate || $termination_date1_10==$currentdate)
+                {   
+
+                 $message= '<html>
+                                  <head></head>
+                                  <body>
+                                    Hi, <br>
+                                    <p>Please note lease term of <b>'.$property_name.'</b> property is expiring on <b>'.date('d-m-Y',strtotime($termination_date)).'</b></p>
+                                    <p>Please ignore if already received.</p>
+                                    <p>Regards,<br>
+                                    Team Pecan Reams.</p>
+                                    </body>
+                             </html>'; 
+                    $subject = "Lease expiring for  ".$property_name." property on  ".date('d-m-Y',strtotime($termination_date));
+                    send_email($from_email='',"Pecan Reams", $owner_email, $subject, $message);
+                    send_email($from_email='',$owner_name, $tenent_email, $subject, $message);
+                }
+                /*$tenant_id = 571;
+                $tenent = $this->get_contact_personname($tenant_id);
+                if(count($tenent)>0){
+                     $tenent_name = $tenent[0]->owner_name;
+                     $tenent_email = $tenent[0]->c_emailid1;
+                }*/
+            }
+
+           
+
+          
+        }
+    }
+
+    public function lease_expired(){
+       $currentdate = date("Y-m-d");
+
+        $sql = "Select * from (select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.net_amount from (select * from rent_txn where txn_status = 'Approved') A left join (select * from rent_schedule where status = '1' and event_type!='Deposit' ) B on (A.txn_id = B.rent_id) where B.sch_id is not null) as E Where tenant_id is not null and property_id is not null and termination_date >='$currentdate' GROUP BY txn_id";
+        $query = $this->db->query($sql);
+        $result = $query->result();
+         $this->db->last_query();
+        if(count($result)>0){
+
+            for($i=0; $i<count($result); $i++)
+            {
+                $r_id = $result[$i]->txn_id;
+                $sch_id = $result[$i]->sch_id;
+                $invoice_issuer = $result[$i]->invoice_issuer;
+                echo "<br>".$termination_date = $result[$i]->termination_date;
+                $invoice_month =  date("F", strtotime($termination_date));
+           
+                $event_date = $result[$i]->event_date;
+                $property_id = $result[$i]->property_id;
+                if($property_id!=""){
+                    $result_prop = $this->db->select("p_property_name")->where("txn_id=$property_id")->get("purchase_txn")->result();
+                    if($result_prop>0)
+                      $property_name=   $result_prop[0]->p_property_name;
+                }
+                $tenant_id = $result[$i]->tenant_id;
+                $net_amount = $result[$i]->net_amount;
+                 $owners = $this->purchase_model->get_property_owners($property_id);
+                if(count($owners)>0){
+                      $owner_name = $owners[0]->owner_name;
+                      $owner_email = $owners[0]->c_emailid1;
+                }
+
+                if($termination_date==$currentdate)
+                {   
+
+                 $message = '<html>
+                                  <head></head>
+                                  <body>
+                                    Hi, <br>
+                                    <p>This is to inform you that lease term of  <b>'.$property_name.'</b> property has expired today i.e <b>'.date('d-m-Y',strtotime($termination_date)).'</b></p>
+                                    <p>Regards,<br>
+                                    Team Pecan Reams.</p>
+                                    </body>
+                             </html>'; 
+                    $subject = "Expiry of lease of ".$property_name;
+                    $owner_email;
+                    send_email($from_email='',"Pecan Reams", $owner_email, $subject, $message);
+                    send_email($from_email='',$owner_name, $tenent_email, $subject, $message);
+                }
+                /*$tenant_id = 571;
+                $tenent = $this->get_contact_personname($tenant_id);
+                if(count($tenent)>0){
+                     $tenent_name = $tenent[0]->owner_name;
+                     $tenent_email = $tenent[0]->c_emailid1;
+                }*/
+            }
+
+           
+
+          
+        }
+    } 
+  
     public function set_invoice(){
         $gid=$this->session->userdata('groupid');
         $roleid=$this->session->userdata('role_id');
@@ -2936,8 +3784,12 @@ class Accounting extends CI_Controller
         // }
     }
 
+    public function generate_invoice2(){
+       $this->get_invoice('Rent', "70");
+    }
+
     public function get_invoice($type, $id){
-        if($type='Rent'){
+        if($type=='Rent'){
             $sql = "select A.sch_id, A.rent_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.net_amount, 
                         avg(B.tax_percent) as gst_rate, sum(B.tax_amount) as tax_amount, 'schedule' as entry_type, A.invoice_no, A.invoice_date 
                     from rent_schedule A left join rent_schedule_taxation B on (A.rent_id=B.rent_id and A.sch_id=B.sch_id) 
@@ -3112,6 +3964,7 @@ class Accounting extends CI_Controller
         } else {
             echo '<script>alert("No Data Found.");</script>';
             $this->load->view('login/main_page');
+
         }
     }
 

@@ -8,6 +8,21 @@
 			$bl_other_schedue = true;
 		}
 	} 
+
+	/*if (isset($property_details['transaction'])) {
+		if($property_details['transaction']=='adhoc') {
+			$bl_other_schedue = true;
+		}
+	}*/ 
+
+	if($this->uri->segment(2)=='addnew' && $property_details['transaction']=='adhoc')
+	{
+			$bl_other_schedue = true;
+	}
+	else if($this->uri->segment(2)=='edit' && $property_details['transaction']=='adhoc')
+	{
+		$bl_other_schedue = true;
+	}
 ?>
 
 <?php 
@@ -18,7 +33,7 @@
 		} else {
 			$action = base_url().'index.php/accounting/updaterecord/'.$property_details['accounting_id'].'/'.$property_details['entry_type'];
 		}
-	} else {
+	}else {
 		if($bl_other_schedue=='true') {
 			$action = base_url().'index.php/accounting/saveOtherScheduleBankEntry';
 		} else {
@@ -38,14 +53,14 @@
 
 	<style>
 	   tfoot
-	   {
+	   	{
 		     background-color: #899be7;
 			color: #ffffff;
-	   }
-	  tfoot td {
-    padding-right: 12px;
-    text-align: right;
-}
+	   	}
+	  	tfoot td {
+		    padding-right: 12px;
+		    text-align: right;
+		}
 		.dt-buttons
 		{
 			display:none!important;
@@ -233,7 +248,7 @@
 			width: 130px;
 		}
 		.pay_now {
-			<?php if($bl_other_schedue==true) { echo 'display: none;'; } ?>
+			<?php if($bl_other_schedue==true && $property_details['transaction']!='adhoc') { echo 'display: none;'; } ?>
 		}
 	</style>
 </head>
@@ -254,10 +269,12 @@
             <input type="hidden" name="other_expense" id="other_expense" value="<?php if(isset($property_details['other_expense'])) echo $property_details['other_expense']; else echo 'false';?>" />
             <input type="hidden" name="type" id="type" value="<?php echo (($type=='receipt' || $type=='income')?'receipt':'payment'); ?>" />
             <input type="hidden" name="other_schedule" id="other_schedule" value="<?php if(isset($property_details['other_schedule'])) echo $property_details['other_schedule']; else echo 'false';?>" />
-
+            <input type="hidden" name="method" id="method" value="<?php if(isset($method)) echo $method; ?>" />
+            <input type="hidden" name="pagetype" id="pagetype" value="<?php echo $this->uri->segment(2); ?>" />
+            
 		<div class=" container-fluid container-fixed-lg">
 			<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="<?php echo base_url().'index.php/Dashboard'; ?>">Dashboard</a></li>
+				<li class="breadcrumb-item"><a href="<?php echo base_url().'index.php/Dashboard'; ?>">Dashboard</a></li>
             	<li class="breadcrumb-item"><a href="<?php echo base_url(); ?>index.php/accounting">Accounting</a></li>
             	<?php if(isset($property_details['accounting_id']) && $property_details['accounting_id']!='') { ?>
 				<li class="breadcrumb-item"><a href="<?php //echo base_url().'index.php/accounting/bankEntryView/'.$property_details['fk_txn_id'].'/'.$property_details['accounting_id'].'/'.$property_details['entry_type']; ?>">Accounting View</a></li>
@@ -289,7 +306,7 @@
 											<input type="text" class="form-control datepicker" name="payment_date" id="payment_date" value="<?php if (isset($property_details['payment_date'])) {if($property_details['payment_date']!='') echo date("d/m/Y",strtotime($property_details['payment_date'])); else echo date('d/m/Y');} else echo date('d/m/Y');?>" >
 										</div>
 									</div>
-									<div class="col-md-4" style="<?php if ($bl_other_schedue=='true') echo 'display: none;'; ?>">
+									<div class="col-md-4" style="<?php if (isset($property_details['transaction'])) {if($property_details['transaction']=='adhoc') echo ''; else if ($bl_other_schedue=='true') echo 'display: none;';} else if ($bl_other_schedue=='true') echo 'display: none;'; ?>">
 										<div class="form-group form-group-default form-group-default-select2" style="background-color: #f6f9fc;">
                                             <label class="">Transaction</label>
                                             <select name="status" id="status" class="form-control full-width" data-error="#err_status" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
@@ -297,8 +314,8 @@
 												<?php if ($type=='income' || $type=='expense') { ?>
 	                                                <option value="other" <?php if (isset($property_details['transaction'])) {if($property_details['transaction']=='other' || $property_details['transaction']=='Expense' || $property_details['transaction']=='Income') { echo 'selected'; }} ?> >Other</option>
 												<?php } else if ($type=='payment') { ?>
-	                                                <option value="purchase" <?php if (isset($property_details['transaction'])) {if($property_details['transaction']=='purchase') { echo 'selected'; }} ?> >Property Purchase</option>
 	                                                <option value="other" <?php if (isset($property_details['transaction'])) {if($property_details['transaction']=='other') { echo 'selected'; }} ?> >Expense</option>
+	                                                <option value="adhoc" <?php if (isset($property_details['transaction'])) {if($property_details['transaction']=='adhoc') { echo 'selected'; }} ?> >Adhoc</option>
 													<!-- <option value="loan" <?php //if (isset($property_details['transaction'])) {if($property_details['transaction']=='loan') { echo 'selected'; }} ?> >Loan EMI</option> -->
 													<!-- <option value="expense" <?php //if (isset($property_details['expense'])) echo $property_details['expense'];?> >Property Expense</option>
 													<option value="maintenance" <?php //if (isset($property_details['maintenance'])) echo $property_details['maintenance'];?> >Property Maintenance</option> -->
@@ -306,6 +323,7 @@
 													<option value="sale" <?php if (isset($property_details['transaction'])) {if($property_details['transaction']=='sale') { echo 'selected'; }} ?> >Property Sale</option>
 													<option value="rent" <?php if (isset($property_details['transaction'])) {if($property_details['transaction']=='rent') { echo 'selected'; }} ?> >Rent</option>
 													<option value="other" <?php if (isset($property_details['transaction'])) {if($property_details['transaction']=='other') { echo 'selected'; }} ?> >Income</option>
+	                                                <option value="adhoc" <?php if (isset($property_details['transaction'])) {if($property_details['transaction']=='adhoc') { echo 'selected'; }} ?> >Adhoc</option>
 												<?php } else { ?>
 													<option value="other" <?php if (isset($property_details['transaction'])) {if($property_details['transaction']=='other' || $property_details['transaction']=='Expense' || $property_details['transaction']=='Income') { echo 'selected'; }} ?> >Other</option>
 												<?php } ?>
@@ -339,7 +357,7 @@
                                             <select id="property" name="prop_name" class="form-control full-width" data-error="#err_property" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
                                                 <option value="">Select</option>
                                                 <?php if(isset($property)) { for ($k=0; $k < count($property) ; $k++) { ?>
-                                                    <option value="<?php echo $property[$k]->txn_id; ?>" <?php if (isset($property_details['property_id'])) {if($property[$k]->txn_id==$property_details['property_id']) { echo 'selected'; }} ?>><?php echo $property[$k]->p_property_name; ?></option>
+                                                    <option value="<?php echo $property[$k]->property_txn_id; ?>" <?php if (isset($property_details['property_id'])) {if($property[$k]->property_txn_id==$property_details['property_id']) { echo 'selected'; }} ?>><?php echo $property[$k]->unit_name; ?></option>
                                                 <?php }} ?>
                                             </select>
                                             <div id="err_property"></div>
@@ -390,8 +408,9 @@
 													<th style="width: 25px;">Pay Now</th>
 											<?php } ?>
 
-											<th class="pay_now" style="width: 100px;"><?php if($type=='receipt' || $type=='income') echo 'Received'; else echo 'Paid'; ?> Till Date</th>
+											<th class="pay_now" style="width: 100px;"><?php if($type=='receipt' || $type=='income') echo 'Received'; else echo 'Paid'; ?> Gross Amount</th>
 											<th style="display: none;">Pending</th>
+											<th class="pay_now" style="width: 100px;">TDS Amount Received Till Date</th>
 											<th class="pay_now" style="width: 100px;">Less: TDS</th>
 											<th class="pay_now" style="width: 100px;"><?php if($type=='receipt' || $type=='income') echo 'Received'; else echo 'Payment'; ?> Amount</th>
 
@@ -411,7 +430,6 @@
 										<?php 
 
 										$i=0;
-
 										if(isset($property_details['schedule_detail'])){
 											foreach ($property_details['schedule_detail'] as $row) {
 												if($property_details['schedule_detail'][$i]['amount_paid'] == $property_details['schedule_detail'][$i]['net_amount'] ){
@@ -424,10 +442,227 @@
 													$disabled='';
 												}
 
-												// $tax_applied=$property_details['schedule_detail'][$i]['tax_applied'];
+												/*$tds_amount_till_date = $property_details['schedule_detail'][$i]['tds_paid_till_date'];*/
+
+
+												if(isset($property_details['schedule_detail'][$i]['tds_paid_till_date']) && $property_details['schedule_detail'][$i]['tds_paid_till_date']!="")
+												{
+													$tds_amount_till_date = $property_details['schedule_detail'][$i]['tds_paid_till_date'];
+												}
+												else
+												{
+													$tds_amount_till_date=0;
+												}
+
+
+
+												if($property_details['schedule_detail'][$i]['amount_paid']>0 && $property_details['accounting_id']=="")
+												{
+													$property_details['schedule_detail'][$i]['tds_amount_paid'] = 0;
+												}
+
+												/*if($property_details['schedule_detail'][$i]['amount_paid_pending'] !=0)
+												{
+
+														$property_details['schedule_detail'][$i]['amount_paid_pending'] = ($property_details['schedule_detail'][$i]['amount_paid_pending']-$property_details['schedule_detail'][$i]['tds_amount_paid']);
+
+														$property_details['schedule_detail'][$i]['amount_paid'] = ($property_details['schedule_detail'][$i]['amount_paid']-$property_details['schedule_detail'][$i]['tds_amount_paid']);
+												}*/
+
+												/*if($property_details['schedule_detail'][$i]['amount_paid_pending'] !=0)
+														$property_details['schedule_detail'][$i]['amount_paid_pending'] = ($property_details['schedule_detail'][$i]['amount_paid_pending']-$property_details['schedule_detail'][$i]['tds_amount_paid']);*/
+
+
+
 												$tax_applied='';
 
-												echo '<tr class="table_head2 sch_cnt">
+												if($property_details['transaction']=='adhoc')
+												{
+													echo '<tr class="table_head2 sch_cnt">
+														<td>
+															<div class="form-group form-group-default">
+																<input type="hidden" name="fk_txn_id[]" id ="fk_txn_id_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['prop_id'].'">
+																<input type="hidden" name="transaction[]" id ="transaction_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['particulars'].'">
+																'.$property_details['schedule_detail'][$i]['particulars'].'
+															</div>
+														</td>
+														<td style="display: none;">
+															<div class="form-group form-group-default">
+																<input type="hidden" name="event_type[]" id ="event_type_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['event_type'].'">
+																'.$property_details['schedule_detail'][$i]['event_type'].'
+															</div>
+														</td>
+														<td style="display: none;">
+															<div class="form-group form-group-default">
+																<input type="hidden" name="event_name[]" id ="event_name_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['event_name'].'">
+																'.$property_details['schedule_detail'][$i]['event_name'].'
+															</div>
+														</td>';
+
+												
+														echo '<td>
+															<div class="form-group form-group-default">
+																<input type="hidden" name="event_date[]" id ="event_date_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['event_date'].'">
+																'.date("d/m/Y",strtotime($property_details['schedule_detail'][$i]['event_date'])).'
+															</div>
+														</td>';
+
+													echo '<td style="display: none">
+															<div class="form-group form-group-default">
+																<input type="hidden" name="invoice_no[]" id ="invoice_no_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['invoice_no'].'">
+																'.(isset($property_details['schedule_detail'][$i]['invoice_no'])?$property_details['schedule_detail'][$i]['invoice_no']:"&nbsp;").'
+															</div>
+														</td>
+													<td style="display: none;">
+														<input type="checkbox" name="late_fee[]" id ="late_fee_'.($i+1).'" value="yes" data-init-plugin="switchery" data-size="small" data-color="primary" checked="checked" />
+													</td>';
+
+
+													echo '<td> 	
+														<div class="form-group form-group-default form-group-default-select2">
+															<select id="category_'.($i+1).'" name="category[]" class="full-width exp_category" data-error="#category_err_'.($i+1).'" data-placeholder="Select " data-init-plugin="select2" data-minimum-results-for-search="Infinity">
+															<option value="">Select</option>';
+
+														if(isset($expense_category)) {
+															foreach($expense_category as $row) {
+																if($property_details['schedule_detail'][$i]['category']==$row->id) {
+																	echo '<option value="'.$row->id.'" selected>'.$row->expense_category.'</option>';	
+																} else {
+																	echo '<option value="'.$row->id.'" >'.$row->expense_category.'</option>';
+																}
+															} 	
+														}
+
+														echo '</select>
+																<div id="category_err_'.($i+1).'"></div>
+															</div>
+														</td>';
+
+													echo '<td style="text-align:right;">
+															<div class="form-group form-group-default ">
+																<input type="text" name="basic_amount[]" class="form-control format_number" id="basic_amount_'.($i+1).'" value="'.format_money($property_details['schedule_detail'][$i]['basic_amount'],2).'" onChange="setTotalAmount(this);" style="text-align:right;">
+															</div>
+														</td>';
+
+													echo '<td>
+														<div class="form-group form-group-default">
+															<input type="text" id="gst_rate_'.($i+1).'" name="gst_rate[]" class="form-control" style="border: none; text-align:right;" onChange="format_number(this); getTotOutstanding(); setTotalAmount(this);" value="'.$property_details['schedule_detail'][$i]['gst_rate'].'" />
+														</div>
+													</td>';
+
+													echo '<td>
+															<div class="form-group form-group-default ">
+																<input type="hidden" name="tax_amount[]" id="tax_amount_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['tax_amount'].'" style="text-align:right;">
+																<span style="float:right" id="tax_amount_text_'.($i+1).'">'.format_money($property_details['schedule_detail'][$i]['tax_amount'],2).' </span>
+															</div>
+														</td>
+														<td>
+															<div class="form-group form-group-default ">
+																<input type="hidden" name="net_amount[]" id="net_amount_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['net_amount'].'" style="text-align:right;">
+																<span style="float:right" id="net_amount_text_'.($i+1).'">'.format_money($property_details['schedule_detail'][$i]['net_amount'],2).'</span>
+															</div>
+														</td>';
+                                                    
+	                                        		 echo '<td>
+	                                                    <div class="form-group form-group-default">
+	                                                        <input type="checkbox" class="toggle" id="pay_now_'.($i+1).'" name="pay_now[]" value="1" '.($property_details['schedule_detail'][$i]['pay_now']=="1"?"checked":"").' />
+	                                                    </div>
+	                                                		</td>';
+
+	                                            echo '
+		                                            <td class="pay_now" style="text-align:right;">
+																<div class="form-group form-group-default ">
+																	<input type="hidden" id="paid_till_date_'.($i+1).'" name="paid_amount[]" value="'.$property_details['schedule_detail'][$i]['amount_paid'].'" style="text-align:right;">
+																	<input type="hidden" id="paid_till_date_actual_'.($i+1).'" name="paid_amount_actual[]" value="'.$property_details['schedule_detail'][$i]['amount_paid'].'" style="text-align:right;">
+																	<!-- <a href="#" id="paid_till_date_link_'.($i+1).'" onclick="getAllpaidDetails(\''.$property_details['schedule_detail'][$i]['event_type'].'\',\''.$property_details['schedule_detail'][$i]['event_name'].'\',\''.$property_details['schedule_detail'][$i]['event_date'].'\')"> -->
+																		'.format_money($property_details['schedule_detail'][$i]['amount_paid'],2).'
+																	<!-- </a> -->
+																</div>
+															</td>
+															   <td class="pay_now" style="text-align:right;">
+																<div class="form-group form-group-default ">
+																 <input type="hidden" id="tds_amount_till_date_'.($i+1).'" name="tds_amount_till_date[]" value="'.$tds_amount_till_date.'" style="text-align:right;">
+																		'.format_money($tds_amount_till_date,2).'
+																	<!-- </a> -->
+																</div>
+															</td>
+															<td style="display: none;">
+																<div class="form-group form-group-default ">
+																	<input type="hidden" name="bal_amount[]" id="bal_amount_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['balance_amount'].'">
+																	'.format_money($property_details['schedule_detail'][$i]['balance_amount'],2).'
+																</div>
+															</td>
+															<td class="pay_now" style="text-align:right;">
+																<div class="form-group form-group-default ">
+																	<select id="extra_taxes_'.($i+1).'" name="extra_taxes_'.($i+1).'[]"  class="select" multiple style="display: none;" data-minimum-results-for-search="Infinity">';
+																	if(isset($property_details['allTaxes'])) {
+																		foreach($property_details['allTaxes'] as $row) {
+																			$tax=$row->tax_id.'_'.$row->tax_percent;
+																			if(strpos($tax_applied, $tax)!==false) {
+																				echo '<option value="'.$row->tax_id.'_'.$row->tax_percent.'" selected>'.$row->tax_name.'-'.$row->tax_percent.'</option>';	
+																			} else {
+																				echo '<option value="'.$row->tax_id.'_'.$row->tax_percent.'" >'.$row->tax_name.'-'.$row->tax_percent.'</option>';
+																			}
+																		} 	
+																	}
+																	echo '</select>
+																	<input type="text" id="tds_amount_'.($i+1).'" name="tds_amount[]" class="form-control" style="border: none; text-align:right;" onchange="format_number(this); getDifferneceAmt();" value="'.format_money($property_details['schedule_detail'][$i]['tds_amount_paid'],2).'" '.$disabled.'/>
+																</div>
+															</td>
+															<td class="pay_now" style="text-align:right;">
+																<div class="form-group form-group-default ">
+																	<input type="text" id="actual_amount_'.($i+1).'" name="actual_amount[]" class="form-control" style="border:none; text-align:right;" onchange="format_number(this); getDifferneceAmt();" value="'.format_money($property_details['schedule_detail'][$i]['amount_paid_pending'],2).'" '.$disabled.'/>
+																</div>
+															</td>';
+
+													if(isset($property_details['txn_type'])) {
+														if($property_details['txn_type']=="loan") {
+															echo '<td>
+																<div class="form-group form-group-default form-group-default-select2">
+																	<select  class="full-width" data-init-plugin="select2" id="int_type_'.($i+1).'" name="int_type[]" onchange="setIntRate($(this));" '.$disabled.'>
+																		<option value="">Select</option>
+																		<option value="Fixed" '.(($property_details['schedule_detail'][$i]['int_type']=="Fixed")?"selected":"").'>Fixed</option>
+																		<option value="Floating" '.(($property_details['schedule_detail'][$i]['int_type']=="Floating")?"selected":"").'>Floating</option>
+																	</select>
+																</div>
+															</td>
+															<td>
+																<div class="form-group form-group-default">
+																	<input type="text" id="int_rate_'.($i+1).'" name="int_rate[]" class="form-control" style="border: none; text-align:right;" onchange="format_number(this); getTotOutstanding();" value="'.$property_details['schedule_detail'][$i]['int_rate'].'" '.$disabled.'/>
+																</div>
+															</td>
+															<td>
+																<div class="form-group form-group-default">
+																	<input type="hidden" id="interest_'.($i+1).'" name="interest[]" class="form-control" style="border: none;text-align:right;" />
+																	<span id="interest_text_'.($i+1).'"></span>
+																</div>
+															</td>
+															<td>
+																<div class="form-group form-group-default">
+																	<input type="hidden" id="principal_'.($i+1).'" name="principal[]" class="form-control" style="border: none;" />
+																	<span id="principal_text_'.($i+1).'"></span>
+																</div>
+															</td>
+															<td>
+																<div class="form-group form-group-default">
+																	<input type="hidden" id="tot_outstanding_'.($i+1).'" name="tot_outstanding[]" class="form-control" style="border: none;text-align:right;" />
+																	<span id="tot_outstanding_text_'.($i+1).'"></span>
+																</div>
+															</td>';
+														}
+													}
+
+														echo '<td class="pay_now" style="text-align:right;">
+																	<div class="form-group form-group-default ">
+																		<input type="hidden" name="balance[]" id="balance_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['balance_amount'].'" style="text-align:right;">
+																		<span id="difference_'.($i+1).'">'.format_money($property_details['schedule_detail'][$i]['balance_amount'],2).'</span>
+																	</div>
+																</td>
+															</tr>';
+												}
+												else
+												{
+													echo '<tr class="table_head2 sch_cnt">
 														<td>
 															<div class="form-group form-group-default">
 																<input type="hidden" name="fk_txn_id[]" id ="fk_txn_id_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['prop_id'].'">
@@ -448,7 +683,7 @@
 															</div>
 														</td>';
 
-												if($bl_other_schedue=="true") {
+												if($bl_other_schedue=="true" && $property_details['transaction']!='adhoc') {
 													echo '<td>
 															<div class="form-group form-group-default">
 																<input type="text" name="event_date[]" class="form-control datepicker" id ="event_date_'.($i+1).'" value="'.date("d/m/Y",strtotime($property_details['schedule_detail'][$i]['event_date'])).'">
@@ -463,7 +698,7 @@
 														</td>';
 												}
 
-												echo '<td style="'.(($bl_other_schedue=='true')?'display: none;':'').'">
+												echo '<td style="'.(($bl_other_schedue=='true'  && $property_details['transaction']!='adhoc')?'display: none;':'').'">
 														<div class="form-group form-group-default">
 															<input type="hidden" name="invoice_no[]" id ="invoice_no_'.($i+1).'" value="'.$property_details['schedule_detail'][$i]['invoice_no'].'">
 															'.(isset($property_details['schedule_detail'][$i]['invoice_no'])?$property_details['schedule_detail'][$i]['invoice_no']:"&nbsp;").'
@@ -474,7 +709,7 @@
 													</td>';
 
 
-												if($bl_other_schedue=="true") {
+												if($bl_other_schedue=="true"  && $property_details['transaction']!='adhoc') {
 													echo '<td> 	
 														<div class="form-group form-group-default form-group-default-select2">
 															<select id="category_'.($i+1).'" name="category[]" class="full-width exp_category" data-error="#category_err_'.($i+1).'" data-placeholder="Select " data-init-plugin="select2" data-minimum-results-for-search="Infinity">
@@ -503,7 +738,7 @@
 
 													echo '<td>
 														<div class="form-group form-group-default">
-															<input type="text" id="gst_rate_'.($i+1).'" name="gst_rate[]" class="form-control format_number" style="border: none; text-align:right;" onChange="getTotOutstanding();" value="'.$property_details['schedule_detail'][$i]['gst_rate'].'" onblur="setTotalAmount(this);" />
+															<input type="text" id="gst_rate_'.($i+1).'" name="gst_rate[]" class="form-control" style="border: none; text-align:right;" onChange="format_number(this); getTotOutstanding(); setTotalAmount(this);" value="'.$property_details['schedule_detail'][$i]['gst_rate'].'" />
 														</div>
 													</td>';
 												} else {
@@ -528,20 +763,29 @@
 															</div>
 														</td>';
                                                     
-	                                            if($bl_other_schedue=="true") {
+	                                            if($bl_other_schedue=="true"  && $property_details['transaction']!='adhoc') {
 	                                                echo '<td>
 	                                                    <div class="form-group form-group-default">
-	                                                        <input type="checkbox" class="toggle" id="pay_now_'.($i+1).'" name="pay_now[]" onChange="setPayNow(this);" value="1" '.($property_details['schedule_detail'][$i]['net_amount']=="1"?"checked":"").' />
+	                                                        <input type="checkbox" class="toggle" id="pay_now_'.($i+1).'" name="pay_now[]" onChange="setPayNow(this);" value="1" '.($property_details['schedule_detail'][$i]['pay_now']=="1"?"checked":"").' />
 	                                                    </div>
 	                                                </td>';
 	                                            }
 
-	                                            echo '<td class="pay_now" style="text-align:right;">
+	                                            echo '
+
+	                                            <td class="pay_now" style="text-align:right;">
 															<div class="form-group form-group-default ">
 																<input type="hidden" id="paid_till_date_'.($i+1).'" name="paid_amount[]" value="'.$property_details['schedule_detail'][$i]['amount_paid'].'" style="text-align:right;">
 																<input type="hidden" id="paid_till_date_actual_'.($i+1).'" name="paid_amount_actual[]" value="'.$property_details['schedule_detail'][$i]['amount_paid'].'" style="text-align:right;">
 																<!-- <a href="#" id="paid_till_date_link_'.($i+1).'" onclick="getAllpaidDetails(\''.$property_details['schedule_detail'][$i]['event_type'].'\',\''.$property_details['schedule_detail'][$i]['event_name'].'\',\''.$property_details['schedule_detail'][$i]['event_date'].'\')"> -->
 																	'.format_money($property_details['schedule_detail'][$i]['amount_paid'],2).'
+																<!-- </a> -->
+															</div>
+														</td>
+														   <td class="pay_now" style="text-align:right;">
+															<div class="form-group form-group-default ">
+															 <input type="hidden" id="tds_amount_till_date_'.($i+1).'" name="tds_amount_till_date[]" value="'.$tds_amount_till_date.'" style="text-align:right;">
+																	'.format_money($tds_amount_till_date,2).'
 																<!-- </a> -->
 															</div>
 														</td>
@@ -565,12 +809,12 @@
 																	} 	
 																}
 																echo '</select>
-																<input type="text" id="tds_amount_'.($i+1).'" name="tds_amount[]" class="form-control format_number" style="border: none; text-align:right;" onblur="getDifferneceAmt();" value="'.format_money($property_details['schedule_detail'][$i]['tds_amount_paid'],2).'" '.$disabled.'/>
+																<input type="text" id="tds_amount_'.($i+1).'" name="tds_amount[]" class="form-control" style="border: none; text-align:right;" onchange="format_number(this); getDifferneceAmt();" value="'.format_money($property_details['schedule_detail'][$i]['tds_amount_paid'],2).'" '.$disabled.'/>
 															</div>
 														</td>
 														<td class="pay_now" style="text-align:right;">
 															<div class="form-group form-group-default ">
-																<input type="text" id="actual_amount_'.($i+1).'" name="actual_amount[]" class="form-control format_number" style="border:none; text-align:right;" onblur="getDifferneceAmt();" value="'.format_money($property_details['schedule_detail'][$i]['amount_paid_pending'],2).'" '.$disabled.'/>
+																<input type="text" id="actual_amount_'.($i+1).'" name="actual_amount[]" class="form-control" style="border:none; text-align:right;" onchange="format_number(this); getDifferneceAmt();" value="'.format_money($property_details['schedule_detail'][$i]['amount_paid_pending'],2).'" '.$disabled.'/>
 															</div>
 														</td>';
 
@@ -578,7 +822,7 @@
 													if($property_details['txn_type']=="loan") {
 														echo '<td>
 															<div class="form-group form-group-default form-group-default-select2">
-																<select  class="full-width" data-init-plugin="select2" id="int_type_'.($i+1).'" name="int_type[]" onblur="setIntRate($(this));" '.$disabled.'>
+																<select  class="full-width" data-init-plugin="select2" id="int_type_'.($i+1).'" name="int_type[]" onchange="setIntRate($(this));" '.$disabled.'>
 																	<option value="">Select</option>
 																	<option value="Fixed" '.(($property_details['schedule_detail'][$i]['int_type']=="Fixed")?"selected":"").'>Fixed</option>
 																	<option value="Floating" '.(($property_details['schedule_detail'][$i]['int_type']=="Floating")?"selected":"").'>Floating</option>
@@ -587,7 +831,7 @@
 														</td>
 														<td>
 															<div class="form-group form-group-default">
-																<input type="text" id="int_rate_'.($i+1).'" name="int_rate[]" class="form-control format_number" style="border: none; text-align:right;" onblur="getTotOutstanding();" value="'.$property_details['schedule_detail'][$i]['int_rate'].'" '.$disabled.'/>
+																<input type="text" id="int_rate_'.($i+1).'" name="int_rate[]" class="form-control" style="border: none; text-align:right;" onchange="format_number(this); getTotOutstanding();" value="'.$property_details['schedule_detail'][$i]['int_rate'].'" '.$disabled.'/>
 															</div>
 														</td>
 														<td>
@@ -618,10 +862,13 @@
 															</div>
 														</td>
 													</tr>';
+												}
+
+												
 
 												$i++;
 											}
-										} else if($bl_other_schedue=="true") {
+										} if($bl_other_schedue=="true" || $property_details['transaction']=='adhoc' && $property_details['accounting_id']=='') {
 											$disabled='';
 
 											$tax_applied='';
@@ -631,7 +878,7 @@
 														<div class="form-group form-group-default">
 															<input type="hidden" name="fk_txn_id[]" id ="fk_txn_id_'.($i+1).'" value="">
 															<input type="hidden" name="transaction[]" id ="transaction_'.($i+1).'" value="'.(($type=='receipt' || $type=='income')?"receipt":"payment").'">
-															'.(($type=="receipt" || $type=="income")?"Income":"Expense").'
+															'.(($property_details['transaction']=='adhoc')?"Adhoc":(($type=="receipt" || $type=="income")?"Income":"Expense")).'
 														</div>
 													</td>
 													<td style="display: none;">
@@ -680,14 +927,14 @@
 
 											echo '<td>
 														<div class="form-group form-group-default ">
-															<input type="text" name="basic_amount[]" id="basic_amount_'.($i+1).'" class="form-control format_number" value="" onblur="setTotalAmount(this);" style="text-align:right;">
+															<input type="text" name="basic_amount[]" id="basic_amount_'.($i+1).'" class="form-control" value="" onchange="format_number(this); setTotalAmount(this);" style="text-align:right;">
 														</div>
 													</td>';
 													
 											if($bl_other_schedue=="true") {
 												echo '<td>
 													<div class="form-group form-group-default">
-														<input type="text" id="gst_rate_'.($i+1).'" name="gst_rate[]" class="form-control format_number" style="border: none; text-align:right;" onblur="setTotalAmount(this);" value="" />
+														<input type="text" id="gst_rate_'.($i+1).'" name="gst_rate[]" class="form-control" style="border: none; text-align:right;" onchange="format_number(this); setTotalAmount(this);" value="" />
 													</div>
 												</td>';
 											}
@@ -708,7 +955,7 @@
 											if($bl_other_schedue=="true") {
 												echo '<td>
 													<div class="form-group form-group-default">
-														<input type="checkbox" class="toggle" id="pay_now_'.($i+1).'" name="pay_now[]" onChange="setPayNow(this);" value="1" />
+														<input type="checkbox" class="toggle" id="pay_now_'.($i+1).'" name="pay_now[]" onChange="'.($property_details['transaction']=='adhoc'?'':'setPayNow(this)').'" value="1" />
 													</div>
 												</td>';
 											}
@@ -726,6 +973,13 @@
 															<span id="bal_amount_text_'.($i+1).'" style="float:right">0</span>
 														</div>
 													</td>
+													   <td class="pay_now" style="text-align:right;">
+														<div class="form-group form-group-default ">
+														 <input type="hidden" id="tds_amount_till_date_'.($i+1).'" name="tds_amount_till_date[]" value="" style="text-align:right;" disable>
+																0
+															<!-- </a> -->
+														</div>
+														</td>
 													<td class="pay_now" >
 														<div class="form-group form-group-default ">
 															<select id="extra_taxes_'.($i+1).'" name="extra_taxes_'.($i+1).'[]"  class="select" multiple style="display: none;">';
@@ -735,12 +989,12 @@
 																} 	
 															}
 															echo '</select>
-															<input type="text" id="tds_amount_'.($i+1).'" name="tds_amount[]" class="form-control format_number" style="border: none; text-align:right;" onblur="getDifferneceAmt();" value="" '.$disabled.'/>
+															<input type="text" id="tds_amount_'.($i+1).'" name="tds_amount[]" class="form-control" style="border: none; text-align:right;" onchange="format_number(this); getDifferneceAmt();" value="" '.$disabled.'/>
 														</div>
 													</td>
 													<td class="pay_now">
 														<div class="form-group form-group-default ">
-															<input type="text" id="actual_amount_'.($i+1).'" name="actual_amount[]" class="form-control format_number" style="border:none; text-align:right;" onblur="getDifferneceAmt();" value="" '.$disabled.'/>
+															<input type="text" id="actual_amount_'.($i+1).'" name="actual_amount[]" class="form-control" style="border:none; text-align:right;" onchange="format_number(this); getDifferneceAmt();" value="" '.$disabled.'/>
 														</div>
 													</td>';
 
@@ -748,7 +1002,7 @@
 												if($property_details['txn_type']=="loan") {
 													echo '<td>
 														<div class="form-group form-group-default">
-															<select id="int_type_'.($i+1).'" name="int_type[]" onblur="setIntRate($(this));" '.$disabled.'>
+															<select id="int_type_'.($i+1).'" name="int_type[]" onchange="setIntRate($(this));" '.$disabled.'>
 																<option value="">Select</option>
 																<option value="Fixed">Fixed</option>
 																<option value="Floating">Floating</option>
@@ -757,7 +1011,7 @@
 													</td>
 													<td>
 														<div class="form-group form-group-default">
-															<input type="text" id="int_rate_'.($i+1).'" name="int_rate[]" class="form-control format_number" style="border: none; text-align:right;" onblur="getTotOutstanding();" value="" '.$disabled.'/>
+															<input type="text" id="int_rate_'.($i+1).'" name="int_rate[]" class="form-control" style="border: none; text-align:right;" onchange="format_number(this); getTotOutstanding();" value="" '.$disabled.'/>
 														</div>
 													</td>
 													<td>
@@ -820,6 +1074,7 @@
 											<?php } ?>
 
 											<td id="tot_paid" class="pay_now"></td>
+											<td id="tot_tds_paid" class="pay_now"></td>
 											<td id="tot_tds" class="pay_now"></td>
 											<td id="tot_received" class="pay_now"></td>
 
@@ -889,15 +1144,14 @@
 						</div>
 					
 						<div class="row clearfix pay_now">
-							
-						<div class="col-md-12" >
+							<div class="col-md-12" >
 								<div class="total_amt">
 									<h5>Total</h5>
 									<h1> &#x20a8 <span id="tot_actual_amount">18,000</span></h1>
 								</div>
-							
+							</div>
 						</div>
-						</div>
+
 						<div class="form-footer" style="padding-bottom: 60px;">
 							<input type="hidden" id="submitVal" value="1" />
                         	<a href="<?php echo base_url();?>index.php/accounting" class="btn btn-danger" >Cancel</a>

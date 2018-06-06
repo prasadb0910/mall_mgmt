@@ -31,7 +31,7 @@ function setTotalAmount(elem, type){
 		// console.log(gst_rate);
 
 		if(amount=='') amount = 0;
-		if(gst_rate=='') amount = 0;
+		if(gst_rate=='') gst_rate = 0;
 
 		// console.log(amount);
 
@@ -81,7 +81,7 @@ function getActualAmount(){
 
 function getDifferneceAmt(){
 	var tot_budget=0, tot_paid=0, tot_outstanding=0, tot_actual_amount=0;
-	var tot_amount=0, tot_gst=0, tot_tds=0;
+	var tot_amount=0, tot_gst=0, tot_tds=0,tds_till_date=0;
 
 	var tot_sch = $('.sch_cnt').length;
 
@@ -94,16 +94,20 @@ function getDifferneceAmt(){
 
 		var paid_ids='paid_till_date_actual_'+i;
 		var paid_amount=parseInt(get_number($("#"+paid_ids).val(),2));
-		
+
+		var tds_id_till_id='tds_amount_till_date_'+i;
+		var tds_amount_till_date=parseInt(get_number($("#"+tds_id_till_id).val(),2));	
+		tds_till_date = tds_till_date+tds_amount_till_date;
 		tot_amount=tot_amount+amount;
 		tot_gst=tot_gst+gst;
 
 		tot_budget=tot_budget+netAmount;
 		tot_paid=tot_paid+paid_amount;
+		console.log('actul_tot_outstanding'+tot_outstanding);
 		tot_outstanding=tot_outstanding+netAmount-paid_amount;
 
-		if($("#actual_amount_"+i).val()!="" && $("#actual_amount_"+i).val()!=null){
-			var actual_amount=parseInt(($("#actual_amount_"+i).val()=="")?0:get_number($("#actual_amount_"+i).val(),2));
+/*		if($("#actual_amount_"+i).val()!="" && $("#actual_amount_"+i).val()!=null){
+*/			var actual_amount=parseInt(($("#actual_amount_"+i).val()=="")?0:get_number($("#actual_amount_"+i).val(),2));
 			
 			if($("#tds_amount_"+i).length>0){
 				var tds_amount=parseInt(($("#tds_amount_"+i).val()=="")?0:get_number($("#tds_amount_"+i).val(),2));
@@ -111,12 +115,22 @@ function getDifferneceAmt(){
 				var tds_amount=0;
 			}
 			
-			var tot_paid_amount=actual_amount+paid_amount+tds_amount;
-			var difference=netAmount-tot_paid_amount;
+			if(paid_amount!=netAmount)
+			{
+				var tot_paid_amount=actual_amount+paid_amount+tds_amount;
+
+			}
+			else
+			{
+				var tot_paid_amount=actual_amount+paid_amount;
+			}
+
+/*			var tot_paid_amount=actual_amount+paid_amount+tds_amount;
+*/			var difference=netAmount-tot_paid_amount;
 
 			// tot_paid=tot_paid+actual_amount;
 			tot_outstanding=tot_outstanding-actual_amount-tds_amount;
-
+			console.log('tot_outstanding'+tot_outstanding);
 			tot_actual_amount=tot_actual_amount+actual_amount;
 			tot_tds=tot_tds+tds_amount;
 
@@ -130,12 +144,12 @@ function getDifferneceAmt(){
 				alert("Outstanding cannot be negative.");
 				$("#actual_amount_"+i).val(0);
 			}
-		} else {
+		/*} else {
 			$("#paid_till_date_"+i).val(paid_amount);
 			// $("#paid_till_date_link_"+i).html(paid_amount);
 			$("#balance_"+i).val(netAmount-paid_amount);
 			$("#difference_"+i).html(((netAmount-paid_amount)==0)?0:format_money(netAmount-paid_amount,2));
-		}
+		}*/
 	}
 
 	if($('#others_net_amount').length>0){
@@ -151,7 +165,7 @@ function getDifferneceAmt(){
 	$("#tot_amount").html((tot_amount==0)?0:format_money(tot_amount,2));
 	$("#tot_tax").html((tot_gst==0)?0:format_money(tot_gst,2));
 	$("#tot_tds").html((tot_tds==0)?0:format_money(tot_tds,2));
-
+	$("#tot_tds_paid").html((tot_tds_paid==0)?0:format_money(tds_till_date,2));
 	$("#tot_budget").html((tot_budget==0)?0:format_money(tot_budget,2));
 	$("#tot_paid").html((tot_paid==0)?0:format_money(tot_paid,2));
 	$("#tot_outstanding").html((tot_outstanding==0)?0:format_money(tot_outstanding,2));
@@ -503,9 +517,11 @@ $( "#status" ).change(function() {
 });
 
 $( "#property" ).change(function() {
-    // getSubProperties();
-
-    getSchedule();
+    if($('#type').val()=='receipt' || $('#type').val()=='payment'){
+    	getSchedule();
+    } else {
+    	getSubProperties();
+    }
 });
 
 $( "#sub_property" ).change(function() {
@@ -515,6 +531,14 @@ $( "#sub_property" ).change(function() {
 $( "#loan_ref_name" ).change(function() {
     getSchedule();
 });
+
+var setPayNow = function(elem){
+	if(elem.checked==true){
+		$('.pay_now').show();
+	} else {
+		$('.pay_now').hide();
+	}
+}
 
 function getSchedule(){
 	// var payer_id=$("#payer_id").val();
@@ -558,20 +582,27 @@ function getSchedule(){
 	// }
 
 	// console.log('getSchedule');
+	// if($('#type').val()=='receipt' || $('#type').val()=='payment'){
 
-	$.ajax({
-       	type: "POST",
-       	url: BASE_URL+"index.php/accounting/getBankEntryUrl",
-       	data: $('#accounting_details').serialize(),
-	   	dataType:"html",
-       	async: false,
-       	cache: false,
-       	success: function(data){
-       		if(data!='' && data!=null){
-       			window.open(data,"_parent","true");
-       		}
-       	}
-    });
+	// console.log($('#other_schedule').val());
+	
+	if($('#other_schedule').val()!='true'){
+		console.log($('#type').val());
+
+		$.ajax({
+	       	type: "POST",
+	       	url: BASE_URL+"index.php/accounting/getBankEntryUrl",
+	       	data: $('#accounting_details').serialize(),
+		   	dataType:"html",
+	       	async: false,
+	       	cache: false,
+	       	success: function(data){
+	       		if(data!='' && data!=null){
+	       			window.open(data,"_parent","true");
+	       		}
+	       	}
+	    });
+	}
 }
 
 function getLoanTxn(){
@@ -727,11 +758,11 @@ function setSubProperty(){
 function checkMode(){
 	if($("#payment_mode").val()=="Cheque"){
 		$("#payment_id_details").show();
-		$("#payment_id_type").html('Cheque No<span  class="asterisk_sign" > * </span>');
+		$("#payment_id_type").html('Cheque No');
 		$("#cheq_no").val("");
 	} else if($("#payment_mode").val()=="NEFT"){
 		$("#payment_id_details").show();
-		$("#payment_id_type").html('Ref No<span  class="asterisk_sign" > * </span>');
+		$("#payment_id_type").html('Ref No');
 		$("#cheq_no").val("");
 	} else {
 		$("#payment_id_details").hide();
@@ -739,16 +770,16 @@ function checkMode(){
 }
 
 $( document ).ready(function() {
-	// getLoanTxn();
- //    getProperties();
- //    // getSubProperties();
- //    getDifferneceAmt();
- //    // setTaxForView();
- //    // checkMode();
+// 	  getLoanTxn();
+//    getProperties();
+//    // getSubProperties();
+//    getDifferneceAmt();
+//    // setTaxForView();
+//    // checkMode();
 
- //    if($('#other_schedule').val()=='true'){
- //    	setSubProperty();
- //    }
+//    if($('#other_schedule').val()=='true'){
+//    	setSubProperty();
+//    }
 
     getDifferneceAmt();
 });

@@ -204,6 +204,16 @@
 		{
 			padding:5px;
 		}
+
+		.dataTables_filter {
+		    float: right;
+		    padding-right: 10px;
+		    display: none!important;
+		}
+
+		.dataTables_length{
+			 display: none!important;
+		}
 	</style>
 
     <style>
@@ -351,17 +361,17 @@
 											<form action="<?= base_url('index.php/accounting')?>" method="POST">
 											<div class="input-daterange input-group " id="datepicker-range">
 												<label style="margin-top:5px;"> Date Range:- &nbsp </label>
-												<input type="text" class="input-sm form-control daterange" name="start" value="<?=($startdate!=""?$startdate:'')?>" />
+												<input type="text" class="input-sm form-control daterange" name="startdate" id="startdate" value="<?=($startdate!=""?$startdate:'')?>" />
 												<div class="input-group-addon">to</div>
-												<input type="text" class="input-sm form-control daterange" name="end" value="<?= ($enddate!=""?$enddate:'')?>"/>
-												 <input type="submit" style="margin-left:10px;border-radius:3px;"class="btn btn-default" name="">
+												<input type="text" class="input-sm form-control daterange" name="enddate" id="enddate" value="<?= ($enddate!=""?$enddate:'')?>"/>
+												 <input type="button" id="buttondate" value="Submit"  style="margin-left:10px;border-radius:3px;" class="btn btn-default" name="">
 											
 											</div>
 											</form>
 												
 										</div>
 												<div class="col-md-2">
-												<a href="<?=base_url('index.php/accounting');?>" target="_self"> <button class="btn btn-default-danger" >Reset</button></a>
+												<button class="btn btn-default-danger" id="resetdate" >Reset</button>
 												</div>
 									</div>
 									<div class="row clearfix">
@@ -386,97 +396,7 @@
 													</tr>
 												</thead>
 												<tbody>
-													<!-- <tr class="odd-cell">
-														<td colspan="11" style="background-color:#f6f9fc!important;">January, 2018</td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-													</tr> -->
-													<?php $j=0; for ($i=0; $i < count($bankentry) ; $i++) { if($bankentry[$i]['particulars']=='Rent' || $bankentry[$i]['particulars']=='Sale' || $bankentry[$i]['particulars']=='Income') { ?>
-													<tr class="">
-														<td><span class="btn btn-success paid" >Paid</span></td>
-														<td class="acc_dtl">
-															<input type="hidden" id="type_<?php echo $j; ?>" value="View" />
-															<input type="hidden" id="status_<?php echo $j; ?>" value="paid" />
-															<input type="hidden" id="prop_id_<?php echo $j; ?>" value="<?php echo $bankentry[$i]['prop_id']; ?>" />
-															<input type="hidden" id="particular_<?php echo $j; ?>" value="<?php echo $bankentry[$i]['particulars']; ?>" />
-															<input type="hidden" id="bal_amount_<?php echo $j; ?>" value="<?php echo format_money($bankentry[$i]['bal_amount'],2); ?>" />
-															<input type="hidden" id="net_amount_<?php echo $j; ?>" value="<?php echo format_money($bankentry[$i]['net_amount'],2); ?>" />
-															<input type="hidden" id="due_date_<?php echo $j; ?>" value="<?php echo ($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!='')?date('d/m/Y',strtotime($bankentry[$i]['due_date'])):''; ?>" />
-															<!-- <input type="hidden" id="link_<?php //echo $j; ?>" value="<?php //echo base_url().'index.php/Accounting/bankEntryView/'.$bankentry[$i]['prop_id'].'/'.$bankentry[$i]['accounting_id'].'/'.$bankentry[$i]['entry_type']; ?>" /> -->
-															<input type="hidden" id="link_<?php echo $j; ?>" value="<?php echo base_url().'index.php/Accounting/view/receipt/'.$bankentry[$i]['txn_status'].'/'.$bankentry[$i]['contact_id'].'/'.$bankentry[$i]['transaction'].'/'.($bankentry[$i]['property_id']==''?'0':$bankentry[$i]['property_id']).'/'.($bankentry[$i]['sub_property_id']==''?'0':$bankentry[$i]['sub_property_id']).'/'.($bankentry[$i]['accounting_id']==''?'0':$bankentry[$i]['accounting_id']); ?>" />
-															<input type="hidden" id="property_name_<?php echo $j; ?>" value="<?php if(isset($bankentry[$i]['property'])) echo $bankentry[$i]['property']; ?>" />
-															<input type="hidden" id="sub_property_name_<?php echo $j; ?>" value="<?php if(isset($bankentry[$i]['sub_property'])) echo $bankentry[$i]['sub_property']; ?>" />
-															<input type="hidden" id="owner_name_<?php echo $j; ?>" value="<?php if(isset($bankentry[$i]['owner_name'])) echo $bankentry[$i]['owner_name']; ?>" />
-															<input type="hidden" id="payer_name_<?php echo $j; ?>" value="<?php if(isset($bankentry[$i]['payer_name'])) echo $bankentry[$i]['payer_name']; ?>" />
-															<input type="hidden" id="address_<?php echo $j; ?>" value="<?php if(isset($bankentry[$i]['p_address'])) echo $bankentry[$i]['p_address']; ?>" />
-															<a id="details_<?php echo $j; ?>" onclick="get_details(this);" data-target="#modalSlideLeft" data-toggle="modal">Details</a>
-														</td>
-														<td style="text-align:right"><?php echo ($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!='')?date('d/m/Y',strtotime($bankentry[$i]['due_date'])):''; ?></td>
-														<td><?php echo $bankentry[$i]['particulars']; ?></td>
-														<td><?php if(isset($bankentry[$i]['payer_name'])) echo $bankentry[$i]['payer_name']; ?></td>
-														<td><?php echo $bankentry[$i]['property']; ?></td>
-														<td><?php echo $bankentry[$i]['sub_property']; ?></td>
-														<td style="text-align:right"><?php echo format_money($bankentry[$i]['net_amount'],2); ?></td>
-														<td style="text-align:right"><?php echo format_money($bankentry[$i]['paid_amount'],2); ?></td>
-														<td style="text-align:right"><?php if(isset($bankentry[$i]['bal_amount'])) echo format_money($bankentry[$i]['bal_amount'],2); ?></td>
-														<!-- <td style="text-align:right"><?php //if(isset($bankentry[$i]['tax_amount'])) echo format_money($bankentry[$i]['tax_amount'],2); ?></td> -->
-													</tr>
-													<?php $j++; }} ?>
-													<?php for($i=0;$i<count($pendingbankentry);$i++) { if($pendingbankentry[$i]['particulars']=='Rent' || $pendingbankentry[$i]['particulars']=='Sale' || $pendingbankentry[$i]['particulars']=='Income') { ?>
-													<tr class="">
-														<td><span class="btn btn-danger unpaid" >Unpaid</span></td>
-														<td class="acc_dtl">
-															<input type="hidden" id="type_<?php echo $j; ?>" value="Receive" />
-															<input type="hidden" id="type_2_<?php echo $j; ?>" value="View" />
-															<input type="hidden" id="status_<?php echo $j; ?>" value="unpaid" />
-															<input type="hidden" id="txn_status_<?php echo $j; ?>" value="<?php echo $pendingbankentry[$i]['txn_status']; ?>" />
-															<input type="hidden" id="prop_id_<?php echo $j; ?>" value="<?php echo $pendingbankentry[$i]['prop_id']; ?>" />
-															<input type="hidden" id="particular_<?php echo $j; ?>" value="<?php echo $pendingbankentry[$i]['particulars']; ?>" />
-															<input type="hidden" id="bal_amount_<?php echo $j; ?>" value="<?php echo format_money($pendingbankentry[$i]['bal_amount'],2); ?>" />
-															<input type="hidden" id="net_amount_<?php echo $j; ?>" value="<?php echo format_money($pendingbankentry[$i]['net_amount'],2); ?>" />
-															<input type="hidden" id="due_date_<?php echo $j; ?>" value="<?php echo ($pendingbankentry[$i]['due_date']!=null && $pendingbankentry[$i]['due_date']!='')?date('d/m/Y',strtotime($pendingbankentry[$i]['due_date'])):''; ?>" />
-															<!-- <input type="hidden" id="link_<?php //echo $j; ?>" value="<?php //echo base_url().'index.php/Accounting/bankEntry/'.$pendingbankentry[$i]['prop_id']; ?>" /> -->
-															<input type="hidden" id="link_<?php echo $j; ?>" value="<?php echo base_url().'index.php/Accounting/edit/receipt/'.$pendingbankentry[$i]['txn_status'].'/'.$pendingbankentry[$i]['contact_id'].'/'.$pendingbankentry[$i]['transaction'].'/'.($pendingbankentry[$i]['property_id']==''?'0':$pendingbankentry[$i]['property_id']).'/'.($pendingbankentry[$i]['sub_property_id']==''?'0':$pendingbankentry[$i]['sub_property_id']).($pendingbankentry[$i]['txn_status']!='Approved'?'/'.$pendingbankentry[$i]['accounting_id']:''); ?>" />
-															<input type="hidden" id="link_2_<?php echo $j; ?>" value="<?php echo base_url().'index.php/Accounting/viewOtherSchedule/receipt/'.$pendingbankentry[$i]['txn_status'].'/'.$pendingbankentry[$i]['contact_id'].'/'.$pendingbankentry[$i]['transaction'].'/'.($pendingbankentry[$i]['property_id']==''?'0':$pendingbankentry[$i]['property_id']).'/'.($pendingbankentry[$i]['sub_property_id']==''?'0':$pendingbankentry[$i]['sub_property_id']).($pendingbankentry[$i]['txn_status']!='Approved'?'/'.$pendingbankentry[$i]['accounting_id']:''); ?>" />
-															<input type="hidden" id="owner_name_<?php echo $j; ?>" value="<?php if(isset($pendingbankentry[$i]['owner_name'])) echo $pendingbankentry[$i]['owner_name']; ?>" />
-															<input type="hidden" id="payer_name_<?php echo $j; ?>" value="<?php if(isset($pendingbankentry[$i]['payer_name'])) echo $pendingbankentry[$i]['payer_name']; ?>" />
-															<input type="hidden" id="property_name_<?php echo $j; ?>" value="<?php if(isset($pendingbankentry[$i]['property'])) echo $pendingbankentry[$i]['property']; ?>" />
-															<input type="hidden" id="sub_property_name_<?php echo $j; ?>" value="<?php if(isset($pendingbankentry[$i]['sub_property'])) echo $pendingbankentry[$i]['sub_property']; ?>" />
-															<input type="hidden" id="address_<?php echo $j; ?>" value="<?php if(isset($pendingbankentry[$i]['p_address'])) echo $pendingbankentry[$i]['p_address']; ?>" />
-															<a id="details_<?php echo $j; ?>" onclick="get_details(this);" data-target="#modalSlideLeft" data-toggle="modal">Details</a>
-														</td>
-														<td style="text-align:right"><?php echo ($pendingbankentry[$i]['due_date']!=null && $pendingbankentry[$i]['due_date']!='')?date('d/m/Y',strtotime($pendingbankentry[$i]['due_date'])):''; ?></td>
-														<td><?php echo $pendingbankentry[$i]['particulars']; ?></td>
-														<td><?php if(isset($pendingbankentry[$i]['payer_name'])) echo $pendingbankentry[$i]['payer_name']; ?></td>
-														<td><?php echo $pendingbankentry[$i]['property']; ?></td>
-														<td><?php echo $pendingbankentry[$i]['sub_property']; ?></td>
-														<td style="text-align:right"><?php echo format_money($pendingbankentry[$i]['net_amount'],2); ?></td>
-														<td style="text-align:right"><?php echo format_money($pendingbankentry[$i]['paid_amount'],2); ?></td>
-														<td style="text-align:right"><?php if(isset($pendingbankentry[$i]['bal_amount'])) echo format_money($pendingbankentry[$i]['bal_amount'],2); ?></td>
-														<!-- <td style="text-align:right"><?php //if(isset($pendingbankentry[$i]['tax_amount'])) echo format_money($pendingbankentry[$i]['tax_amount'],2); ?></td> -->
-													</tr>
-													<?php $j++; }} ?>
-													<!-- <tr class="odd-cell">
-														<td colspan="6" style="background-color:#f6f9fc!important;">Sub-Total</td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td>40,000</td>
-														<td>0</td>
-														<td>20,000</td>
-														<td>100</td>
-														<td></td>
-													</tr> -->
+
 												</tbody>
 											</table>
 										</div>
@@ -503,97 +423,6 @@
 													</tr>
 												</thead>
 												<tbody>
-													<!-- <tr class="odd-cell">
-														<td colspan="11" style="background-color:#f6f9fc!important;">January, 2018</td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-													</tr> -->
-													<?php for ($i=0; $i < count($bankentry) ; $i++) { if($bankentry[$i]['particulars']=='Purchase' || $bankentry[$i]['particulars']=='Loan' || $bankentry[$i]['particulars']=='Expense' || $bankentry[$i]['particulars']=='Maintenance') { ?>
-													<tr class="">
-														<td><span class="btn btn-success paid" >Paid</span></td>
-														<td class="acc_dtl">
-															<input type="hidden" id="type_<?php echo $j; ?>" value="View" />
-															<input type="hidden" id="status_<?php echo $j; ?>" value="paid" />
-															<input type="hidden" id="prop_id_<?php echo $j; ?>" value="<?php echo $bankentry[$i]['prop_id']; ?>" />
-															<input type="hidden" id="particular_<?php echo $j; ?>" value="<?php echo $bankentry[$i]['particulars']; ?>" />
-															<input type="hidden" id="bal_amount_<?php echo $j; ?>" value="<?php echo format_money($bankentry[$i]['bal_amount'],2); ?>" />
-															<input type="hidden" id="net_amount_<?php echo $j; ?>" value="<?php echo format_money($bankentry[$i]['net_amount'],2); ?>" />
-															<input type="hidden" id="due_date_<?php echo $j; ?>" value="<?php echo ($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!='')?date('d/m/Y',strtotime($bankentry[$i]['due_date'])):''; ?>" />
-															<!-- <input type="hidden" id="link_<?php //echo $j; ?>" value="<?php //echo base_url().'index.php/Accounting/bankEntryView/'.$bankentry[$i]['prop_id'].'/'.$bankentry[$i]['accounting_id'].'/'.$bankentry[$i]['entry_type']; ?>" /> -->
-															<input type="hidden" id="link_<?php echo $j; ?>" value="<?php echo base_url().'index.php/Accounting/view/payment/'.$bankentry[$i]['txn_status'].'/'.$bankentry[$i]['contact_id'].'/'.$bankentry[$i]['transaction'].'/'.($bankentry[$i]['property_id']==''?'0':$bankentry[$i]['property_id']).'/'.($bankentry[$i]['sub_property_id']==''?'0':$bankentry[$i]['sub_property_id']).'/'.($bankentry[$i]['accounting_id']==''?'0':$bankentry[$i]['accounting_id']); ?>" />
-															<input type="hidden" id="property_name_<?php echo $j; ?>" value="<?php if(isset($bankentry[$i]['property'])) echo $bankentry[$i]['property']; ?>" />
-															<input type="hidden" id="sub_property_name_<?php echo $j; ?>" value="<?php if(isset($bankentry[$i]['sub_property'])) echo $bankentry[$i]['sub_property']; ?>" />
-															<input type="hidden" id="owner_name_<?php echo $j; ?>" value="<?php if(isset($bankentry[$i]['owner_name'])) echo $bankentry[$i]['owner_name']; ?>" />
-															<input type="hidden" id="payer_name_<?php echo $j; ?>" value="<?php if(isset($bankentry[$i]['payer_name'])) echo $bankentry[$i]['payer_name']; ?>" />
-															<input type="hidden" id="address_<?php echo $j; ?>" value="<?php if(isset($bankentry[$i]['p_address'])) echo $bankentry[$i]['p_address']; ?>" />
-															<a id="details_<?php echo $j; ?>" onclick="get_details(this);" data-target="#modalSlideLeft" data-toggle="modal">Details </a>
-														</td>
-														<td style="text-align:right"><?php echo ($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!='')?date('d/m/Y',strtotime($bankentry[$i]['due_date'])):''; ?></td>
-														<td><?php echo $bankentry[$i]['particulars']; ?></td>
-														<td><?php if(isset($bankentry[$i]['payer_name'])) echo $bankentry[$i]['payer_name']; ?></td>
-														<td><?php echo $bankentry[$i]['property']; ?></td>
-														<td><?php echo $bankentry[$i]['sub_property']; ?></td>
-														<td style="text-align:right"><?php echo format_money($bankentry[$i]['net_amount'],2); ?></td>
-														<td style="text-align:right"><?php echo format_money($bankentry[$i]['paid_amount'],2); ?></td>
-														<td style="text-align:right"><?php if(isset($bankentry[$i]['bal_amount'])) echo format_money($bankentry[$i]['bal_amount'],2); ?></td>
-														<!-- <td style="text-align:right"><?php //if(isset($bankentry[$i]['tax_amount'])) echo format_money($bankentry[$i]['tax_amount'],2); ?></td> -->
-													</tr>
-													<?php $j++; }} ?>
-													<?php for($i=0;$i<count($pendingbankentry);$i++) { if($pendingbankentry[$i]['particulars']=='Purchase' || $pendingbankentry[$i]['particulars']=='Loan' || $pendingbankentry[$i]['particulars']=='Expense' || $pendingbankentry[$i]['particulars']=='Maintenance') { ?>
-													<tr class="">
-														<td><span class="btn btn-danger unpaid" >Unpaid</span></td>
-														<td class="acc_dtl">
-															<input type="hidden" id="type_<?php echo $j; ?>" value="Pay" />
-                              								<input type="hidden" id="type_2_<?php echo $j; ?>" value="View" />
-															<input type="hidden" id="status_<?php echo $j; ?>" value="unpaid" />
-                              								<input type="hidden" id="txn_status_<?php echo $j; ?>" value="<?php echo $pendingbankentry[$i]['txn_status']; ?>" />
-															<input type="hidden" id="prop_id_<?php echo $j; ?>" value="<?php echo $pendingbankentry[$i]['prop_id']; ?>" />
-															<input type="hidden" id="particular_<?php echo $j; ?>" value="<?php echo $pendingbankentry[$i]['particulars']; ?>" />
-															<input type="hidden" id="bal_amount_<?php echo $j; ?>" value="<?php echo format_money($pendingbankentry[$i]['bal_amount'],2); ?>" />
-															<input type="hidden" id="net_amount_<?php echo $j; ?>" value="<?php echo format_money($pendingbankentry[$i]['net_amount'],2); ?>" />
-															<input type="hidden" id="due_date_<?php echo $j; ?>" value="<?php echo ($pendingbankentry[$i]['due_date']!=null && $pendingbankentry[$i]['due_date']!='')?date('d/m/Y',strtotime($pendingbankentry[$i]['due_date'])):''; ?>" />
-															<!-- <input type="hidden" id="link_<?php //echo $j; ?>" value="<?php //echo base_url().'index.php/Accounting/bankEntry/'.$pendingbankentry[$i]['prop_id']; ?>" /> -->
-															<input type="hidden" id="link_<?php echo $j; ?>" value="<?php echo base_url().'index.php/Accounting/edit/payment/'.$pendingbankentry[$i]['txn_status'].'/'.$pendingbankentry[$i]['contact_id'].'/'.$pendingbankentry[$i]['transaction'].'/'.($pendingbankentry[$i]['property_id']==''?'0':$pendingbankentry[$i]['property_id']).'/'.($pendingbankentry[$i]['sub_property_id']==''?'0':$pendingbankentry[$i]['sub_property_id']).($pendingbankentry[$i]['txn_status']!='Approved'?'/'.$pendingbankentry[$i]['accounting_id']:''); ?>" />
-															<input type="hidden" id="link_2_<?php echo $j; ?>" value="<?php echo base_url().'index.php/Accounting/viewOtherSchedule/payment/'.$pendingbankentry[$i]['txn_status'].'/'.$pendingbankentry[$i]['contact_id'].'/'.$pendingbankentry[$i]['transaction'].'/'.($pendingbankentry[$i]['property_id']==''?'0':$pendingbankentry[$i]['property_id']).'/'.($pendingbankentry[$i]['sub_property_id']==''?'0':$pendingbankentry[$i]['sub_property_id']).($pendingbankentry[$i]['txn_status']!='Approved'?'/'.$pendingbankentry[$i]['accounting_id']:''); ?>" />
-															<input type="hidden" id="property_name_<?php echo $j; ?>" value="<?php if(isset($pendingbankentry[$i]['property'])) echo $pendingbankentry[$i]['property']; ?>" />
-															<input type="hidden" id="sub_property_name_<?php echo $j; ?>" value="<?php if(isset($pendingbankentry[$i]['sub_property'])) echo $pendingbankentry[$i]['sub_property']; ?>" />
-															<input type="hidden" id="payer_name_<?php echo $j; ?>" value="<?php if(isset($pendingbankentry[$i]['payer_name'])) echo $pendingbankentry[$i]['payer_name']; ?>" />
-															<input type="hidden" id="owner_name_<?php echo $j; ?>" value="<?php if(isset($pendingbankentry[$i]['owner_name'])) echo $pendingbankentry[$i]['owner_name']; ?>" />
-															<input type="hidden" id="address_<?php echo $j; ?>" value="<?php if(isset($pendingbankentry[$i]['p_address'])) echo $pendingbankentry[$i]['p_address']; ?>" />
-															<a id="details_<?php echo $j; ?>" onclick="get_details(this);" data-target="#modalSlideLeft" data-toggle="modal">Details</a>
-														</td>
-														<td style="text-align:right"><?php echo ($pendingbankentry[$i]['due_date']!=null && $pendingbankentry[$i]['due_date']!='')?date('d/m/Y',strtotime($pendingbankentry[$i]['due_date'])):''; ?></td>
-														<td><?php echo $pendingbankentry[$i]['particulars']; ?></td>
-														<td><?php if(isset($pendingbankentry[$i]['payer_name'])) echo $pendingbankentry[$i]['payer_name']; ?></td>
-														<td><?php echo $pendingbankentry[$i]['property']; ?></td>
-														<td><?php echo $pendingbankentry[$i]['sub_property']; ?></td>
-														<td style="text-align:right"><?php echo format_money($pendingbankentry[$i]['net_amount'],2); ?></td>
-														<td style="text-align:right"><?php echo format_money($pendingbankentry[$i]['paid_amount'],2); ?></td>
-														<td style="text-align:right"><?php if(isset($pendingbankentry[$i]['bal_amount'])) echo format_money($pendingbankentry[$i]['bal_amount'],2); ?></td>
-														<!-- <td style="text-align:right"><?php //if(isset($pendingbankentry[$i]['tax_amount'])) echo format_money($pendingbankentry[$i]['tax_amount'],2); ?></td> -->
-													</tr>
-													<?php $j++; }} ?>
-													<!-- <tr class="odd-cell">
-														<td colspan="6" style="background-color:#f6f9fc!important;">Sub-Total</td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td style="display: none;"></td>
-														<td>40,000</td>
-														<td>0</td>
-														<td>20,000</td>
-														<td>100</td>
-														<td></td>
-													</tr> -->
 												</tbody>
 											</table>
 										</div>
@@ -753,7 +582,209 @@ for (var i = 0; i < btns.length; i++) {
 <script type="text/javascript" src="<?php echo base_url(); ?>js/acc_list.js"></script>
 
 <script>
+var BASE_URL="<?php echo base_url(); ?>";
 	$(".daterange").datepicker();
+
+$(document).ready(function() {
+$(".daterange").datepicker();
+
+	$('#buttondate').on( 'click', function () {
+	    $('#example5').DataTable().destroy();
+	    $('#example6').DataTable().destroy();
+
+	    $('#example5').DataTable({
+				"bProcessing": true,
+				"serverSide": true,
+				"ajax":{
+							url : BASE_URL + "index.php/accounting/checkstatus_receipt/<?=($checkstatus!=''?$checkstatus:'ALL')?>", // json datasource
+							type: "post",  // type of method  ,GET/POST/DELETE
+							data: function(data) {
+													// data.notice_type_id = 1;
+													// data.newspaper = '6';
+													// data.from_date = '';
+													// data.to_date = '';
+													// data.keyword = '';
+													// data.match_word = '';
+													data.startdate = $('#startdate').val();
+													data.enddate = $('#enddate').val();
+													/*data.notice_type_id = $('#notice_type_id').val();
+													data.newspaper = $('#newspaper').val();
+													data.from_date = $('#from_date').val();
+													data.to_date = $('#to_date').val();
+													data.keyword = $('#keyword').val();
+													data.match_word = $("input[name='match_word']:checked").val();											
+													data.noticetypetext = $("#noticetypetext").val();
+													data.newspapertext = $("#newspaper option:selected").text();*/
+							                    },
+							error: function(){
+							  	$("#example_processing").css("display","none");
+							}
+						}
+		});
+
+		$('#example6').DataTable({
+				"bProcessing": true,
+				"serverSide": true,
+				"ajax":{
+							url : BASE_URL + "index.php/accounting/checkstatus_payment/<?=($checkstatus!=''?$checkstatus:'ALL')?>", // json datasource
+							type: "post",  // type of method  ,GET/POST/DELETE
+							data: function(data) {
+													// data.notice_type_id = 1;
+													// data.newspaper = '6';
+													// data.from_date = '';
+													// data.to_date = '';
+													// data.keyword = '';
+													// data.match_word = '';
+													data.startdate = $('#startdate').val();
+													data.enddate = $('#enddate').val();
+													/*data.notice_type_id = $('#notice_type_id').val();
+													data.newspaper = $('#newspaper').val();
+													data.from_date = $('#from_date').val();
+													data.to_date = $('#to_date').val();
+													data.keyword = $('#keyword').val();
+													data.match_word = $("input[name='match_word']:checked").val();											
+													data.noticetypetext = $("#noticetypetext").val();
+													data.newspapertext = $("#newspaper option:selected").text();*/
+							                    },
+							error: function(){
+							  	$("#example_processing").css("display","none");
+							}
+						}
+		});
+
+	} );
+
+	 $('#example5').DataTable().destroy();
+	 $('#example6').DataTable().destroy();
+
+	$('#resetdate').on( 'click', function () {
+	    $('#example5').DataTable().destroy();
+	    $('#example6').DataTable().destroy();
+	    $('#startdate').val('');
+	    $('#enddate').val('');
+	    $('#example5').DataTable({
+				"bProcessing": true,
+				"serverSide": true,
+				"ajax":{
+							url : BASE_URL + "index.php/accounting/checkstatus_receipt/<?=($checkstatus!=''?$checkstatus:'ALL')?>", // json datasource
+							type: "post",  // type of method  ,GET/POST/DELETE
+							data: function(data) {
+													// data.notice_type_id = 1;
+													// data.newspaper = '6';
+													// data.from_date = '';
+													// data.to_date = '';
+													// data.keyword = '';
+													// data.match_word = '';
+													data.startdate = $('#startdate').val();
+													data.enddate = $('#enddate').val();
+													/*data.notice_type_id = $('#notice_type_id').val();
+													data.newspaper = $('#newspaper').val();
+													data.from_date = $('#from_date').val();
+													data.to_date = $('#to_date').val();
+													data.keyword = $('#keyword').val();
+													data.match_word = $("input[name='match_word']:checked").val();											
+													data.noticetypetext = $("#noticetypetext").val();
+													data.newspapertext = $("#newspaper option:selected").text();*/
+							                    },
+							error: function(){
+							  	$("#example_processing").css("display","none");
+							}
+						}
+		});
+
+		$('#example6').DataTable({
+				"bProcessing": true,
+				"serverSide": true,
+				"ajax":{
+							url : BASE_URL + "index.php/accounting/checkstatus_payment/<?=($checkstatus!=''?$checkstatus:'ALL')?>", // json datasource
+							type: "post",  // type of method  ,GET/POST/DELETE
+							data: function(data) {
+													// data.notice_type_id = 1;
+													// data.newspaper = '6';
+													// data.from_date = '';
+													// data.to_date = '';
+													// data.keyword = '';
+													// data.match_word = '';
+													data.startdate = $('#startdate').val();
+													data.enddate = $('#enddate').val();
+													/*data.notice_type_id = $('#notice_type_id').val();
+													data.newspaper = $('#newspaper').val();
+													data.from_date = $('#from_date').val();
+													data.to_date = $('#to_date').val();
+													data.keyword = $('#keyword').val();
+													data.match_word = $("input[name='match_word']:checked").val();											
+													data.noticetypetext = $("#noticetypetext").val();
+													data.newspapertext = $("#newspaper option:selected").text();*/
+							                    },
+							error: function(){
+							  	$("#example_processing").css("display","none");
+							}
+						}
+		});
+
+	} );
+
+    $('#example5').DataTable({
+		"bProcessing": true,
+		"serverSide": true,
+		"ajax":{
+					url : BASE_URL + "index.php/accounting/checkstatus_receipt/<?=($checkstatus!=''?$checkstatus:'ALL')?>", // json datasource
+					type: "post",  // type of method  ,GET/POST/DELETE
+					data: function(data) {
+											// data.notice_type_id = 1;
+											// data.newspaper = '6';
+											// data.from_date = '';
+											// data.to_date = '';
+											// data.keyword = '';
+											// data.match_word = '';
+											data.startdate = $('#startdate').val();
+											data.enddate = $('#enddate').val();
+											/*data.notice_type_id = $('#notice_type_id').val();
+											data.newspaper = $('#newspaper').val();
+											data.from_date = $('#from_date').val();
+											data.to_date = $('#to_date').val();
+											data.keyword = $('#keyword').val();
+											data.match_word = $("input[name='match_word']:checked").val();											
+											data.noticetypetext = $("#noticetypetext").val();
+											data.newspapertext = $("#newspaper option:selected").text();*/
+					                    },
+					error: function(){
+					  	$("#example_processing").css("display","none");
+					}
+				}
+	});
+
+
+	$('#example6').DataTable({
+		"bProcessing": true,
+		"serverSide": true,
+		"ajax":{
+					url : BASE_URL + "index.php/accounting/checkstatus_payment/<?=($checkstatus!=''?$checkstatus:'ALL')?>", // json datasource
+					type: "post",  // type of method  ,GET/POST/DELETE
+					data: function(data) {
+											// data.notice_type_id = 1;
+											// data.newspaper = '6';
+											// data.from_date = '';
+											// data.to_date = '';
+											// data.keyword = '';
+											// data.match_word = '';
+											data.startdate = $('#startdate').val();
+											data.enddate = $('#enddate').val();
+											/*data.notice_type_id = $('#notice_type_id').val();
+											data.newspaper = $('#newspaper').val();
+											data.from_date = $('#from_date').val();
+											data.to_date = $('#to_date').val();
+											data.keyword = $('#keyword').val();
+											data.match_word = $("input[name='match_word']:checked").val();											
+											data.noticetypetext = $("#noticetypetext").val();
+											data.newspapertext = $("#newspaper option:selected").text();*/
+					                    },
+					error: function(){
+					  	$("#example_processing").css("display","none");
+					}
+				}
+	});
+});
 </script>
 
 </body>
