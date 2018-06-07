@@ -241,7 +241,9 @@ class Rent_revenue_sharing extends CI_Controller
                   $where = array("rent_id"=>$rid,"status"=>1);
                   if($revenue_id!="")
                     $where['revenue_schedule_id']=$revenue_id;
-                  $result1 = $this->db->select("event_date,revenue_schedule_id,revenue_amount,property_id,revenue_sharing_amount")->where($where)->get('revenue_schedule')->result_array();
+                  $this->db->select("r.event_date,r.revenue_schedule_id,r.revenue_amount,r.property_id,r.revenue_sharing_amount,rt.revenue_percentage,rt.rent_amount");
+				  $this->db->join('rent_txn rt','rt.txn_id=r.rent_id','left');
+				  $result1 = $this->db->where($where)->get('revenue_schedule r')->result_array();
                   if(count( $result1)>0)
                   {
                     foreach ($result1 as $key => $value) {

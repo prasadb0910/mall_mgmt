@@ -407,87 +407,52 @@
 											{ ?>
 												<article class="lease-transaction">
 														<h5 class="view-title">Entered Revenue Amount</h5>
-															<div class="row">
-																<div class="col-md-4 col-sm-4">
-																	<div class="transaction-item">
-																		<div class="view-block m-b-0">
-																			<div class="title-block">
-																				<h4>Month</h4>
-																			</div>
-																		
-																		</div>
-																	</div>
-																</div>
-															
-																<div class="col-md-4 col-sm-4">
-																	<div class="transaction-item">
-																		<div class="view-block m-b-0">
-																			<div class="title-block">
-																				<h4>Revenue Amount</h4>
-																				
-																			</div>
-																		
-																		</div>
-																	</div>
-																</div>
-
-																<div class="col-md-4 col-sm-4">
-																	<div class="transaction-item">
-																		<div class="view-block m-b-0">
-																			<div class="title-block">
-																				<h4>Action</h4>
-																				
-																			</div>
-																		
-																		</div>
-																	</div>
-																</div>
-
-															</div>
-														<section>
-															<?php 
+														
+										<div class="row clearfix">
+											<table class="view_table">
+												<thead>
+													<tr>
+														<th>Month</th>
+														<th>Revenue Amount (In ₹)</th>
+														<th>Rent Amount (In ₹)</th>
+														<th>Revenue (In ₹)</th>
+														<th>Total Rent Amount (In ₹)</th>
+														<th>Action</th>
+													</tr>
+												</thead>
+												<tbody>
+														<?php 
 															if(isset($revenue_sharing))
 															{
 																foreach ($revenue_sharing as $key => $value) {
 																
+																$total_rent_amt=$value['revenue_sharing_amount'] + $value['rent_amount']
 															?>
-															<div class="row">
-																<div class="col-md-4 col-sm-4">
-																	<div class="transaction-item">
-																		<div class="view-block m-b-0">
-																			<div class="title-block">
-																				<span><?=$value['event_date']?></span>
-																			</div>
-																		
-																		</div>
-																	</div>
-																</div>
-															
-																<div class="col-md-4 col-sm-4">
-																	<div class="transaction-item">
-																		<div class="view-block m-b-0">
-																			<div class="title-block">
-																				<span><?=($value['revenue_amount'])!=''?'₹ '.$value['revenue_amount']:'-'?></span>
-																			</div>
-																		
-																		</div>
-																	</div>
-																</div>
-
-																<div class="col-md-4 col-sm-4">
-																	<div class="transaction-item">
-																		<div class="view-block m-b-0">
-																			<div class="title-block">
-																				<span><a href="<?php echo base_url().'index.php/Rent_revenue_sharing/edit/'.$r_id.'/'.$value['revenue_schedule_id'] ?>" class="dropdown-item edit" ><i class="pg-settings_small"></i> Edit</a></span>
-																			</div>
-																		
-																		</div>
-																	</div>
-																</div>
-
-															</div>
-															
-															<?php } }?>	
+														
+													<tr class="odd gradeX">
+														
+														<td><?=$value['event_date']?></td>
+														<td><?=format_money($value['revenue_amount'],2)?></td>
+														<td><?=format_money($value['rent_amount'],2)?></td>
+														<td><?=$value['revenue_sharing_amount']?></td>
+														<td><?=$total_rent_amt?></td>
+														<td><a href="<?php echo base_url().'index.php/Rent_revenue_sharing/edit/'.$r_id.'/'.$value['revenue_schedule_id'] ?>" class="dropdown-item edit" ><i class="pg-settings_small"></i> Edit</a></td>
+												
+													</tr>
+													<?php }} ?>
+												</tbody>
+											</table>
+										</div>
+														
+														
+														
+														
+														
+														
+														
+														
+														
+											
 														</section>
 												</article>
 												

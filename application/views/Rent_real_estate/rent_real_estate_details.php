@@ -19,7 +19,7 @@
             transition: background-color ease 0.3s;
         }
         .toggle:before {
-            content: "on off";
+            content: "Yes No";
             display: block;
             position: absolute;
             z-index: 2;
@@ -396,6 +396,7 @@
 }
 
 
+
     </style>
 </head>
 <body class="fixed-header ">
@@ -610,7 +611,7 @@
                                             <input type="text" class="form-control format_number rent_amount" name="rent_amount" id="rent_amount" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->rent_amount,2); }} ?>" />
                                         </div>
                                     </div>
-                                     <div class="col-md-3" style="display:none"  id="revenue_percentage">
+                                     <div class="col-md-3"   id="revenue_percentage" >
                                         <div class="form-group form-group-default ">
                                             <label>Revenue % </label>
                                             <input type="text" class="form-control format_number rent_amount" name="revenue_percentage" id="revenue_percentage_id" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->revenue_percentage,2); }} ?>"  />
@@ -636,7 +637,7 @@
                                                 <input type="text" class="form-control datepicker" name="invoice_date" id="invoice_date" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { if($rent[0]->invoice_date!=null && $rent[0]->invoice_date!='') echo date('d/m/Y',strtotime($rent[0]->invoice_date)); }} ?>"/>
                                             </div>
                                      </div>
-                                     <div class="col-md-3" style="display:none" id="revenue_due_day">
+                                     <div class="col-md-3"  id="revenue_due_day">
                                             <div class="form-group form-group-default form-group-default-select2 required">
                                                 <label> Revenue % input due day</label>
                                                 <select class="full-width" name="revenue_due_day" id=""  data-error="#err_revenue_due_day" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity">
@@ -654,7 +655,7 @@
                                             <div class="form-group form-group-default input-group">
                                                 <div class="form-input-group">
                                                     <label class="inline" style="float:left!important;">Advance Rent?</label>
-                                                    <input type="text" class="form-control format_number" name="advance_rent_amount" id="advance_rent_amount" placeholder="Enter Here"  style="" value="<?php if(isset($rent)) { if(count($rent)>=0) { echo format_money($rent[0]->advance_rent_amount,2); }} ?>" />
+                                                 
                                                 </div>
                                                 <div class="input-group-addon bg-transparent h-c-50">
                                                     <input type="checkbox" name="advance_rent" id="advance_rent" value="yes" onchange="set_advrent()" class="toggle"  <?php if(isset($rent)) { if($rent[0]->advance_rent==1) echo 'checked'; } ?> />
@@ -677,6 +678,8 @@
                                                 <div id="err_rent_due_day"></div>
                                             </div>
                                      </div>
+									 
+									  <div class="col-md-9">   </div>
                                 </div>
                                 <div class="row clearfix recurring">
                                    
@@ -1355,23 +1358,32 @@
 </script>
 
 <script type="text/javascript">
-  $( document ).ready(function() {
+  $(document).ready(function() {
+	
      rentype();
   });
 
   var rentype = function() {
+	  
+	
         if($('#rent_type').val()=="fixed")
         {
             $('#revenue_percentage_id').val('');
             $('#revenue_percentage').hide();
             $('#revenue_due_day').hide();
         }
-        else
+        else if($('#rent_type').val()=="revenue")
         {
             console.log('revenue_percentage'+$('#revenue_percentage').val());
             $('#revenue_percentage').show();
             $('#revenue_due_day').show();
         }
+		else
+		{
+			$('#revenue_percentage').hide();
+            $('#revenue_due_day').hide();
+		}
+			
     }
 
 

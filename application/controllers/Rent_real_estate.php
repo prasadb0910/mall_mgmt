@@ -1033,7 +1033,10 @@ class Rent_real_estate extends CI_Controller
         }
     }
 
-       
+           
+function send_mail_test(){
+        $this->rent_model->send_rent_intimation('5');
+    }
 
 }
 ?>

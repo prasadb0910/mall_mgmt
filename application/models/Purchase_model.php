@@ -718,7 +718,7 @@ public function get_purchase_list_table($property_id) {
         for($i=0;$i<count($property); $i++ ) {
             $table=$table.'<tr>
                             <td style="padding:5px; border: 1px solid black;">'.($i+1).'</td>
-                            <td style="padding:5px; border: 1px solid black;">'.$property[$i]->p_property_name.'</td>
+                            <td style="padding:5px; border: 1px solid black;">'.$property[$i]->unit_name.'</td>
                             <td style="padding:5px; border: 1px solid black;">'.$property[$i]->owner_name.'</td>
                             <td style="padding:5px; border: 1px solid black;">'.$property[$i]->p_type.'</td>
                             <td style="padding:5px; text-align:right; border: 1px solid black;">'.format_money($property[$i]->purchase_price,2).'</td>

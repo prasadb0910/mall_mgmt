@@ -213,6 +213,7 @@
 											
 											
                                         </select>
+										<div id="property-error"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-6" style="display:none">

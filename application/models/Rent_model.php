@@ -49,10 +49,11 @@ class Rent_model Extends CI_Model{
 
 
         $sql = "Select rt.*,pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_name,pt.unit_no,
-                pt.unit_type,pd.pr_client_id,pt.p_image,pt.property_typ_id
+                pt.unit_type,pd.pr_client_id,pt.p_image,pt.property_typ_id,C.c_name
                 from rent_txn rt
                 left join property_txn pt on rt.property_id=pt.property_txn_id
                 left join purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
+				left join contact_master C on pd.pr_client_id= C.c_id
                 Where rt.property_id NOT IN(Select property_id from sales_txn) and rt. txn_status <> 'Inactive' and rt.gp_id = '$gid' ".$cond;
         $query=$this->db->query($sql); 
         return $query->result();       
@@ -62,10 +63,11 @@ class Rent_model Extends CI_Model{
     {   
         $gid=$this->session->userdata('groupid');
         $sql = "Select rt.*,pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_name,pt.unit_no,
-                pt.unit_type,pd.pr_client_id
+                pt.unit_type,pd.pr_client_id,C.c_name
                 from rent_txn rt
                 left join property_txn pt on rt.property_id=pt.property_txn_id
                 left join purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
+				left join contact_master C on pd.pr_client_id= C.c_id
                 Where  rt. txn_status <> 'Inactive' and rt.gp_id = '$gid' and pt.property_typ_id=".$property_type_id;
         $query=$this->db->query($sql); 
         return $query->result();       
@@ -1431,10 +1433,10 @@ class Rent_model Extends CI_Model{
 
         if(count($result)){
             $property_id=$result[0]->property_id;
-            $sub_property_id=$result[0]->sub_property_id;
+            //$sub_property_id=$result[0]->sub_property_id;
         } else {
             $property_id='';
-            $sub_property_id='';
+            //$sub_property_id='';
         }
 
         $group_owners=$this->purchase_model->get_group_owners($gid);
@@ -1453,7 +1455,7 @@ class Rent_model Extends CI_Model{
                 $this->send_rent_intimation_to_owner($table, $owner_name, $to_email);
             }
 
-            if(strpos($prop_owners, ', ')>0){
+            if(strpos($prop_owners, ',')>0){
                 $prop_owners=substr($prop_owners,0,strripos($prop_owners, ', '));
             }
 
@@ -1477,7 +1479,7 @@ class Rent_model Extends CI_Model{
     }
 
     function get_rent_list_table($r_id) {
-        $rent = $this->rentData("All", '', $r_id);
+        $rent = $this->rentData("All",'1','', $r_id);
         $table='';
 
         if(count($rent)>0) {
@@ -1487,7 +1489,8 @@ class Rent_model Extends CI_Model{
                             <tr>
                                 <th style="padding:5px; border: 1px solid black;" width="55">ID</th>
                                 <th style="padding:5px; border: 1px solid black;" width="100">Property Name</th>
-                                <th style="padding:5px; border: 1px solid black;" width="100">Sub Property Name</th>
+                          
+                          
                                 <th style="padding:5px; border: 1px solid black;" width="90">Tenant Name</th>
                                 <th style="padding:5px; border: 1px solid black;" width="110">Rent Per Month</th>
                                 <th style="padding:5px; border: 1px solid black;" width="90">Possession Date</th>
@@ -1500,8 +1503,9 @@ class Rent_model Extends CI_Model{
             for($i=0;$i<count($rent); $i++ ) {
                 $table=$table.'<tr>
                                 <td style="padding:5px; border: 1px solid black;">'.($i+1).'</td>
-                                <td style="padding:5px; border: 1px solid black;">'.$rent[$i]->p_property_name.'</td>
-                                <td style="padding:5px; border: 1px solid black;">'.$rent[$i]->sp_name.'</td>
+                                <td style="padding:5px; border: 1px solid black;">'.$rent[$i]->unit_name.'</td>
+                             
+                            
                                 <td style="padding:5px; border: 1px solid black;">'.$rent[$i]->c_name.'</td>
                                 <td style="padding:5px; border: 1px solid black;">'.format_money($rent[$i]->rent_amount,2).'</td>
                                 <td style="padding:5px; text-align:right; border: 1px solid black;">'.(($rent[$i]->possession_date!=null && $rent[$i]->possession_date!='')?date('d/m/Y',strtotime($rent[$i]->possession_date)):'').'</td>
@@ -1512,7 +1516,7 @@ class Rent_model Extends CI_Model{
 
             $table=$table.'</tbody></table></div>';
 
-            // echo $table;
+            echo $table;
             return $table;
         }
     }
@@ -1527,6 +1531,7 @@ class Rent_model Extends CI_Model{
                     The Rent details are as follows.<br /><br />' . $table . '<br /><br />
                     If the above Rent details are incorrect please reject the same immediately.<br /><br />Thanks</body></html>';
         $mailSent=send_email($from_email,  $from_email_sender, $to_email, $subject, $message);
+		  echo $owner_name . ' ';
     }
 
     function send_rent_intimation_to_group_owner($table, $owner_name, $to_email, $prop_owners) {
@@ -1540,7 +1545,7 @@ class Rent_model Extends CI_Model{
                     If the above Rent details are incorrect please reject the same immediately.<br /><br />Thanks</body></html>';
         $mailSent=send_email($from_email,  $from_email_sender, $to_email, $subject, $message);
 
-        // echo $owner_name . ' ';
+         echo $owner_name . ' ';
     }
 
     function send_rent_intimation_to_owner($table, $owner_name, $to_email) {
@@ -1554,7 +1559,7 @@ class Rent_model Extends CI_Model{
                     If the above Property has not been put up for rent please reject the same immediately.<br /><br />Thanks</body></html>';
         $mailSent=send_email($from_email,  $from_email_sender, $to_email, $subject, $message);
 
-        // echo $owner_name . ' ';
+         echo $owner_name . ' ';
     }
 
 

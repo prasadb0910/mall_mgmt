@@ -4533,7 +4533,13 @@ $('#form_non_real_estate_property').submit(function() {
 $("#form_sale").validate({
     rules: {
         property: {
-            required: true
+              required: function(element) {
+                        if($("#submitVal").val()=="0"){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
         },
         sub_property: {
             required: function(element) {
