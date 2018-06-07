@@ -516,7 +516,7 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 
-$config['txnTypeArray']=array("p"=>"purchase","s"=>"sales","r"=>"rent","l"=>"loan","e"=>"expense","m"=>"maintenance","o"=>"other_expense");
+$config['txnTypeArray']=array("p"=>"purchase","s"=>"sales","r"=>"rent","l"=>"loan","e"=>"expense","m"=>"maintenance","o"=>"other_expense","t"=>"other","a"=>"adhoc");
 // $config['txnTypeArray']=array("p"=>"purchase","s"=>"sales","r"=>"rent","l"=>"loan","e"=>"expense","m"=>"maintenance","o"=>"other");
 
 // $config['template_path']="/var/www/html/app/assets/templates/";
