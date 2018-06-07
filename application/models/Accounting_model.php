@@ -115,9 +115,9 @@ function bankentryData($status='', $property_id='', $contact_id='', $created_on=
 
     //for Sale
     $sql="select E.* ,(Select case when c_owner_type='individual' 
-                then concat(ifnull(c_name,''),' ',ifnull(c_last_name,'')) 
-                else concat(ifnull(c_company_name,'')) end as Tenant_name 
-                from contact_master cm join purchase_ownership_details p where p.purchase_id=property_id and cm.c_id=p.pr_client_id Limit 0,1) as owners_name  from 
+        then concat(ifnull(c_name,''),' ',ifnull(c_last_name,'')) 
+        else concat(ifnull(c_company_name,'')) end as Tenant_name 
+        from contact_master cm join purchase_ownership_details p where p.purchase_id=property_id and cm.c_id=p.pr_client_id Limit 0,1) as owners_name  from 
         (select C.*, C.net_amount-C.paid_amount as bal_amount, D.buyer_id as contact_id, D.c_full_name, D.owner_name from 
         (select A.*, B.unit_name  from 
         (select * from 
@@ -238,7 +238,7 @@ function bankentryData($status='', $property_id='', $contact_id='', $created_on=
             tax_amount as basic_cost, tax_amount as total_amount, 0 as tax_amount, 'tax' as entry_type 
         from actual_schedule_taxes where table_type = 'rent') A 
         left join 
-        (select id, fk_txn_id, event_type, event_name, event_date, (paid_amount+tds_amount) as paid_amount, txn_status 
+        (select id, fk_txn_id, event_type, event_name, event_date, sum(paid_amount+tds_amount) as paid_amount, txn_status 
             from actual_schedule where table_type = 'rent' 
         union all 
         select id, fk_txn_id, tax_applied as event_type, 'tax' as event_name, created_on as event_date, 
@@ -495,9 +495,9 @@ function getPendingBankEntry($status='', $property_id='', $contact_id='') {
 
 
     $sql="select E.*  ,(Select case when c_owner_type='individual' 
-                then concat(ifnull(c_name,''),' ',ifnull(c_last_name,'')) 
-                else concat(ifnull(c_company_name,'')) end as Tenant_name 
-                from contact_master cm join purchase_ownership_details p where p.purchase_id=property_id and cm.c_id=p.pr_client_id Limit 0,1) as owners_name  from 
+        then concat(ifnull(c_name,''),' ',ifnull(c_last_name,'')) 
+        else concat(ifnull(c_company_name,'')) end as Tenant_name 
+        from contact_master cm join purchase_ownership_details p where p.purchase_id=property_id and cm.c_id=p.pr_client_id Limit 0,1) as owners_name  from 
         (select C.*, C.net_amount-C.paid_amount as bal_amount, D.buyer_id as contact_id, D.c_full_name, D.owner_name from 
         (select A.*, B.unit_name  from 
         (select * from 
@@ -529,8 +529,7 @@ function getPendingBankEntry($status='', $property_id='', $contact_id='') {
         left join 
         (select A.*, B.c_name, B.c_last_name, B.c_full_name, B.c_emailid1, B.owner_name FROM 
         (select * FROM sales_buyer_details A WHERE A.buyer_id in (select min(buyer_id) from sales_buyer_details 
-        where sale_id = A.sale_id 
-            ".(($blOwnerExist==true)?" and buyer_id in (select distinct owner_id from user_role_owners where user_id = '$session_id')":"")." group by sale_id)) A 
+        where sale_id = A.sale_id  group by sale_id)) A 
         left join 
         (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
             case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
@@ -576,8 +575,6 @@ function getPendingBankEntry($status='', $property_id='', $contact_id='') {
         }
     }
  
-
-
     //for rent
      $sql = "select * from 
             (select C.*, C.total_amount-C.paid_amount as bal_amount, D.contact_id, D.c_full_name as payer_name, D.tenant_name  from 
@@ -666,7 +663,6 @@ function getPendingBankEntry($status='', $property_id='', $contact_id='') {
         }
     }
 
-   
     return $dataarray;
 }
 
@@ -1829,104 +1825,10 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
     if (count($result)>0) {
         $blOwnerExist=true;
     }
-
-    $sql="select * , if(tds_amount_received_bank_name IS NOT NULL,(select concat(b_name,' - ',b_accountnumber) as b_name from bank_master Where b_id=tds_amount_received_bank_name ) ,'') as tds_bank_name  from 
-        (select C.*, '' as sub_property_id, '' as sp_name, C.net_amount-C.paid_amount as bal_amount, D.pr_client_id, D.c_full_name, D.owner_name from 
-        (select * from 
-        (select A.*, B.purchase_id, B.event_type, B.event_name, B.event_date, B.accounting_id, B.txn_status, B.entry_type, 
-            case when B.basic_cost is null then 0 else B.basic_cost end as basic_cost, 
-            case when B.net_amount is null then 0 else B.net_amount end as net_amount, 
-            case when B.tax_amount is null then 0 else B.tax_amount end as tax_amount, 
-            case when B.paid_amount is null then 0 else B.paid_amount end as paid_amount, 
-            case when B.tds_amount is null then 0 else B.tds_amount end as tds_amount, 
-            case when B.tds_amount_received is null then 0 else B.tds_amount_received end as tds_amount_received , B.tds_amount_received_method , B.tds_amount_reference_no , B.tds_amount_received_bank_name  from 
-        (select txn_id, gp_id, p_property_name, p_display_name, p_purchase_date, p_type, p_status 
-        from purchase_txn where gp_id='$gid' and txn_status = 'Approved') A 
-        left join 
-        (select * from 
-        (select A.purchase_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.net_amount, A.tax_amount, 
-            B.id as accounting_id, B.txn_status, case when B.paid_amount is null then 0 else B.paid_amount end as paid_amount, 
-            B.tds_amount, B.tds_amount_received, A.entry_type, B.tds_amount_received_method, B.tds_amount_reference_no, B.tds_amount_received_bank_name from 
-        (select A.sch_id, A.purchase_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.net_amount, 
-            sum(B.tax_amount) as tax_amount, 'schedule' as entry_type 
-            from purchase_schedule A left join purchase_schedule_taxation B on (A.purchase_id=B.pur_id and A.sch_id=B.sch_id) 
-            where A.status = '1' and (B.status = '1' or B.status is null) 
-            group by A.sch_id, A.purchase_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.net_amount
-        union all 
-        select id as sch_id, fk_txn_id as purchase_id, tax_applied as event_type, 'tax' as event_name, created_on as event_date, 
-            tax_amount as basic_cost, tax_amount as net_amount, 0 as tax_amount, 'tax' as entry_type 
-            from actual_schedule_taxes where table_type = 'purchase') A 
-        left join 
-        (select id, fk_txn_id, event_type, event_name, event_date, txn_status, paid_amount+tds_amount as paid_amount, 
-            tds_amount, tds_amount_received , tds_amount_received_bank_name,tds_amount_received_method,tds_amount_reference_no from actual_schedule where table_type = 'purchase' ".$cond2.") B 
-        on (A.purchase_id=B.fk_txn_id and A.event_type=B.event_type and A.event_name=B.event_name and A.event_date=B.event_date)) C 
-        where C.tds_amount>0 ) B 
-        on A.txn_id = B.purchase_id) C where C.event_name is not null) C 
-        left join 
-        (select A.*, B.c_name, B.c_last_name, B.c_full_name, B.c_emailid1, B.owner_name from 
-        (select A.purchase_id, A.pr_client_id from purchase_ownership_details A 
-            where A.ow_id in (select min(ow_id) from purchase_ownership_details where purchase_id=A.purchase_id
-            ".(($blOwnerExist==true)?" and pr_client_id in (select distinct owner_id from user_role_owners where user_id = '$session_id')":"").")) A 
-        left join 
-        (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
-            case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
-            case when A.c_owner_type='individual' then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                else concat(ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as c_full_name, 
-            case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
-            case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
-            case when A.c_owner_type='individual' 
-            then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-            else concat(ifnull(A.c_company_name,'')) end as owner_name 
-        from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-        where A.c_status='Approved' and A.c_gid='$gid' 
-            ".(($blOwnerExist==true)?" and A.c_id in (select distinct owner_id from user_role_owners where user_id = '$session_id')":"").") B 
-        on (A.pr_client_id=B.c_id)) D 
-        on C.txn_id=D.purchase_id) E 
-        where E.owner_name is not null and E.owner_name<>''" . $cond . $cond5;
-
-    $result1=$this->db->query($sql);
-    $result1 = $result1->result();
-
-    if(count($result1) > 0){
-        foreach($result1 as $row){
-            $dataarray[$i]['due_date']=$row->event_date;
-            $dataarray[$i]['particulars']='Purchase';
-            $dataarray[$i]['event_name']=$row->event_name;
-            $dataarray[$i]['property_id']=$row->purchase_id;
-            $dataarray[$i]['property']=$row->p_property_name;
-            $dataarray[$i]['prop_id']="p_".$row->purchase_id;
-            $dataarray[$i]['sub_property']=$row->sp_name;
-            $dataarray[$i]['accounting_id']=$row->accounting_id;
-            $dataarray[$i]['txn_status']=$row->txn_status;
-            $dataarray[$i]['net_amount']=$row->tds_amount;
-            $dataarray[$i]['basic_amount']=$row->tds_amount;
-            $dataarray[$i]['owner_name']=$row->c_full_name;
-            $dataarray[$i]['tax_amount']=$row->tax_amount;
-            $dataarray[$i]['bal_amount']=$row->tds_amount;
-            if($row->tds_amount_received==1)
-            {
-                $dataarray[$i]['paid_amount']=$row->tds_amount;
-            }
-            else
-            {
-                $dataarray[$i]['paid_amount']=0;
-            }
-            $dataarray[$i]['paid_amount']=$row->tds_amount;
-            $dataarray[$i]['ref_id']=null;
-            $dataarray[$i]['ref_name']=null;
-            $dataarray[$i]['entry_type']=$row->entry_type;
-            $dataarray[$i]['tds_amount_received']=$row->tds_amount_received;
-            $dataarray[$i]['tds_method']=$row->tds_amount_received_method;
-            $dataarray[$i]['tds_reference_no']=$row->tds_amount_reference_no;
-            $dataarray[$i]['tds_bank_name']=$row->tds_bank_name;
-            $i++;
-        }
-    }
-
     //for sale
     $sql="select * , if(tds_amount_received_bank_name IS NOT NULL,(select concat(b_name,' - ',b_accountnumber) as b_name from bank_master Where b_id=tds_amount_received_bank_name ) ,'') as tds_bank_name from 
         (select C.*, C.net_amount-C.paid_amount as bal_amount, D.buyer_id, D.c_full_name, D.owner_name from 
-        (select A.*, B.p_property_name, B.p_display_name, B.p_type, B.p_status from 
+        (select A.*, B.unit_name  from 
         (select * from 
         (select C.*, D.sale_id, D.event_type, D.event_name, D.event_date, D.accounting_id, D.txn_status, D.entry_type, 
             case when D.basic_cost is null then 0 else D.basic_cost end as basic_cost, 
@@ -1935,13 +1837,9 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
             case when D.paid_amount is null then 0 else D.paid_amount end as paid_amount, 
             case when D.tds_amount is null then 0 else D.tds_amount end as tds_amount, 
             case when D.tds_amount_received is null then 0 else D.tds_amount_received end as tds_amount_received , D.tds_amount_received_method, D.tds_amount_reference_no, D.tds_amount_received_bank_name   from 
-        (select A.txn_id, A.property_id, A.sub_property_id, B.sp_name, A.gp_id, A.date_of_sale from 
+        (select A.txn_id, A.property_id, A.sub_property_id, A.gp_id, A.date_of_sale from 
         (select * from sales_txn where gp_id = '$gid' and txn_status = 'Approved' and 
-            txn_id in (select distinct sale_id from sales_buyer_details 
-            ".(($blOwnerExist==true)?" where buyer_id in (select distinct owner_id from user_role_owners where user_id = '$session_id')":"").")) A 
-        left join 
-        (select * from sub_property_allocation where txn_status='Approved' and gp_id = '$gid') B 
-        on A.sub_property_id = B.txn_id) C 
+            txn_id in (select distinct sale_id from sales_buyer_details )) A ) C 
         left join 
         (select * from 
         (select A.sale_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.net_amount, A.tax_amount, 
@@ -1966,13 +1864,13 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
         where C.tds_amount>0 ) D 
         on C.txn_id = D.sale_id) E where E.event_name is not null) A 
         left join 
-        (select * from purchase_txn where gp_id = '$gid') B 
-        on A.property_id=B.txn_id) C 
+        (select * from property_txn where gp_id = '$gid') B 
+        on A.property_id=B.property_txn_id) C 
         left join 
         (SELECT A.*, B.c_name, B.c_last_name, B.c_full_name, B.c_emailid1, B.owner_name FROM 
         (SELECT * FROM sales_buyer_details A WHERE A.buyer_id in (select min(buyer_id) from sales_buyer_details 
         where sale_id = A.sale_id 
-        ".(($blOwnerExist==true)?" and buyer_id in (select distinct owner_id from user_role_owners where user_id = '$session_id')":"")." group by sale_id)) A 
+         group by sale_id)) A 
         LEFT JOIN 
         (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
             case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
@@ -1984,8 +1882,7 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
             then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
             else concat(ifnull(A.c_company_name,'')) end as owner_name 
         from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-        where A.c_status='Approved' and A.c_gid='$gid' 
-        ".(($blOwnerExist==true)?" and A.c_id in (select distinct owner_id from user_role_owners where user_id = '$session_id')":"").") B 
+        where A.c_status='Approved' and A.c_gid='$gid' ) B 
         ON (A.buyer_id=B.c_id)) D 
         on C.txn_id=D.sale_id) E 
         where E.owner_name is not null and E.owner_name<>''" . $cond . $cond5;
@@ -1997,9 +1894,9 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
             $dataarray[$i]['particulars']='Sale';
             $dataarray[$i]['event_name']=$row->event_name;
             $dataarray[$i]['property_id']=$row->property_id;
-            $dataarray[$i]['property']=$row->p_property_name;
+            $dataarray[$i]['property']=$row->unit_name;
             $dataarray[$i]['prop_id']="s_".$row->sale_id;
-            $dataarray[$i]['sub_property']=$row->sp_name;
+            $dataarray[$i]['sub_property']='';
             $dataarray[$i]['accounting_id']=$row->accounting_id;
             $dataarray[$i]['txn_status']=$row->txn_status;
             $dataarray[$i]['net_amount']=$row->tds_amount;
@@ -2029,7 +1926,7 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
     //for rent
     $sql="select * ,if(tds_amount_received_bank_name IS NOT NULL,(select concat(b_name,' - ',b_accountnumber) as b_name from bank_master Where b_id=tds_amount_received_bank_name ) ,'') as tds_bank_name from 
         (select C.*, C.net_amount-C.paid_amount as bal_amount, D.contact_id, D.c_full_name, D.owner_name from 
-        (select A.*, B.p_property_name, B.p_display_name, B.p_type, B.p_status from 
+        (select A.*, B.unit_name from 
         (select * from 
         (select C.*, D.rent_id, D.event_type, D.event_name, D.event_date, D.accounting_id, D.txn_status, D.entry_type, 
             case when D.basic_cost is null then 0 else D.basic_cost end as basic_cost, 
@@ -2038,14 +1935,10 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
             case when D.paid_amount is null then 0 else D.paid_amount end as paid_amount, 
             case when D.tds_amount is null then 0 else D.tds_amount end as tds_amount, 
             case when D.tds_amount_received is null then 0 else D.tds_amount_received end as tds_amount_received ,D.tds_amount_received_method, D.tds_amount_reference_no, D.tds_amount_received_bank_name from 
-        (select A.txn_id, A.property_id, A.sub_property_id, B.sp_name, A.gp_id, A.rent_amount, 
+        (select A.txn_id, A.property_id, A.sub_property_id, A.gp_id, A.rent_amount, 
             A.possession_date, A.termination_date from 
         (select * from rent_txn where gp_id = '$gid' and txn_status='Approved' and 
-            property_id in (select distinct purchase_id from purchase_ownership_details 
-            ".(($blOwnerExist==true)?" where pr_client_id in (select distinct owner_id from user_role_owners where user_id = '$session_id')":"").")) A 
-        left join 
-        (select * from sub_property_allocation where txn_status='Approved' and gp_id = '$gid') B 
-        on A.sub_property_id = B.txn_id) C 
+            property_id in (select distinct purchase_id from purchase_ownership_details )) A ) C 
         left join 
         (select * from 
         (select A.rent_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.net_amount, A.tax_amount, 
@@ -2070,8 +1963,8 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
         where C.tds_amount>0 ) D 
         on C.txn_id=D.rent_id) E where E.event_name is not null) A 
         left join 
-        (select * from purchase_txn where gp_id = '$gid') B 
-        on A.property_id=B.txn_id) C 
+        (select * from property_txn where gp_id = '$gid') B 
+        on A.property_id=B.property_txn_id) C 
         left join 
         (SELECT A.*, B.c_name, B.c_last_name, B.c_full_name, B.c_emailid1, B.owner_name FROM 
         (SELECT * FROM rent_tenant_details A WHERE A.contact_id in (select min(contact_id) from rent_tenant_details 
@@ -2100,9 +1993,9 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
             $dataarray[$i]['particulars']='Rent';
             $dataarray[$i]['event_name']=$row->event_name;
             $dataarray[$i]['property_id']=$row->property_id;
-            $dataarray[$i]['property']=$row->p_property_name;
+            $dataarray[$i]['property']=$row->unit_name;
             $dataarray[$i]['prop_id']="r_".$row->rent_id;
-            $dataarray[$i]['sub_property']=$row->sp_name;
+            $dataarray[$i]['sub_property']='';
             $dataarray[$i]['accounting_id']=$row->accounting_id;
             $dataarray[$i]['txn_status']=$row->txn_status;
             $dataarray[$i]['net_amount']=$row->tds_amount;
@@ -2131,9 +2024,9 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
 
     //for other schedule
       $sql="select * , if(tds_amount_received_bank_name IS NOT NULL,(select concat(b_name,' - ',b_accountnumber) as b_name from bank_master Where b_id=tds_amount_received_bank_name ) ,'') as tds_bank_name from 
-            (select C.*, C.net_amount-C.paid_amount as bal_amount, D.p_property_name, D.p_display_name, D.p_type, D.p_status, 
+            (select C.*, C.net_amount-C.paid_amount as bal_amount, D.unit_name, 
                 D.pr_client_id, D.c_full_name, D.owner_name from 
-            (select A.*, B.sp_name from 
+            (select A.* from 
             (select D.fk_txn_id, D.type, D.event_type, D.event_name, D.event_date, D.property_id, D.sub_property_id, D.entry_type, 
                 D.accounting_id, D.txn_status, 
                 case when D.basic_cost is null then 0 else D.basic_cost end as basic_cost, 
@@ -2157,13 +2050,10 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
                 from actual_schedule where table_type = 'other' or table_type = 'adhoc') B 
             on (A.fk_txn_id=B.fk_txn_id and A.event_type=B.event_type and A.event_name=B.event_name and A.event_date=B.event_date)) C 
             where C.".$module_type.">0 ) D 
-            where D.".$module_type.">0 ) A 
-            left join 
-            (select * from sub_property_allocation where txn_status='Approved' and gp_id = '$gid') B 
-            on A.sub_property_id=B.txn_id) C 
+            where D.".$module_type.">0 ) A ) C 
             left join 
             (select A.*, B.pr_client_id, B.c_name, B.c_last_name, B.c_full_name, B.c_emailid1, B.owner_name FROM 
-            (select * from purchase_txn where txn_status = 'Approved') A 
+            (select * from property_txn where txn_status = 'Approved') A 
             left join 
             (select A.*, B.c_name, B.c_last_name, B.c_full_name, B.c_emailid1, B.owner_name from 
             (select A.purchase_id, A.pr_client_id from purchase_ownership_details A 
@@ -2183,8 +2073,8 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
             where A.c_status='Approved' and A.c_gid='$gid' 
             ".(($blOwnerExist==true)?" and A.c_id in (select distinct owner_id from user_role_owners where user_id = '$session_id')":"").") B 
             on (A.pr_client_id=B.c_id)) B 
-            on (A.txn_id = B.purchase_id)) D 
-            on (C.property_id = D.txn_id)) E " .$cond3.$cond5;
+            on (A.property_txn_id = B.purchase_id)) D 
+            on (C.property_id = D.property_txn_id)) E " .$cond3.$cond5;
 
     $result7=$this->db->query($sql);
     if($result7->num_rows() > 0){
@@ -2215,9 +2105,9 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
             $dataarray[$i]['table_type']= $row->type;
             $dataarray[$i]['event_name']=$row->event_name;
             $dataarray[$i]['property_id']=$row->property_id;
-            $dataarray[$i]['property']=$row->p_property_name;
+            $dataarray[$i]['property']=$row->unit_name;
 /*            $dataarray[$i]['prop_id']="t_".$row->fk_txn_id;
-*/            $dataarray[$i]['sub_property']=$row->sp_name;
+*/          $dataarray[$i]['sub_property']='';
             $dataarray[$i]['accounting_id']=$row->accounting_id;
             $dataarray[$i]['txn_status']=$row->txn_status;
             $dataarray[$i]['net_amount']=$row->tds_amount;

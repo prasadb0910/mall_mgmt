@@ -27,69 +27,32 @@ function getAccess(){
 }
 
 function salesData($status='' ,$property_id='', $s_id=''){
-       // if($status=='All'){
-        // $cond="";
-        // $cond3="";
-    // } else if($status=='InProcess'){
-        // $status='In Process';
-        // $cond="and A.txn_status='In Process'";
-        // $cond3="where A.txn_status='In Process'";
-    // } else if($status=='Pending'){
-        // $cond="and (A.txn_status='Pending' or A.txn_status='Delete')";
-        // $cond3="where (A.txn_status='Pending' or A.txn_status='Delete')";
-    // } else {
-        // $cond="and A.txn_status='$status'";
-        // $cond3="where A.txn_status='$status'";
-    // }
-
-       
-	    $status;
+     
+	    if($status=='All'){
         $cond="";
-        if($status=='InProcess')
-        {
-            if($cond=="")
-                   $cond.=" And A.txn_status='In Process'";
-
-        }else if($status=='Pending')
-        {
-             if($cond=="")
-                    $cond.="And (A.txn_status='Pending' or A.txn_status='Delete')";
-        }else if($status=='All' || $status=='ALL')
-        {
-            $cond = "";
-        }else{
-            
-             if($cond=="")
-                 
-                    $cond.="And  A.txn_status='$status'";
-        }
-	   
-	   
-	   
-
-        if($property_id!=""){
-
-            if($cond=="")
-                    $cond = " Where D.property_txn_id=".$property_id;
-            else
-                    $cond.=" And D.property_txn_id=".$property_id;    
+        $cond3="";
+        } else if($status=='InProcess'){
+            $status='In Process';
+            $cond="and E.txn_status='In Process'";
+            $cond3="where E.txn_status='In Process'";
+        } else if($status=='Pending'){
+            $cond="and (E.txn_status='Pending' or E.txn_status='Delete')";
+            $cond3="where (E.txn_status='Pending' or E.txn_status='Delete')";
+        } else {
+            $cond="and E.txn_status='$status'";
+            $cond3="where E.txn_status='$status'";
         }
 
         if($property_id!=""){
-
-            if($cond=="")
-                    $cond = " Where D.property_type_id=".$property_type_id;
-            else
-                    $cond.=" And D.property_type_id=".$property_type_id;    
+            $cond2=" and property_id='" . $property_id . "'";
+        } else {
+            $cond2="";
         }
 
         if($s_id!=""){
-
-            // if($cond=="")
-                    $cond = " And H.txn_id=".$s_id;
-            // else
-                    // $cond.=" And A.txn_id=".$s_id;
+            $cond2=" and txn_id='" . $s_id . "'";
         }
+
 
     $gid=$this->session->userdata('groupid');
     $roleid=$this->session->userdata('role_id');
@@ -97,157 +60,32 @@ function salesData($status='' ,$property_id='', $s_id=''){
     $query=$this->db->query("select distinct owner_id from user_role_owners where user_id = '$session_id'");
     $result=$query->result();
 
-	if (count($result)>0) 
-	{
-		 $sql="  SELECT H.*, B.* From (SELECT E.*, G.* FROM (Select  A.*,D.unit_name,D.unit_no,D.floor,D.area,D.area_unit from 
-            (select * from sales_txn ) A 
+	    $sql="
+            select E.* from 
+            (
+            Select * from (
+            Select C.*, D.sale_price from 
+            (Select s.*,p.unit_name,p.property_txn_id,p.floor,p.area,p.area_unit from sales_txn s left join property_txn p on s.property_id=p.property_txn_id   Where s.gp_id='64' 
+            and s.txn_id IN (select distinct sale_id from sales_buyer_details) )C
             left join 
-            (select * from property_txn)D
-            on (A.property_id=D.property_txn_id))G
-			  left join 
-         
-            (SELECT * FROM sales_buyer_details  
-           ) E 
-			  on (E.sale_id=G.txn_id))H
+            (Select sale_id, sum(net_amount) as sale_price from sales_schedule where status='1' or status='3' group by sale_id) D 
+            on C.txn_id = D.sale_id ) C 
+            Left join
+            (SELECT A.*, B.* FROM 
+            (SELECT * FROM sales_buyer_details A WHERE A.buyer_id in (select min(buyer_id) from sales_buyer_details 
+            where sale_id = A.sale_id) ) A 
             LEFT JOIN 
-            (select E.c_id, case when E.c_owner_type='individual' then ifnull(E.c_name,'') else ifnull(B.c_name,'') end as c_name, 
-                case when E.c_owner_type='individual' then ifnull(E.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
-                case when E.c_owner_type='individual' then ifnull(E.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
-                case when E.c_owner_type='individual' then ifnull(E.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
-                case when E.c_owner_type='individual' 
-                then concat(ifnull(E.c_name,''),' ',ifnull(E.c_last_name,'')) 
-                else concat(ifnull(E.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
-            from contact_master E left join contact_master B on (E.c_contact_id=B.c_id) 
-            where E.c_status='Approved' and E.c_gid='$gid') B 
-            ON (H.buyer_id=B.c_id) 
-			
-			 where H.gp_id = '$gid'".$cond;
-	}
-	else 
-	{
-		// $sql="Select  A.*,D.* from 
-            // (select * from sales_txn) A 
-            // left join 
-            // (select * from property_txn )D
-            // on (A.property_id=D.property_txn_id)where A.gp_id = '$gid'".$cond;
-			
-			
-		 $sql="  SELECT H.*, B.* From (SELECT E.*, G.* FROM (Select  A.*,D.unit_name,D.unit_no,D.floor,D.area,D.area_unit from 
-            (select * from sales_txn ) A 
-            left join 
-            (select * from property_txn)D
-            on (A.property_id=D.property_txn_id))G
-			  left join 
-         
-            (SELECT * FROM sales_buyer_details  
-           ) E 
-			  on (E.sale_id=G.txn_id))H
-            LEFT JOIN 
-            (select E.c_id, case when E.c_owner_type='individual' then ifnull(E.c_name,'') else ifnull(B.c_name,'') end as c_name, 
-                case when E.c_owner_type='individual' then ifnull(E.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
-                case when E.c_owner_type='individual' then ifnull(E.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
-                case when E.c_owner_type='individual' then ifnull(E.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
-                case when E.c_owner_type='individual' 
-                then concat(ifnull(E.c_name,''),' ',ifnull(E.c_last_name,'')) 
-                else concat(ifnull(E.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
-            from contact_master E left join contact_master B on (E.c_contact_id=B.c_id) 
-            where E.c_status='Approved' and E.c_gid='$gid') B 
-            ON (H.buyer_id=B.c_id) 
-			
-			 where H.gp_id = '$gid'".$cond;
-           
-	}
-	
-	
-	
-	
-	
-	// echo $sql;
-    // if (count($result)>0) {
-        // $sql="select * from 
-            // (select C.*, D.sale_id, D.buyer_id, D.owner_name from 
-            // (select A.*, B.unit_name, B.p_display_name, B.p_type, B.p_status, 
-                    // B.p_image, B.pr_agreement_area, B.pr_agreement_unit, B.purchase_price, B.p_apartment, B.p_flatno, B.p_floor, 
-                    // B.p_wing, B.p_address, B.p_landmark, B.p_state, B.p_city, B.p_pincode, B.p_country, B.p_googlemaplink from 
-            // (select C.*, D.sale_price from 
-            // (select A.*, B.sp_name from 
-            // (select * from sales_txn where gp_id = '$gid' and txn_id in (select distinct sale_id from sales_buyer_details 
-            // where buyer_id in (select distinct owner_id from user_role_owners where user_id = '$session_id'))" . $cond2 . ") A 
-            // left join 
-            // (select * from sub_property_allocation where txn_status='Approved' and gp_id = '$gid') B 
-            // on A.sub_property_id = B.txn_id) C 
-            // left join 
-            // (select sale_id, sum(net_amount) as sale_price from sales_schedule where status='1' or status='3' group by sale_id) D 
-            // on C.txn_id = D.sale_id) A 
-            // left join 
-            // (select A.*, B.purchase_price from 
-            // (select A.*, B.pr_agreement_area, B.pr_agreement_unit 
-                // from property_txn A left join purchase_property_description B on (A.property_txn_id=B.purchase_id) 
-                // where A.gp_id='$gid') A 
-            // left join 
-            // (select purchase_id,sum(net_amount) as purchase_price from purchase_schedule where status = '1' or status = '3' group by purchase_id) B 
-            // on A.txn_id = B.purchase_id) B 
-            // on A.property_id=B.txn_id) C 
-            // left join 
-            // (SELECT A.*, B.* FROM 
-            // (SELECT * FROM sales_buyer_details A WHERE A.buyer_id in (select min(buyer_id) from sales_buyer_details 
-            // where sale_id = A.sale_id and buyer_id in (select distinct owner_id from user_role_owners 
-            // where user_id = '$session_id'))) A 
-            // LEFT JOIN 
-            // (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
-                // case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
-                // case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
-                // case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
-                // case when A.c_owner_type='individual' 
-                // then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                // else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
-            // from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-            // where A.c_status='Approved' and A.c_gid='$gid') B 
-            // ON (A.buyer_id=B.c_id)) D 
-            // on C.txn_id=D.sale_id) E 
-            // where E.owner_name is not null and E.owner_name<>'' " . $cond;
-    // } else {
-        // $sql="select * from 
-            // (select C.*, D.sale_id, D.buyer_id, D.owner_name, D.c_name, D.c_last_name, D.c_emailid1, D.c_mobile1 from 
-            // (select A.*, B.unit_name, B.p_display_name, B.p_type, B.p_status, 
-                    // B.pr_agreement_area, B.pr_agreement_unit, B.purchase_price, B.p_apartment, B.p_flatno, B.p_floor, 
-                    // B.p_wing, B.p_address, B.p_landmark, B.p_state, B.p_city, B.p_pincode, B.p_country, B.p_googlemaplink from 
-            // (select C.*, D.sale_price from 
-            // (select A.*, B.sp_name from 
-            // (select * from sales_txn where gp_id = '$gid'" . $cond2 . ") A 
-            // left join 
-            // (select * from sub_property_allocation where txn_status='Approved' and gp_id = '$gid') B 
-            // on A.sub_property_id = B.txn_id) C 
-            // left join 
-            // (select sale_id, sum(net_amount) as sale_price from sales_schedule where status='1' or status='3' group by sale_id) D 
-            // on C.txn_id = D.sale_id) A 
-            // left join 
-            // (select A.*, B.purchase_price from 
-            // (select A.*, B.pr_agreement_area, B.pr_agreement_unit 
-                // from property_txn A left join purchase_property_description B on (A.property_txn_id=B.purchase_id) 
-                // where A.gp_id='$gid') A 
-            // left join 
-            // (select purchase_id,sum(net_amount) as purchase_price from purchase_schedule where status = '1' or status = '3' group by purchase_id) B 
-            // on A.txn_id = B.purchase_id) B 
-            // on A.property_id=B.txn_id) C 
-            // left join 
-            // (SELECT A.*, B.* FROM 
-            // (SELECT * FROM sales_buyer_details A WHERE A.buyer_id in (select min(buyer_id) from sales_buyer_details 
-            // where sale_id = A.sale_id)) A 
-            // LEFT JOIN 
-            // (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
-                // case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
-                // case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
-                // case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
-                // case when A.c_owner_type='individual' 
-                // then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                // else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
-            // from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-            // where A.c_status='Approved' and A.c_gid='$gid') B 
-            // ON (A.buyer_id=B.c_id)) D 
-            // on C.txn_id=D.sale_id) E " . $cond3;
-    // }
-
+            (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
+                case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
+                case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
+                case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
+                case when A.c_owner_type='individual' 
+                then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
+                else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
+            from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
+            where A.c_status='Approved' and A.c_gid='64') B 
+            ON (A.buyer_id=B.c_id) )D on C.txn_id=D.sale_id )E
+            where E.owner_name is not null and E.owner_name<>'' " . $cond;
 	
     $query=$this->db->query($sql);
     return $query->result();
@@ -266,23 +104,31 @@ function getAllCountData(){
     $result=$query->result();
 
    
-	if (count($result)>0) 
-	{
-		$sql="Select  A.*,D.* from 
-            (select * from sales_txn) A 
+	$sql="select E.* from 
+            (
+            Select * from (
+            Select C.*, D.sale_price from 
+            (Select s.*,p.unit_name,p.property_txn_id,p.floor,p.area,p.area_unit from sales_txn s left join property_txn p on s.property_id=p.property_txn_id   Where s.gp_id='64' 
+            and s.txn_id IN (select distinct sale_id from sales_buyer_details) )C
             left join 
-            (select * from property_txn)D
-            on (A.property_id=D.property_txn_id)";
-	}
-	else 
-	{
-		$sql="Select  A.*,D.* from 
-            (select * from sales_txn) A 
-            left join 
-            (select * from property_txn)D
-            on (A.property_id=D.property_txn_id) ";
-           
-	}
+            (Select sale_id, sum(net_amount) as sale_price from sales_schedule where status='1' or status='3' group by sale_id) D 
+            on C.txn_id = D.sale_id ) C 
+            Left join
+            (SELECT A.*, B.* FROM 
+            (SELECT * FROM sales_buyer_details A WHERE A.buyer_id in (select min(buyer_id) from sales_buyer_details 
+            where sale_id = A.sale_id) ) A 
+            LEFT JOIN 
+            (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
+                case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
+                case when A.c_owner_type='individual' then ifnull(A.c_emailid1,'') else ifnull(B.c_emailid1,'') end as c_emailid1, 
+                case when A.c_owner_type='individual' then ifnull(A.c_mobile1,'') else ifnull(B.c_mobile1,'') end as c_mobile1, 
+                case when A.c_owner_type='individual' 
+                then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
+                else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
+            from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
+            where A.c_status='Approved' and A.c_gid='64') B 
+            ON (A.buyer_id=B.c_id) )D on C.txn_id=D.sale_id )E
+            where E.owner_name is not null and E.owner_name<>'' ";
 	
     $query=$this->db->query($sql);
     $result=$query->result();
@@ -314,7 +160,7 @@ function ownerDetails($gid){
             $query=$this->db->query($sql);
             $result=$query->result();
             return $result;
-     /* }*/
+        /* }*/
     }
 function getSubPropertyDetails($txn_id='0', $property_id='0') {
     $gid=$this->session->userdata('groupid');
