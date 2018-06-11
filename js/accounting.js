@@ -541,50 +541,6 @@ var setPayNow = function(elem){
 }
 
 function getSchedule(){
-	// var payer_id=$("#payer_id").val();
-	// var status=$("#status").val();
-	// var other_expense=$("#other_expense").val();
-	// var other_schedule=$("#other_schedule").val();
-
-	// if(status=="loan") {
- //    	var loan_txn_id=$("#loan_ref_name").val();
-	// 	if (loan_txn_id!=null && loan_txn_id!="") {
- //   			window.open(BASE_URL+"index.php/accounting/bankEntry/l_" + loan_txn_id,"_parent","true");
- //   		}
-	// } else if(other_expense=="true") {
- //   		//do nothing
-	// } else if(other_schedule=="true") {
- //   		//do nothing
-	// } else {
- //        var property=$("#property").val();
- //        var sub_property=$("#sub_property").val();
-	// 	var dataString = 'status=' + status + '&property_id=' + property + '&sub_property_id=' + sub_property;
-
-	// 	if(property!=0 && property!=null) {
- //        	$.ajax({
- //               	type: "POST",
- //               	url: BASE_URL+"index.php/accounting/getBankEntry",
- //               	data: dataString,
-	// 		   	dataType:"json",
- //               	async: false,
- //               	cache: false,
- //               	success: function(data){
- //               		txn_id = data.txn_id;
- //               		sch_id = data.sch_id;
-
- //               		if (txn_id!=null && txn_id!="" & sch_id!=null & sch_id!="") {
- //               			window.open(BASE_URL+"index.php/accounting/bankEntry/" + txn_id,"_parent","true");
- //               		}
-               		
- //               	}
- //            });
- //        }
-	// }
-
-	// console.log('getSchedule');
-	// if($('#type').val()=='receipt' || $('#type').val()=='payment'){
-
-	// console.log($('#other_schedule').val());
 	
 	if($('#other_schedule').val()!='true'){
 		console.log($('#type').val());

@@ -303,7 +303,7 @@ class Accounting extends CI_Controller
         }
     }
 
-    public function addnew($type='', $status='', $contact_id='', $transaction='', $property_id='', $sub_property_id='', $accounting_id=''){
+     public function addnew(){
         $gid=$this->session->userdata('groupid');
         $roleid=$this->session->userdata('role_id');
         $session_id=$this->session->userdata('session_id');
@@ -316,31 +316,15 @@ class Accounting extends CI_Controller
         $dataarray['other_schedule']='false';
         $dataarray['type']=$type;
 
-        $dataarray['payer_id']=$contact_id;
-        $dataarray['transaction']=$transaction;
-        $dataarray['property_id']=$property_id;
-        $dataarray['sub_property_id']=$sub_property_id;
-        $dataarray['accounting_id']=$accounting_id;
-
-        if($type=="payment"  && $transaction!="adhoc" ){
+        if($type=="payment"){
             $dataarray['payment']='selected';
             $dataarray['receipt']='';
             $dataarray['transaction']='Pay';
-        }else if($type=="payment" && $transaction=="adhoc" )
-        {
-            $dataarray['payment']='selected';
-            $dataarray['receipt']='';
-            $dataarray['transaction']='adhoc';
-        }else if($type=="receipt" && $transaction=="adhoc" ){
-            $dataarray['payment']='';
-            $dataarray['receipt']='selected';
-            $dataarray['transaction']='adhoc';
-        }else if($type=="receipt" && $transaction!="adhoc" ){
+        } else if($type=="receipt"){
             $dataarray['payment']='';
             $dataarray['receipt']='selected';
             $dataarray['transaction']='Receive';
-        }
-        else if($type=="expense"){
+        } else if($type=="expense"){
             $dataarray['payment']='selected';
             $dataarray['receipt']='';
             $dataarray['transaction']='Expense';
@@ -405,7 +389,7 @@ class Accounting extends CI_Controller
             $sql = "select * from 
                     (select A.c_id, case when A.c_owner_type='individual' 
                         then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
-                        else concat(ifnull(A.c_company_name,'')) end as contact_name 
+                        else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as contact_name 
                     from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
                     where A.c_status='Approved' and A.c_gid='$gid') A order by A.contact_name";
             $query=$this->db->query($sql);
@@ -430,7 +414,8 @@ class Accounting extends CI_Controller
                 $result=$query->result();
                 $data['banks']=$result;
 
-                $sql = "select * from property_txn where txn_status = 'approved' and gp_id='$gid' and property_txn_id in (select distinct purchase_id from purchase_ownership_details)";
+                $sql = "select * from purchase_txn where txn_status = 'approved' and gp_id='$gid' and txn_id in (select distinct purchase_id from purchase_ownership_details 
+                        where pr_client_id in (select distinct owner_id from user_role_owners where user_id = '$session_id'))";
                 $query=$this->db->query($sql);
                 $data['property']=$query->result();
             } else {
@@ -458,11 +443,7 @@ class Accounting extends CI_Controller
 
             $data['maker_checker'] = $this->session->userdata('maker_checker');
 
-            $data['method'] = 'addnew';
-
             // echo json_encode($data['expense_category']);
-
-            // echo json_encode($data); 
 
             load_view('accounting/accounting_details',$data);
         } else {
@@ -912,7 +893,7 @@ class Accounting extends CI_Controller
                 $result=$query->result();
                 $data['banks']=$result;
 
-                $sql = "select * from purchase_txn where txn_status = 'approved' and gp_id='$gid'";
+                $sql = "select * from property_txn where txn_status = 'approved' and gp_id='$gid'";
                 $query=$this->db->query($sql);
                 $data['property']=$query->result();
             }
@@ -927,7 +908,7 @@ class Accounting extends CI_Controller
             //     for($i=0;$i<count($count_data);$i++){
             //         if (strtoupper(trim($count_data[$i]['txn_status']))=="APPROVED")
             //             $approved=$approved+1;
-            //         else if (strtoupper(trim($count_data[$i]['txn_status']))=="PENDING" || strtoupper(trim($count_data[$i]['txn_status']))=="DELETE")
+            //         else if (strtoupper(trim($count_data[$i]['txn_status']))=="PENDING" || strtoupper(trim($count_data[$i]['txn_status']))=="DELETE"l)
             //             $pending=$pending+1;
             //         else if (strtoupper(trim($count_data[$i]['txn_status']))=="REJECTED")
             //             $rejected=$rejected+1;
@@ -3030,7 +3011,6 @@ class Accounting extends CI_Controller
         $query = $this->db->query($sql);
         echo $this->db->last_query();
         $result = $query->result();
-        dump($result);
         if(count($result)>0){
             $format = '';
             $series = 1;
@@ -3090,7 +3070,7 @@ class Accounting extends CI_Controller
     public function invoice_postdate(){
         $currentdate = date("Y-m-d");
 
-        $sql = "Select E.* from (select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.total_amount , B.tax_amount from (select * from rent_txn where txn_status = 'Approved') A left join (select * from rent_schedule where status = '1' and event_type!='Deposit' ) B on (A.txn_id = B.rent_id) where B.sch_id is not null) as E  Where tenant_id is not null and property_id is not null and invoice_date is not null and invoice_date='$currentdate' GROUP BY txn_id";
+        $sql = "Select E.* from (select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.net_amount , B.tax_amount from (select * from rent_txn where txn_status = 'Approved') A left join (select * from rent_schedule where status = '1' and event_type!='Deposit' ) B on (A.txn_id = B.rent_id) where B.sch_id is not null) as E  Where tenant_id is not null and property_id is not null and invoice_date is not null and invoice_date='$currentdate' GROUP BY txn_id";
         $query = $this->db->query($sql);
         $result = $query->result();
         $this->db->last_query();
@@ -3113,7 +3093,7 @@ class Accounting extends CI_Controller
                       $propert_name=   $result_prop[0]->p_property_name;
                 }
                 $tenant_id = $result[$i]->tenant_id;
-                $net_amount = $result[$i]->total_amount;
+                $net_amount = $result[$i]->net_amount;
                 $basic_cost = $result[$i]->basic_cost;
                 $gst_rate = $result[$i]->gst_rate;
                 $tax_amount = $result[$i]->tax_amount;
@@ -3508,56 +3488,88 @@ class Accounting extends CI_Controller
         $curusr=$this->session->userdata('session_id');
         $now=date('Y-m-d');
 
-       echo $sql = "select E.* ,F.pr_client_id from(select C.* ,D.property_txn_id from (select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.total_amount from 
-                (select * from rent_txn where txn_status = 'Approved' and gp_id = '$gid') A 
+      /*  $sql = "select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.net_amount from 
+                (select * from rent_txn where txn_status = 'Approved' and gp_id = '$gid' and txn_id='53') A 
                 left join 
                 (select * from rent_schedule where status = '1' and (invoice_no is null or invoice_no='') and 
                     event_type!='Deposit' and date(now())>=date(event_date)) B 
-                on (A.txn_id = B.rent_id))C
-				left join
-				(select * from property_txn)D
-				  on (D.property_txn_id = C.property_id))E
-				  left join
-				(select * from purchase_ownership_details)F
-				  on (E.property_txn_id = F.purchase_id)
-                where E.sch_id is not null";
+                on (A.txn_id = B.rent_id) 
+                where B.sch_id is not null";*/
+        $sql = "Select * from (select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.net_amount,B.revenue_amount from (select * from rent_txn where txn_status = 'Approved' and gp_id = '64') A left join (select * from rent_schedule where status = '1' and (invoice_no is null or invoice_no='') and event_type!='Deposit' and event_date= '2018-06-03') B on (A.txn_id = B.rent_id) where B.sch_id is not null) B left JOIN (Select cm.c_id,pd.purchase_id from purchase_ownership_details pd left join contact_master cm on cm.c_id=pd.pr_client_id) C on B.property_id=C.purchase_id";
         $query = $this->db->query($sql);
         $result = $query->result();
         if(count($result)>0){
             for($i=0; $i<count($result); $i++){
                 $r_id = $result[$i]->txn_id;
                 $sch_id = $result[$i]->sch_id;
-              echo  $invoice_issuer = $result[$i]->pr_client_id;
+                $invoice_issuer = $result[$i]->c_id;
                 $invoice_date = $result[$i]->invoice_date;
+                $revenue_percentage = $result[$i]->revenue_percentage;
+                $rent_type = $result[$i]->rent_type;
+                $revenue_amount = $result[$i]->revenue_amount;
                 $event_date = $result[$i]->event_date;
+               
+                if($rent_type='revenue' && ($revenue_percentage!=''||$revenue_percentage!=0) && $revenue_amount!="")
+                {
+                    $invoice_no = $this->generate_invoice_no($invoice_issuer, $event_date);
 
-                $invoice_no = $this->generate_invoice_no($invoice_issuer, $event_date);
+                    $day = date('d', strtotime($invoice_date));
+                    $month = date('m', strtotime($event_date));
+                    $year = date('Y', strtotime($event_date));
+                    
+                    $event_date = $year.'-'.$month.'-'.$day;
 
-                $day = date('d', strtotime($invoice_date));
-                $month = date('m', strtotime($event_date));
-                $year = date('Y', strtotime($event_date));
-                
-                $event_date = $year.'-'.$month.'-'.$day;
-
-                if($month==2){
-                    if($day>28){
-                        if($year%4==0){
-                            $event_date = $year.'-'.$month.'-29';
-                        } else {
-                            $event_date = $year.'-'.$month.'-28';
+                    if($month==2){
+                        if($day>28){
+                            if($year%4==0){
+                                $event_date = $year.'-'.$month.'-29';
+                            } else {
+                                $event_date = $year.'-'.$month.'-28';
+                            }
+                        }
+                    } else if($month==4 || $month==6 || $month==9 || $month==11){
+                        if($day>30){
+                            $event_date = $year.'-'.$month.'-30';
                         }
                     }
-                } else if($month==4 || $month==6 || $month==9 || $month==11){
-                    if($day>30){
-                        $event_date = $year.'-'.$month.'-30';
-                    }
+
+                    echo $invoice_no;
+                    echo '<br/>';
+
+                    $sql = "update rent_schedule set invoice_no = '$invoice_no', invoice_date = '$event_date' where sch_id = '$sch_id'";
+                    $this->db->query($sql);
                 }
+                else 
+                {
+                    $invoice_no = $this->generate_invoice_no($invoice_issuer, $event_date);
 
-                echo $invoice_no;
-                echo '<br/>';
+                    $day = date('d', strtotime($invoice_date));
+                    $month = date('m', strtotime($event_date));
+                    $year = date('Y', strtotime($event_date));
+                    
+                    $event_date = $year.'-'.$month.'-'.$day;
 
-                $sql = "update rent_schedule set invoice_no = '$invoice_no', invoice_date = '$event_date' where sch_id = '$sch_id'";
-                $this->db->query($sql);
+                    if($month==2){
+                        if($day>28){
+                            if($year%4==0){
+                                $event_date = $year.'-'.$month.'-29';
+                            } else {
+                                $event_date = $year.'-'.$month.'-28';
+                            }
+                        }
+                    } else if($month==4 || $month==6 || $month==9 || $month==11){
+                        if($day>30){
+                            $event_date = $year.'-'.$month.'-30';
+                        }
+                    }
+
+                    echo $invoice_no;
+                    echo '<br/>';
+
+                    $sql = "update rent_schedule set invoice_no = '$invoice_no', invoice_date = '$event_date' where sch_id = '$sch_id'";
+                    $this->db->query($sql);      
+                }
+                
             }
         }
 
@@ -3592,14 +3604,14 @@ class Accounting extends CI_Controller
     }
 
     public function generate_invoice2(){
-       $this->get_invoice('Rent', "70");
+       $this->get_invoice('Rent', "2");
     }
 
     public function get_invoice($type, $id){
         if($type=='Rent'){
-            $sql = "select A.sch_id, A.rent_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.total_amount, C.property_id,
-                        avg(B.tax_percent) as gst_rate, sum(B.tax_amount) as tax_amount, 'schedule' as entry_type, A.invoice_no, A.invoice_date 
-                    from rent_schedule A left join rent_schedule_taxation B on (A.rent_id=B.rent_id and A.sch_id=B.sch_id) left join rent_txn C on(A.rent_id=C.txn_id )
+            $sql = "select A.sch_id, A.rent_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.total_amount as net_amount, 
+                        avg(B.tax_percent) as gst_rate, sum(B.tax_amount) as tax_amount, 'schedule' as entry_type, A.invoice_no, A.invoice_date ,A.revenue_amount
+                    from rent_schedule A left join rent_schedule_taxation B on (A.rent_id=B.rent_id and A.sch_id=B.sch_id) 
                     where A.status = '1' and (B.status = '1' or B.status is null) and A.sch_id = '$id' 
                     group by A.sch_id, A.rent_id, A.event_type, A.event_name, A.event_date, A.basic_cost, 
                     A.total_amount, A.invoice_no, A.invoice_date ";
@@ -3608,23 +3620,20 @@ class Accounting extends CI_Controller
             $invoice = $result;
             if(count($result)>0){
                 $rent_id = $result[0]->rent_id;
-                $property_id = $result[0]->property_id;
             } else {
                 $rent_id = '';
             }
 
-          $sql = "select C.*, D.pr_client_id from (select A.*, B.property_txn_id from(select * from rent_txn where txn_id = '$rent_id' and property_id='$property_id' )A left join (select * from property_txn ) B on (A.property_id=B.property_txn_id))C  left join
-				(select * from purchase_ownership_details)D
-				  on (C.property_txn_id = D.purchase_id)";
+            $sql = "select * from rent_txn where txn_id = '$rent_id'";
             $query = $this->db->query($sql);
             $result = $query->result();
             if(count($result)>0){
-                $issuer_id = $result[0]->pr_client_id;
+                $issuer_id = $result[0]->invoice_issuer;
             } else {
                 $issuer_id = '';
             }
             
-             $sql = "select * from rent_tenant_details where rent_id = '$rent_id' and 
+            $sql = "select * from rent_tenant_details where rent_id = '$rent_id' and 
                     id = (select min(id) from rent_tenant_details where rent_id = '$rent_id')";
             $query = $this->db->query($sql);
             $result = $query->result();
@@ -3646,7 +3655,7 @@ class Accounting extends CI_Controller
                 $tenant_id = '';
             }
 
-             $sql = "select * from purchase_ownership_details where purchase_id = '$property_id' and 
+            $sql = "select * from purchase_ownership_details where purchase_id = '$property_id' and 
                     ow_id = (select min(ow_id) from purchase_ownership_details where purchase_id = '$property_id')";
             $query = $this->db->query($sql);
             $result = $query->result();
@@ -3709,8 +3718,8 @@ class Accounting extends CI_Controller
             } else {
                 $basic_cost = 0;
             }
-            if(is_numeric($invoice[0]->total_amount)){
-                $net_amount = floatval($invoice[0]->total_amount);
+            if(is_numeric($invoice[0]->net_amount)){
+                $net_amount = floatval($invoice[0]->net_amount);
             } else {
                 $net_amount = 0;
             }
@@ -3765,7 +3774,7 @@ class Accounting extends CI_Controller
             $data['gst'] = $this->format_money($gst,2);
             $data['total_amount'] = $this->format_money($net_amount,2);
             $data['round_off_amount'] = $round_off_amount;
-
+            $data['revenue_amount'] = $this->format_money($invoice[0]->revenue_amount,2);
             $data['total_amount_in_words']=$this->convert_number_to_words($net_amount) . ' Only';
 
             $invoice_data['data'] = $data;

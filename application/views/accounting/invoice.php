@@ -309,6 +309,18 @@
         <span style="text-align:right; float:right"><?php echo $data['round_off_amount']; ?></span> 
     </td>
 </tr>
+</td>
+<?php  if($data['revenue_amount']!=""){?>
+<tr style="background:#ececec;"> 
+    <td colspan="2" valign="middle" style="font-size:10px; font-weight:900;">
+        <p style="margin:0;"><span style="  font-size:10px; font-weight:900;" >Revenue Amount</span></p>
+    </td>
+    <td valign="middle" style=" font-size:10px; font-weight:900;" >  
+        <span style="text-align:left; float:left"> &#8377; </span> 
+        <span style="text-align:right; float:right"><?php echo $data['revenue_amount']; ?></span> 
+    </td>
+</tr>
+<?php } ?>
 <tr style="background:#ececec;"> 
     <td colspan="2" valign="middle" style="font-size:10px; font-weight:900;">
         <p style="margin:0;"><span style="  font-size:10px; font-weight:900;" >Total Amount After Tax</span></p>

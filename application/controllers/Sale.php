@@ -416,7 +416,7 @@ class Sale extends CI_Controller
                     $property_id='0';
                 }
                 
-                $data['sub_property']= $this->sales_model->getSubPropertyDetails($pid, $property_id);
+                $data['sub_property']= [];
 
                 $query=$this->db->query("SELECT A.*, B.c_name, B.c_last_name, B.c_emailid1, B.c_mobile1, B.owner_name FROM 
                                         (SELECT * FROM purchase_ownership_details WHERE purchase_id = '$property_id') A 

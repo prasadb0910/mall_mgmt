@@ -161,7 +161,7 @@
     <form id="form_non_real_estate_property" role="form" method ="post" action="<?php if(isset($p_txn)) { echo base_url().'index.php/non_real_estate_property/updaterecord/'.$p_id; } else { echo base_url().'index.php/non_real_estate_property/saverecord'; } ?>"  enctype="multipart/form-data">
     <div class=" container-fluid   container-fixed-lg ">
          <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="<?=base_url('index/Dashboard')?>">">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="<?=base_url('index/Dashboard')?>">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="<?=base_url('index.php/Non_real_estate_property/checkstatus/All/2')?>">Non Estate Property</a></li>
             <li class="breadcrumb-item"><a href="<?=base_url('index.php/Non_real_estate_property/checkstatus/All/2')?>">Property List</a></li>
                  <?php if(isset($p_txn)){ ?><li class="breadcrumb-item"><a href="<?=base_url('index.php/Non_real_estate_property/view/'.$p_txn[0]->property_txn_id)?>">Property View</a></li>
@@ -234,7 +234,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group form-group-default required">
                                         <label>Area</label>
-                                        <input type="text" class="form-control" id="area" name="area"  placeholder="Enter Here" value="<?php if(isset($p_txn)) { echo $p_txn[0]->area; } ?>" />
+                                        <input type="text" class="form-control format_number" id="area" name="area"  placeholder="Enter Here" value="<?php if(isset($p_txn)) { echo $p_txn[0]->area; } ?>" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">

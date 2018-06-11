@@ -238,7 +238,7 @@ function bankentryData($status='', $property_id='', $contact_id='', $created_on=
             tax_amount as basic_cost, tax_amount as total_amount, 0 as tax_amount, 'tax' as entry_type 
         from actual_schedule_taxes where table_type = 'rent') A 
         left join 
-        (select id, fk_txn_id, event_type, event_name, event_date, sum(paid_amount+tds_amount) as paid_amount, txn_status 
+        (select id, fk_txn_id, event_type, event_name, event_date, (paid_amount+tds_amount) as paid_amount, txn_status 
             from actual_schedule where table_type = 'rent' 
         union all 
         select id, fk_txn_id, tax_applied as event_type, 'tax' as event_name, created_on as event_date, 
@@ -324,8 +324,7 @@ function bankentryData($status='', $property_id='', $contact_id='', $created_on=
         (select A.fk_txn_id, A.table_type, A.type, A.event_type, A.event_name, A.event_date, A.basic_cost, A.net_amount, A.tax_amount, 
             A.payer_id, A.property_id, A.sub_property_id ,A.pay_now
         from actual_other_schedule A where A.gp_id = '$gid' and 
-            A.property_id in (select distinct purchase_id from purchase_ownership_details 
-            ".$cond4.") )A 
+            A.property_id in (select distinct purchase_id from purchase_ownership_details) )A 
         left join 
         (select id, fk_txn_id, event_type, event_name, event_date, paid_amount+tds_amount as paid_amount, txn_status 
         from actual_schedule where table_type = 'other' or table_type = 'adhoc') B 
@@ -587,7 +586,7 @@ function getPendingBankEntry($status='', $property_id='', $contact_id='') {
                     case when D.paid_amount is null then 0 else D.paid_amount end as paid_amount from 
             (select A.* from 
             (select * from rent_txn where gp_id = '$gid' and txn_status='Approved' and 
-                    property_id in (select distinct purchase_id from purchase_ownership_details)) A ".$cond4.") C 
+                    property_id in (select distinct purchase_id from purchase_ownership_details)) A ) C 
             left join 
             (select * from 
             (select A.rent_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.total_amount, A.tax_amount, 
@@ -1101,7 +1100,7 @@ function getBankEntryDetails($type='', $status='', $contact_id='', $transaction=
         $sql="select * from 
             (select C.*, C.net_amount-C.amount_paid_till_date-C.amount_paid_till_date_pending-C.tds_amount_paid as bal_amount, 
                     D.buyer_id as contact_id, D.c_full_name, D.owner_name from 
-            (select A.*, B.p_property_name, B.p_display_name, B.p_type, B.p_status from 
+            (select A.*, B.unit_name from 
             (select * from 
             (select C.*, D.sale_id, D.event_type, D.event_name, D.event_date, D.invoice_no, D.txn_status, 
                 case when D.basic_cost is null then 0 else D.basic_cost end as basic_cost, 
@@ -1111,13 +1110,9 @@ function getBankEntryDetails($type='', $status='', $contact_id='', $transaction=
                 case when D.tds_paid_till_date is null then 0 else D.tds_paid_till_date end as  tds_paid_till_date,
                 case when D.amount_paid_till_date_pending is null then 0 else D.amount_paid_till_date_pending end as amount_paid_till_date_pending, 
                 case when D.tds_amount_paid is null then 0 else D.tds_amount_paid end as tds_amount_paid from 
-            (select A.txn_id, A.property_id, A.sub_property_id, B.sp_name, A.gp_id, A.date_of_sale from 
+            (select A.txn_id, A.property_id, A.sub_property_id,A.gp_id, A.date_of_sale from 
             (select * from sales_txn where gp_id = '$gid' and txn_status = 'Approved' and 
-                txn_id in (select distinct sale_id from sales_buyer_details 
-                ".(($blOwnerExist==true)?" where buyer_id in (select distinct owner_id from user_role_owners where user_id = '$session_id')":"").")".$cond4.") A 
-            left join 
-            (select * from sub_property_allocation where txn_status='Approved' and gp_id = '$gid') B 
-            on A.sub_property_id = B.txn_id) C 
+                txn_id in (select distinct sale_id from sales_buyer_details) ) A ) C 
             left join 
             (select * from 
             (select A.sale_id, A.event_type, A.event_name, A.event_date, A.invoice_no, A.basic_cost, A.net_amount, A.tax_amount, B.txn_status, 
@@ -1142,8 +1137,8 @@ function getBankEntryDetails($type='', $status='', $contact_id='', $transaction=
             on (A.sale_id=B.fk_txn_id and A.event_type=B.event_type and A.event_name=B.event_name and A.event_date=B.event_date)) C) D 
             on C.txn_id = D.sale_id) E) A 
             left join 
-            (select * from purchase_txn where gp_id = '$gid') B 
-            on A.property_id=B.txn_id) C 
+            (select * from property_txn where gp_id = '$gid') B 
+            on A.property_id=B.property_txn_id) C 
             left join 
             (select A.*, B.c_name, B.c_last_name, B.c_full_name, B.c_emailid1, B.owner_name FROM 
             (select * FROM sales_buyer_details A WHERE A.buyer_id in (select min(buyer_id) from sales_buyer_details 
@@ -1172,10 +1167,10 @@ function getBankEntryDetails($type='', $status='', $contact_id='', $transaction=
                 $dataarray['schedule_detail'][$i]['particulars']='Sale';
                 $dataarray['schedule_detail'][$i]['event_particulars']=$row->event_name;
                 $dataarray['schedule_detail'][$i]['event_name']=$row->event_name;
-                $dataarray['schedule_detail'][$i]['property']=$row->p_property_name;
+                $dataarray['schedule_detail'][$i]['property']=$row->unit_name;
                 $dataarray['schedule_detail'][$i]['prop_id']="s_".$row->sale_id;
                 // $dataarray['schedule_detail'][$i]['prop_id']=$row->sale_id;
-                $dataarray['schedule_detail'][$i]['sub_property']=$row->sp_name;
+                $dataarray['schedule_detail'][$i]['sub_property']='';
                 $dataarray['schedule_detail'][$i]['txn_status']=$row->txn_status;
                 $dataarray['schedule_detail'][$i]['net_amount']=$row->net_amount;
                 $dataarray['schedule_detail'][$i]['basic_amount']=$row->basic_cost;
@@ -1301,8 +1296,8 @@ function getBankEntryDetails($type='', $status='', $contact_id='', $transaction=
         $sql="select * from 
             (select E.*, E.payer_id as contact_id, F.c_full_name, F.owner_name from 
             (select C.*, C.net_amount-C.amount_paid_till_date-C.amount_paid_till_date_pending-C.tds_amount_paid as bal_amount, 
-                D.p_property_name, D.p_display_name, D.p_type, D.p_status from 
-            (select A.*, B.sp_name from 
+                D.unit_name from 
+            (select A.*  from 
             (select D.fk_txn_id, D.type, D.event_type, D.event_name, D.event_date, D.invoice_no, D.payer_id, D.property_id, 
                 D.sub_property_id, D.txn_status, D.category, D.gst_rate, D.expense_category, 
                 case when D.basic_cost is null then 0 else D.basic_cost end as basic_cost, 
@@ -1322,8 +1317,7 @@ function getBankEntryDetails($type='', $status='', $contact_id='', $transaction=
                 A.payer_id, A.property_id, A.sub_property_id, A.txn_status, A.category, A.gst_rate, B.expense_category  ,A.pay_now ,A.table_type
             from actual_other_schedule A left join expense_category_master B on (A.category=B.id) 
             where A.gp_id = '$gid' and A.txn_status = 'Approved' and A.type='$type' and A.table_type = '".$transaction."' and 
-                A.property_id in (select distinct purchase_id from purchase_ownership_details 
-                ".(($blOwnerExist==true)?" where pr_client_id in (select distinct owner_id from user_role_owners where user_id = '$session_id')":"").")".$cond4.") A 
+                A.property_id in (select distinct purchase_id from purchase_ownership_details ) ) A 
             left join 
             (select fk_txn_id, event_type, event_name, event_date, txn_status, 
                 sum(case when (txn_status='Approved' and created_on<>'$created_on' and created_on<>'$fk_created_on') 
@@ -1333,13 +1327,10 @@ function getBankEntryDetails($type='', $status='', $contact_id='', $transaction=
                 sum(case when (created_on='$created_on') then ifnull(paid_amount,0) else 0 end) as amount_paid_till_date_pending, 
                 sum(case when (created_on='$created_on') then ifnull(tds_amount,0) else 0 end) as tds_amount_paid 
             from actual_schedule where table_type = '".$transaction."' group by fk_txn_id, event_type, event_name, event_date, txn_status) B 
-            on (A.fk_txn_id=B.fk_txn_id and A.event_type=B.event_type and A.event_name=B.event_name and A.event_date=B.event_date)) C) D) A 
+            on (A.fk_txn_id=B.fk_txn_id and A.event_type=B.event_type and A.event_name=B.event_name and A.event_date=B.event_date)) C) D) A ) C 
             left join 
-            (select * from sub_property_allocation where txn_status='Approved' and gp_id = '$gid') B 
-            on A.sub_property_id=B.txn_id) C 
-            left join 
-            (select * from purchase_txn where txn_status = 'Approved') D 
-            on (C.property_id = D.txn_id)) E 
+            (select * from property_txn where txn_status = 'Approved') D 
+            on (C.property_id = D.property_txn_id)) E 
             left join 
             (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
                 case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
@@ -1400,9 +1391,9 @@ function getBankEntryDetails($type='', $status='', $contact_id='', $transaction=
                 $dataarray['schedule_detail'][$i]['event_particulars']=$row->expense_category;
 
                 $dataarray['schedule_detail'][$i]['event_name']=$row->event_name;
-                $dataarray['schedule_detail'][$i]['property']=$row->p_property_name;                
+                $dataarray['schedule_detail'][$i]['property']=$row->unit_name;                
                 // $dataarray['schedule_detail'][$i]['prop_id']=$row->fk_txn_id;
-                $dataarray['schedule_detail'][$i]['sub_property']=$row->sp_name;
+                $dataarray['schedule_detail'][$i]['sub_property']='';
                 $dataarray['schedule_detail'][$i]['txn_status']=$row->txn_status;
                 $dataarray['schedule_detail'][$i]['net_amount']=$row->net_amount;
                 $dataarray['schedule_detail'][$i]['basic_amount']=$row->basic_cost;
@@ -1658,8 +1649,8 @@ function getOtherScheduleDetail($type='', $status='', $contact_id='', $transacti
         $sql="select * from 
             (select E.*, E.payer_id as contact_id, F.c_full_name, F.owner_name from 
             (select C.*, C.net_amount-C.amount_paid_till_date-C.amount_paid_till_date_pending-C.tds_amount_paid as bal_amount, 
-                D.p_property_name, D.p_display_name, D.p_type, D.p_status from 
-            (select A.*, B.sp_name from 
+                D.unit_name from 
+            (select A.* from 
             (select D.fk_txn_id, D.type, D.event_type, D.event_name, D.event_date, D.invoice_no, D.payer_id, 
                 D.property_id, D.sub_property_id, D.txn_status, D.category, D.gst_rate, D.pay_now, D.expense_category, 
                 case when D.basic_cost is null then 0 else D.basic_cost end as basic_cost, 
@@ -1692,8 +1683,8 @@ function getOtherScheduleDetail($type='', $status='', $contact_id='', $transacti
             (select * from sub_property_allocation where txn_status='Approved' and gp_id = '$gid') B 
             on A.sub_property_id=B.txn_id) C 
             left join 
-            (select * from purchase_txn where txn_status = 'Approved') D 
-            on (C.property_id = D.txn_id)) E 
+            (select * from property_txn where txn_status = 'Approved') D 
+            on (C.property_id = D.property_txn_id)) E 
             left join 
             (select A.c_id, case when A.c_owner_type='individual' then ifnull(A.c_name,'') else ifnull(B.c_name,'') end as c_name, 
                 case when A.c_owner_type='individual' then ifnull(A.c_last_name,'') else ifnull(B.c_last_name,'') end as c_last_name, 
@@ -1725,10 +1716,10 @@ function getOtherScheduleDetail($type='', $status='', $contact_id='', $transacti
                 }
 
                 $dataarray['schedule_detail'][$i]['event_name']=$row->event_name;
-                $dataarray['schedule_detail'][$i]['property']=$row->p_property_name;
+                $dataarray['schedule_detail'][$i]['property']=$row->unit_name;
                 $dataarray['schedule_detail'][$i]['prop_id']="t_".$row->fk_txn_id;
                 // $dataarray['schedule_detail'][$i]['prop_id']=$row->fk_txn_id;
-                $dataarray['schedule_detail'][$i]['sub_property']=$row->sp_name;
+                $dataarray['schedule_detail'][$i]['sub_property']='';
                 $dataarray['schedule_detail'][$i]['txn_status']=$row->txn_status;
                 $dataarray['schedule_detail'][$i]['net_amount']=$row->net_amount;
                 $dataarray['schedule_detail'][$i]['basic_amount']=$row->basic_cost;

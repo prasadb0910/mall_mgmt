@@ -269,10 +269,10 @@ function insertRecord($txn_status){
                   'floor'=> ($this->input->post('floor')?$this->input->post('floor'):''),
                   'area'=> ($this->input->post('area')?$this->input->post('area'):''),
                   'area_unit'=> ($this->input->post('area_unit')?$this->input->post('area_unit'):''),
-                  'allocated_cost'=>($this->input->post('allocated_cost')?$this->input->post('allocated_cost'):''),
-                  'allocated_maintenance'=>($this->input->post('allocated_maintenance')?$this->input->post('allocated_maintenance'):''),
+                  'allocated_cost'=>($this->input->post('allocated_cost')?format_number($this->input->post('allocated_cost'),2):''),
+                  'allocated_maintenance'=>($this->input->post('allocated_maintenance')?format_number($this->input->post('allocated_maintenance'),2):''),
                   'txn_status'=>$txn_status,
-                  'location'=>($this->input->post('loaction')?$this->input->post('location'):''),
+                  'location'=>($this->input->post('location')?$this->input->post('location'):''),
                   'added_on' =>date('Y-m-d'),
                   'added_by' => $curusr,
                   'updated_on'=>date('Y-m-d')

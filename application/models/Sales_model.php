@@ -162,7 +162,7 @@ function ownerDetails($gid){
             return $result;
         /* }*/
     }
-function getSubPropertyDetails($txn_id='0', $property_id='0') {
+/*function getSubPropertyDetails($txn_id='0', $property_id='0') {
     $gid=$this->session->userdata('groupid');
     $roleid=$this->session->userdata('role_id');
     $session_id=$this->session->userdata('session_id');
@@ -252,7 +252,7 @@ function getSubPropertyDetails($txn_id='0', $property_id='0') {
     $result=$query->result();
     return $result;
 }
-
+*/
 function insertRecord($sldt, $txn_status){
 	$gid=$this->session->userdata('groupid');
     $roleid=$this->session->userdata('role_id');

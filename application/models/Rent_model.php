@@ -68,7 +68,7 @@ class Rent_model Extends CI_Model{
                 left join property_txn pt on rt.property_id=pt.property_txn_id
                 left join purchase_ownership_details pd on pt.property_txn_id=pd.purchase_id
 				left join contact_master C on pd.pr_client_id= C.c_id
-                Where  rt. txn_status <> 'Inactive' and rt.gp_id = '$gid' and pt.property_typ_id=".$property_type_id;
+                 Where rt.property_id NOT IN(Select property_id from sales_txn) and  rt. txn_status <> 'Inactive' and rt.gp_id = '$gid' and pt.property_typ_id=".$property_type_id;
         $query=$this->db->query($sql); 
         return $query->result();       
     }
@@ -1531,7 +1531,7 @@ class Rent_model Extends CI_Model{
                     The Rent details are as follows.<br /><br />' . $table . '<br /><br />
                     If the above Rent details are incorrect please reject the same immediately.<br /><br />Thanks</body></html>';
         $mailSent=send_email($from_email,  $from_email_sender, $to_email, $subject, $message);
-		  echo $owner_name . ' ';
+		   $owner_name . ' ';
     }
 
     function send_rent_intimation_to_group_owner($table, $owner_name, $to_email, $prop_owners) {
@@ -1545,7 +1545,7 @@ class Rent_model Extends CI_Model{
                     If the above Rent details are incorrect please reject the same immediately.<br /><br />Thanks</body></html>';
         $mailSent=send_email($from_email,  $from_email_sender, $to_email, $subject, $message);
 
-         echo $owner_name . ' ';
+          $owner_name . ' ';
     }
 
     function send_rent_intimation_to_owner($table, $owner_name, $to_email) {
@@ -1559,7 +1559,7 @@ class Rent_model Extends CI_Model{
                     If the above Property has not been put up for rent please reject the same immediately.<br /><br />Thanks</body></html>';
         $mailSent=send_email($from_email,  $from_email_sender, $to_email, $subject, $message);
 
-         echo $owner_name . ' ';
+          $owner_name . ' ';
     }
 
 
