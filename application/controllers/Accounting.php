@@ -3495,7 +3495,7 @@ class Accounting extends CI_Controller
                     event_type!='Deposit' and date(now())>=date(event_date)) B 
                 on (A.txn_id = B.rent_id) 
                 where B.sch_id is not null";*/
-        $sql = "Select * from (select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.net_amount,B.revenue_amount from (select * from rent_txn where txn_status = 'Approved' and gp_id = '64') A left join (select * from rent_schedule where status = '1' and (invoice_no is null or invoice_no='') and event_type!='Deposit' and event_date= '2018-06-03') B on (A.txn_id = B.rent_id) where B.sch_id is not null) B left JOIN (Select cm.c_id,pd.purchase_id from purchase_ownership_details pd left join contact_master cm on cm.c_id=pd.pr_client_id) C on B.property_id=C.purchase_id";
+        $sql = "Select * from (select A.*, B.sch_id, B.event_type, B.event_name, B.event_date, B.basic_cost, B.net_amount,B.revenue_amount from (select * from rent_txn where txn_status = 'Approved' and gp_id = '64') A left join (select * from rent_schedule where status = '1' and (invoice_no is null or invoice_no='') and event_type!='Deposit' and date(now())>=date(event_date) B on (A.txn_id = B.rent_id) where B.sch_id is not null) B left JOIN (Select cm.c_id,pd.purchase_id from purchase_ownership_details pd left join contact_master cm on cm.c_id=pd.pr_client_id) C on B.property_id=C.purchase_id";
         $query = $this->db->query($sql);
         $result = $query->result();
         if(count($result)>0){

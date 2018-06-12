@@ -486,25 +486,16 @@
                                         <input type="text" class="form-control format_number" name="deposit_amount" id="deposit_amount" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo format_money($rent[0]->deposit_amount,2); }} ?>"/>
                                     </div>
                                 </div>
-                                <div class="col-md-6" style="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo ''; } else echo 'display: none;'; } else echo 'display: none;'; ?>">
-                                    <div class="form-group form-group-default required">
-                                        <label>Paid Amount In &#x20B9;</label>
-                                        <input type="text" class="form-control format_number" name="deposit_paid_amount" id="deposit_paid_amount" placeholder="Enter Here" value="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo format_money($deposit_paid_details[0]->paid_amount,2); }} ?>" readonly />
-                                    </div>
-                                </div>
-                              
                             </div>
                         </div>
 						
 						
 						 <div class="a m-b-20" >
-                           
-					  <p class="m-t-20"> 
-                            <div class="div_heading ">
-                            <h5>Document Details</h5>		
-                           <p class="panel-description">By default requirements of rent documents are displayed. Just need to add details. Also can add aditional documents if required by using plus button	.</p></p>
-						
-							</div>
+    					   <p class="m-t-20"> 
+                             <div class="div_heading ">
+                                <h5>Document Details</h5>		
+                               <p class="panel-description">By default requirements of rent documents are displayed. Just need to add details. Also can add aditional documents if required by using plus button	.</p>
+							</div></p>
                             <?php $this->load->view('templates/document');?>
                             <div class="optionBox" id="optionBox1">
                                 <div class="block" id="block2">

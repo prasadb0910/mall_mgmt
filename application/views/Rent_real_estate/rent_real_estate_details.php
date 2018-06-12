@@ -405,9 +405,8 @@
 <?php $this->load->view('templates/main_header');?>
 <div class="page-content-wrapper ">
     <div class="content ">
-            <form id="form_rent" role="form" method="POST" enctype="multipart/form-data" 
-            action="<?php if(isset($rent)){ echo base_url().'index.php/Rent_real_estate/updaterecord/'.$r_id; } else { echo base_url().'index.php/Rent_real_estate/saverecord';} ?>">
-            <input type="hidden" name="rent_module_type" value="1">
+    <form id="form_rent" role="form" method="POST" enctype="multipart/form-data" action="<?php if(isset($rent)){ echo base_url().'index.php/Rent_real_estate/updaterecord/'.$r_id; } else { echo base_url().'index.php/Rent_real_estate/saverecord';} ?>">
+        <input type="hidden" name="rent_module_type" value="1">
         <div class=" container-fluid container-fixed-lg ">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="<?=base_url().'index.php/Dashboard/'?>">Dashboard</a></li>
@@ -524,7 +523,7 @@
                                     <div class="col-md-5">
                                         <div class="form-group form-group-default form-group-default-select2">
                                             <label class="">Tenant</label>
-                                            <select id="tenant_name_<?php echo $j+1; ?>" name="owners[]" class="form-control tenant full-width select2" data-error="#err_tenant_name_<?php echo $j+1; ?>" data-placeholder="Select" data-init-plugin="select2" >
+                                            <select id="tenant_name_<?php echo $j+1; ?>" name="tenant[]" class="form-control tenant full-width select2" data-error="#err_tenant_name_<?php echo $j+1; ?>" data-placeholder="Select" data-init-plugin="select2" >
                                                 <option value="">Select</option>
                                                 <?php for ($k=0; $k < count($contact) ; $k++) { ?>
                                                     <option value="<?php echo $contact[$k]->c_id; ?>"
@@ -583,11 +582,7 @@
 							       <div class="col-md-3">
                                         <div class="form-group form-group-default form-group-default-select2 required">
                                             <label class="">Category</label>
-                                            <select class="full-width" name="category" id="category" data-error="#err_schedule" data-placeholder="Select" data-init-plugin="select2" onchange="instchange(); opentable();" data-minimum-results-for-search="Infinity">
-                                                <option value="">Select</option>
-                                                <option value="Rent">Rent</option>
-                                             
-                                                
+                                            <select class="full-width" name="category" id="category" data-error="#err_schedule" data-placeholder="Select" data-init-plugin="select2" onchange="instchange(); opentable();" data-minimum-results-for-search="Infinity"><option value="Rent">Rent</option>
                                             </select>
                                             <div id="err_schedule"></div>
                                         </div>
@@ -765,12 +760,12 @@
                                         <input type="text" class="form-control format_number" name="deposit_amount" id="deposit_amount" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo format_money($rent[0]->deposit_amount,2); }} ?>"/>
                                     </div>
                                 </div>
-                                <div class="col-md-6" style="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo ''; } else echo 'display: none;'; } else echo 'display: none;'; ?>">
+                                <!-- <div class="col-md-6" style="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo ''; } else echo 'display: none;'; } else echo 'display: none;'; ?>">
                                     <div class="form-group form-group-default required">
                                         <label>Paid Amount In &#x20B9;</label>
                                         <input type="text" class="form-control format_number" name="deposit_paid_amount" id="deposit_paid_amount" placeholder="Enter Here" value="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo format_money($deposit_paid_details[0]->paid_amount,2); }} ?>" readonly />
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-md-6" style="display: none;">
                                     <div class="form-group form-group-default required">
                                         <label class="">Category </label>
@@ -1080,7 +1075,7 @@
                                 </thead>
                                 <tbody id="rent_utilities">
                                     <?php //for ($k=0; $k < count($utility) ; $k++) { ?>
-<tr class="">
+                                                <tr class="">
                                                 <td>
                                                     <input type="hidden" id="utility" name="utility" value="2">
 													Property Tax
@@ -1130,7 +1125,7 @@
                                 </thead>
                                      <tbody id="email_notification">
                                     <?php //for ($k=0; $k < count($utility) ; $k++) { ?>
-<tr class="">
+                                                <tr class="">
                                                 <td>
                                                     <input type="hidden" id="email_notification" name="email_notification" value="6">
 													Invoice is Posted			

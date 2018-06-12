@@ -1001,5 +1001,22 @@ $(document).ready(function() {
         $(".progress-bar").text(progress + '%');
     }
 </script>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAElDAFxOW8LNuFFASHJesAWs8bwzP3IU0",
+    authDomain: "testingproject-af738.firebaseapp.com",
+    databaseURL: "https://testingproject-af738.firebaseio.com",
+    projectId: "testingproject-af738",
+    storageBucket: "",
+    messagingSenderId: "873941869126"
+  };
+  firebase.initializeApp(config);
+</script>
+
+
 </body>
 </html>

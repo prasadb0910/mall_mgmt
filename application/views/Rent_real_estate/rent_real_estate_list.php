@@ -82,23 +82,25 @@
                                                             </div>
                                                             <div class=" col-md-8">
                                                                 <div class="card-header ">
-																   <div class="building_name"><b></b></div>
+																   <div class="building_name"><b><?php echo $rent[$i]->unit_name; ?></b></div>
                                                                     <div class="owner_name"><H4 class="m-t-0 m-b-0">
-                                                                        <?php
-
-                                                                        foreach ($rent[$i]->owner_name as $key => $value) {
-                                                                            echo $value->owner_name.",";
-                                                                        }
-
-                                                                         ?>
+                                                                     <?php
+                                                                        $val = '';
+                                                                        foreach($rent[$i]->owner_name as $name)
+                                                                                {
+                                                                                 $val .=$name->owner_name.",";
+                                                                                }
+                                                                        echo rtrim($val, ',');
+                                                                      ?>
                                                                     </H4></div>
                                                                 </div>
                                                                 <div class="card-block">
-
-                                                                     <?php foreach($rent[$i]->tenant_name as $name) { ?>
-                                                                       <p class=" flat_info m-t-0 m-b-0"><b><?php echo $name->contact_name; ?></b></p> 
-                                                                      <?php  }?>
-                                                                      <p class=" flat_info m-t-0 m-b-0"><?php echo $rent[$i]->unit_name . ', ' . $rent[$i]->floor.' ' . 'Floor - ' . $rent[$i]->area.'  '.$rent[$i]->area_unit; ?></p>
+                                                                     <?php 
+                                                                    $tenant = '';
+                                                                    foreach($rent[$i]->tenant_name as $name) { ?>
+                                                                   <b><?php  $tenant.=$name->contact_name.','; ?></b>
+                                                                  <?php  }; echo rtrim($tenant, ',');  ?>
+                                                                      <p class=" flat_info m-t-0 m-b-0"><?php echo $rent[$i]->floor.' ' . 'Floor - ' . $rent[$i]->area.'  '.$rent[$i]->area_unit; ?></p>
                                                                    
                                                                 </div>
                                                             </div>
@@ -140,21 +142,27 @@
                                                     <div class="row">
                                                         <img src="<?php echo base_url().$rent[$i]->p_image; ?>" alt=" " class="prop_img" style="max-width:100%;max-height:100%;height:100px; width:100px;border:none;padding: 8px;" onerror=" this.src='<?php echo base_url(); ?>assets/img/demo/preview.jpg'">
                                                         <div class="info pull-left p-l-10" style="margin-top: 20px;text-align:left;width:35%">
-                                                            <div class="building_name"><?php echo $rent[$i]->unit_name; ?></div>
+                                                            <div class="building_name"><b><?php echo $rent[$i]->unit_name; ?></b></div>
 														<div class="owner_name">
+                                                            <b>
                                                              <?php
-
-                                                                foreach ($rent[$i]->owner_name as $key => $value) {
-                                                                    echo $value->owner_name.",";
-                                                                }
-
-                                                                ?>  
-                                                             </div>
-                                                           <p class=" flat_info m-t-0 m-b-0"><b><?php foreach($rent[$i]->tenant_name as $name) { ?>
-                                                           <p class=" flat_info m-t-0 m-b-0"><b><?php echo $name->contact_name; ?></b></p> 
-                                                          <?php  }?></b></p>
+                                                                $val = '';
+                                                                foreach($rent[$i]->owner_name as $name)
+                                                                        {
+                                                                         $val .=$name->owner_name.",";
+                                                                        }
+                                                                echo rtrim($val, ',');
+                                                             ?>
+                                                             </b> 
+                                                         </div>
+                                                           <p class=" flat_info m-t-0 m-b-0">
+                                                           <?php 
+                                                            $tenant = '';
+                                                            foreach($rent[$i]->tenant_name as $name) { ?>
+                                                           <?php  $tenant.=$name->contact_name.','; ?>
+                                                          <?php  }; echo rtrim($tenant, ',');  ?></p>
                                                         </div>
-                                                        <p class=" flat_info m-t-0 m-b-0 pull-left" style="margin-top: 45px;padding-left: 10px;width: 18%;"><?php echo $rent[$i]->unit_name . ', ' . $rent[$i]->floor.' ' . 'Floor - ' . $rent[$i]->area.'  '.$rent[$i]->area_unit; ?></p>    
+                                                        <p class=" flat_info m-t-0 m-b-0 pull-left" style="margin-top: 45px;padding-left: 10px;width: 18%;"><?php echo  $rent[$i]->floor.' ' . 'Floor - ' . $rent[$i]->area.'  '.$rent[$i]->area_unit; ?></p>    
 														<p class="avaibility m-t-0 m-b-0 pull-left" style="margin-top: 45px;padding-left: 10px;"></p>
 														
                                                         <div class="prop_btns">

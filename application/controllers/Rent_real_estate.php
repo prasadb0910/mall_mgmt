@@ -660,8 +660,7 @@ class Rent_real_estate extends CI_Controller
                                     }
                                 }
 
-                                $this->db->query("Insert into rent_tenant_details (rent_id, contact_id) 
-                                                 Select '$new_rid', contact_id FROM rent_tenant_details WHERE rent_id = '$rid'");
+                                $this->db->query("Insert into rent_tenant_details (rent_id, contact_id)  Select '$new_rid', contact_id FROM rent_tenant_details WHERE rent_id = '$rid'");
 
                                 $this->db->query("Insert into rent_escalation_details (rent_id, esc_date, escalation) 
                                                  Select '$new_rid', esc_date, escalation FROM rent_escalation_details WHERE rent_id = '$rid'");
@@ -869,8 +868,8 @@ class Rent_real_estate extends CI_Controller
 
                     // $this->rent_model->insertSchedule($rid, $txn_status);
                     /*For the entries which is appproved and send for approval new entries is created*/
-
                     $this->rent_model->insertTenantDetails($rid);
+
                     $this->rent_model->insertEscalationDetails($rid);
                     $this->rent_model->insertPDCDetails($rid);
                     $this->rent_model->insertUtilityDetails($rid);

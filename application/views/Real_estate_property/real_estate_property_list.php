@@ -98,11 +98,14 @@
                                                                 <div class="card-header ">
                                                                    <div class="building_name"><b><?php echo $property[$i]->unit_name; ?></b></div>
                                                                     <div class="owner_name"><H4 class="m-t-0 m-b-0">
-                                                                    <?php foreach($property[$i]->owner_name as $name)
-                                                                        {
-                                                                            echo $name->owner_name;
-                                                                        }
-                                                                    ?> 
+                                                                    <?php
+                                                                        $val = '';
+                                                                        foreach($property[$i]->owner_name as $name)
+                                                                                {
+                                                                                    $val .=$name->owner_name.",";
+                                                                                }
+                                                                        echo rtrim($val, ',');
+                                                                    ?>
                                                                 </H4></div>
                                                                 </div>
                                                                 <div class="card-block">
@@ -153,10 +156,13 @@
                                                         <div class="info pull-left p-l-10" style="margin-top: 20px;text-align:left;width:40%">
                                                             <div class="building_name"><?php echo $property[$i]->unit_name; ?></div>
                                                             <div class="owner_name"><H4 class="m-t-0 m-b-0">
-																<?php foreach($property[$i]->owner_name as $name)
-                                                                        {
-                                                                            echo $name->owner_name;
-                                                                        }
+																<?php
+                                                                $val = '';
+                                                                    foreach($property[$i]->owner_name as $name)
+                                                                            {
+                                                                                $val .=$name->owner_name.",";
+                                                                            }
+                                                                    echo rtrim($val, ',');
                                                                     ?>  </H4></div>
                                                             <!--<div class="address"><i class="fa fa-map-marker"></i>  
                                                             <?php if(isset($property)) { echo $property[$i]->p_apartment . ' ' . $property[$i]->p_address . ' ' . $property[$i]->p_landmark . ' ' . $property[$i]->p_state . ' ' . $property[$i]->p_city . ' ' . $property[$i]->p_pincode . ' ' . $property[$i]->p_country; } ?></div>

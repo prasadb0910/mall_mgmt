@@ -380,7 +380,9 @@
 															
 															<div class="title-block">
 																<h4>Lockin Period</h4>
-																<span class="period"><?=$rent[0]->locking_period?></span>
+																<span class="period">
+																	<?php echo $rent[0]->locking_period; ?><?php if($rent[0]->locking_period >1) echo " months"; else echo " month" ?>
+																</span>
 															</div>
 															
 														</div>
@@ -426,8 +428,6 @@
 																	<span>₹<?php echo format_money($rent[0]->deposit_amount,2); ?></span></span>
 																	</div>
 																	<div class="title-block" style="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo ''; } else echo 'display: none;'; } else echo 'display: none;'; ?>">
-																	<h4>Deposits Paid</h4>
-																	<span>₹<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo format_money($deposit_paid_details[0]->paid_amount,2); }} ?></span></span>
 																	</div>
 															
 														</div>

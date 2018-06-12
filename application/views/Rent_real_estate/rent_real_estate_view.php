@@ -352,7 +352,6 @@
 													<a class="info-link" href="">
 														<?=$rent[0]->unit_name?> , Real Estate
 													</a>
-													<span>, </span>
 												</span>
 											</div>
 											
@@ -376,19 +375,28 @@
 															</div>
 															<div class="title-block">
 																<h4>Lease Period</h4>
-																<span class="period"><?=$rent[0]->lease_period?></span>
+																<span class="period">
+																<?php echo $rent[0]->lease_period; ?><?php if($rent[0]->lease_period >1) echo " months"; else echo " month" ?>
 															</div>
 															<div class="title-block">
 																<h4>Lockin Period</h4>
-																<span class="period"><?=$rent[0]->locking_period?></span>
+																<span class="period">
+
+																<?php echo $rent[0]->locking_period; ?><?php if($rent[0]->locking_period >1) echo " months"; else echo " month" ?>
+																</span>
 															</div>
 															<div class="title-block">
 																<h4>Notice Period  </h4>
-																<span class="period"><?=$rent[0]->notice_period?></span>
+																<span class="period">
+															
+																<?php echo $rent[0]->notice_period; ?><?php if($rent[0]->notice_period >1) echo " months"; else echo " month" ?>
+																</span>
 															</div>
 															<div class="title-block">
 																<h4>Rent Free Period</h4>
-																<span class="period"><?=$rent[0]->free_rent_period?> </span>
+																<span class="period">
+																<?php echo $rent[0]->free_rent_period; ?><?php if($rent[0]->free_rent_period >1) echo " months"; else echo " month" ?>
+																</span>
 															</div>
 														</div>
 													</div>
@@ -436,11 +444,6 @@
 																	<h4>Deposits</h4>
 																	<span>₹<?php echo format_money($rent[0]->deposit_amount,2); ?></span></span>
 																	</div>
-																	<div class="title-block" style="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo ''; } else echo 'display: none;'; } else echo 'display: none;'; ?>">
-																	<h4>Deposits Paid</h4>
-																	<span>₹<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo format_money($deposit_paid_details[0]->paid_amount,2); }} ?></span></span>
-																	</div>
-															
 														</div>
 													</div>
 												</div>
@@ -468,10 +471,10 @@
 																	<h4>Deposits</h4>
 																	<span>₹<?php echo format_money($rent[0]->deposit_amount,2); ?></span></span>
 																	</div>
-																	<div class="title-block" style="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo ''; } else echo 'display: none;'; } else echo 'display: none;'; ?>">
+																	<!-- <div class="title-block" style="<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo ''; } else echo 'display: none;'; } else echo 'display: none;'; ?>">
 																	<h4>Deposits Paid</h4>
 																	<span>₹<?php if(isset($deposit_paid_details)) { if(count($deposit_paid_details)>0) { echo format_money($deposit_paid_details[0]->paid_amount,2); }} ?></span></span>
-																	</div>
+																	</div> -->
 																	
 																</div>
 															</div>
@@ -519,7 +522,10 @@
 											<div class="col-xs-24 col-sm-12" >
 												<div class="utilities-block">
 													<div class="utilities-tag">
-													<?php if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1'){?> <span class="tag"> <?php echo 'Yes'; }else echo ''; } ?></span>
+													<label>Property Tax</label> <br>
+													<?php if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1'){?> <span class="tag"> <?php echo 'Tenant </span>'; }else echo ''; } ?>
+
+													<?php if(isset($utility[0]->landlord)) { if($utility[0]->landlord=='1'){?> <span class="tag"> <?php echo 'Owners </span>'; }else echo ''; } ?>
 													</div>
 												</div>
 											</div>
