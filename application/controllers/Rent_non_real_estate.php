@@ -23,7 +23,9 @@ class Rent_non_real_estate extends CI_Controller
 
        $this->checkstatus('All','2');
     }
-    
+       public function getConRent($status='', $contact_id=''){
+        $this->checkstatus($status, '2', $contact_id);
+    }
     public function add() {
         $gid=$this->session->userdata('groupid');
         $roleid=$this->session->userdata('role_id');

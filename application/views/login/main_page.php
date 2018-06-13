@@ -8,11 +8,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="Description" content="Get access to your real estate property management dashboard.">
         
-        <link rel="icon" href="<?php echo base_url(); ?>favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
         <!-- END META SECTION -->
         
         <!-- CSS INCLUDE -->        
-        <link rel="stylesheet" type="text/css" id="theme" href="<?php echo base_url(); ?>css/theme-default.css"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="css/theme-default.css"/>
         <!-- EOF CSS INCLUDE -->                                     
     </head>
     <body>
@@ -47,7 +47,7 @@
 
                         <div class="form-group">
                             <a href="<?php echo base_url().'index.php/login/email'; ?>" class="btn-link btn-block pull-left">I forgot my password</a>
-                            <a href="<?php echo base_url().'../register.php'; ?>" class="btn-link btn-block pull-left">Register a new membership</a>
+                            <a href="<?php echo base_url().'register2.php'; ?>" class="btn-link btn-block pull-left">Register a new membership</a>
                         </div>
                         
                         <!-- <div class="login-subtitle">
@@ -107,11 +107,11 @@
         <script type="text/javascript">
             var BASE_URL="<?php echo base_url()?>";
         </script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>js/plugins/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>js/plugins/jquery/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="<?php echo base_url(); ?>js/plugins/bootstrap/bootstrap.min.js"></script>
-        <script type='text/javascript' src='<?php echo base_url(); ?>js/plugins/jquery-validation/jquery.validate.js'></script>
-        <script type='text/javascript' src='<?php echo base_url(); ?>js/login.js'></script>
+        <script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="js/plugins/bootstrap/bootstrap.min.js"></script>
+        <script type='text/javascript' src='js/plugins/jquery-validation/jquery.validate.js'></script>
+        <script type='text/javascript' src='js/login.js'></script>
         <!-- END PLUGINS-->
         
         

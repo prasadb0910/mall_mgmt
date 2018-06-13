@@ -1082,25 +1082,37 @@
 
                                                     <?php //if(isset($utility[$k]->utility)) echo $utility[$k]->utility; ?>
                                                 </td>
+												      
                                                 <td>
-                                                    <div class="checkbox check-success">
-                                                        <input type="checkbox" id="landlord<?php //echo $k+1; ?>" name="landlord" value="1" <?php if(isset($utility[0]->landlord)) { if($utility[0]->landlord=='1') echo 'checked'; } ?> >
-                                                        <label for="landlord"></label>
+                                              
+                                                        <!-- <input type="checkbox" id="landlord<?php //echo $k+1; ?>" name="landlord" value="1" <?php //if(isset($utility[0]->landlord)) { if($utility[0]->landlord=='1') echo 'checked'; } ?> >
+                                                        <label for="landlord"></label>-->
+														<div class="radio radio-success">
+														<input type="radio" value="landlord" name="utility_owner" id="landlord" <?php if(isset($utility[0]->utility_owner)) { if($utility[0]->utility_owner=='landlord') echo 'checked'; } ?>>
+														<label for="landlord"></label>
+														</div>
+                                                </td>
+                                                <td>
+                                                
+                                                        <!--<input type="checkbox" id="tenant<?php //echo $k+1; ?>" name="u_tenant" value="1" <?php// if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1') echo 'checked'; } ?> >
+                                                        <label for="tenant"></label>-->
+													<div class="radio radio-success">
+														<input type="radio" value="u_tenant" name="utility_owner" id="u_tenant" <?php if(isset($utility[0]->utility_owner)) { if($utility[0]->utility_owner=='u_tenant') echo 'checked'; } ?>>
+														<label for="u_tenant"></label>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="checkbox check-success">
-                                                        <input type="checkbox" id="tenant<?php //echo $k+1; ?>" name="u_tenant" value="1" <?php if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1') echo 'checked'; } ?> >
-                                                        <label for="tenant"></label>
-                                                    </div>
+                                                   
+                                                        <!--<input type="checkbox" id="na" name="na" value="1" <?php// if(isset($utility[0]->na)) { if($utility[0]->na=='1') echo 'checked'; } ?> >
+                                                        <label for="na"></label>-->
+													<div class="radio radio-success">
+                                                    <input type="radio"  value="na" name="utility_owner" id="na" <?php if(isset($utility[0]->utility_owner)) { if($utility[0]->utility_owner=='na') echo 'checked'; } ?>>
+														<label for="na"></label>
+													</div>
                                                 </td>
-                                                <td>
-                                                    <div class="checkbox check-success">
-                                                        <input type="checkbox" id="na" name="na" value="1" <?php if(isset($utility[0]->na)) { if($utility[0]->na=='1') echo 'checked'; } ?> >
-                                                        <label for="na"></label>
-                                                    </div>
-                                                </td>
-                                            </tr> 
+                                            </tr>
+
+										
                                     <?php //} ?>
                                 </tbody>
                             </table>
@@ -1646,6 +1658,7 @@
 }
 
 </script>
+
 
 
 

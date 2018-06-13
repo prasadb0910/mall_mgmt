@@ -214,6 +214,10 @@ class Login extends CI_Controller
     public function email() {
         $this->load->view('login/email');
     }
+	
+	 public function register() {
+        $this->load->view('login/register');
+    }
 
     public function check_valid_email() {
         $result = 1;
