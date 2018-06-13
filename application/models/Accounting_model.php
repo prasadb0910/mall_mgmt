@@ -52,28 +52,16 @@ function bankentryData($status='', $property_id='', $contact_id='', $created_on=
 
     if($contact_id!=""){
         if($cond==""){
-            $cond = " and E.contact_id='$contact_id'";
+            $cond = " Where E.contact_id='$contact_id'";
         } else {
-            $cond = $cond . " and E.contact_id='$contact_id'";
-        }
-
-        if($cond3==""){
-            $cond3 = " where E.contact_id='$contact_id'";
-        } else {
-            $cond3 = $cond3 . " and E.contact_id='$contact_id'";
+            $cond .=" and E.contact_id='$contact_id'";
         }
     }
 
-    if($property_id!=""){
+   if($property_id!="" && $property_id!=0){
         $cond4=" and property_id='" . $property_id . "' ";
     } else {
         $cond4="";
-    }
-
-    if($property_id!=""){
-        $cond5=" and txn_id='" . $property_id . "' ";
-    } else {
-        $cond5="";
     }
 
     if($created_on!=""){
@@ -173,7 +161,7 @@ function bankentryData($status='', $property_id='', $contact_id='', $created_on=
         from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
         where A.c_status='Approved' and A.c_gid='$gid') B 
         ON (A.buyer_id=B.c_id)) D 
-        on C.txn_id=D.sale_id) E" . $cond3;
+        on C.txn_id=D.sale_id) E" . $cond3.$cond;
 
     $result2=$this->db->query($sql);
     $this->db->last_query();
@@ -222,7 +210,7 @@ function bankentryData($status='', $property_id='', $contact_id='', $created_on=
         (select A.txn_id, A.property_id, A.sub_property_id, A.gp_id, A.rent_amount, 
             A.possession_date, A.termination_date from 
         (select * from rent_txn where gp_id = '$gid' and txn_status='Approved' and 
-                    property_id in (select distinct purchase_id from purchase_ownership_details)) A ) C 
+                    property_id in (select distinct purchase_id from purchase_ownership_details) ".$cond4.") A ) C 
         left join 
         (select * from 
         (select A.rent_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.total_amount, A.tax_amount, 
@@ -276,7 +264,7 @@ function bankentryData($status='', $property_id='', $contact_id='', $created_on=
                 else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
         from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
         where A.c_status='Approved' and A.c_gid='$gid') B 
-        ON (A.pr_client_id=B.c_id) ) D on E.property_id=D.purchase_id". $cond3;
+        ON (A.pr_client_id=B.c_id) ) D on E.property_id=D.purchase_id". $cond3.$cond;
 
     $result3=$this->db->query($sql);
     if($result3->num_rows() > 0){
@@ -441,36 +429,15 @@ function getPendingBankEntry($status='', $property_id='', $contact_id='') {
     $cond="";
     $cond2="";
     if($contact_id!=""){
-        $cond = " where E.contact_id='$contact_id'";
-        $cond2 = " and E.contact_id='$contact_id'";
-
-        if($cond3==""){
-            $cond3 = " where E.contact_id='$contact_id'";
-        } else {
-            
-
-              if($status!="")
-                {
-                    $cond3 = $cond3 . " and E.contact_id='$contact_id'";
-                }
-                else{
-                    
-                    $cond3="";
-                }
-        }
+        $cond2 .=" And E.contact_id='" . $contact_id . "' ";
     }
 
-    if($property_id!=""){
+   if($property_id!="" && $property_id!=0){
         $cond4=" and property_id='" . $property_id . "' ";
     } else {
         $cond4="";
     }
 
-    if($property_id!=""){
-        $cond5=" and txn_id='" . $property_id . "' ";
-    } else {
-        $cond5="";
-    }
 
     if($from_date!="" && $to_date!="")
         {   
@@ -507,7 +474,7 @@ function getPendingBankEntry($status='', $property_id='', $contact_id='') {
             case when D.paid_amount is null then 0 else D.paid_amount end as paid_amount from 
         (select A.txn_id, A.property_id, A.sub_property_id, A.gp_id, A.date_of_sale, A.txn_status from 
         (select * from sales_txn where gp_id = '$gid' and txn_status = 'Approved' and 
-                txn_id in (select distinct sale_id from sales_buyer_details) ) A ) C 
+                txn_id in (select distinct sale_id from sales_buyer_details) ".$cond4." ) A ) C 
         left join 
         (select * from 
         (select A.sale_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.net_amount, A.tax_amount, 
@@ -543,7 +510,7 @@ function getPendingBankEntry($status='', $property_id='', $contact_id='') {
         where A.c_status='Approved' and A.c_gid='$gid') B 
         on (A.buyer_id=B.c_id)) D 
         on C.txn_id=D.sale_id) E 
-        where E.owner_name is not null and E.owner_name<>''" . $cond2;
+        where E.owner_name is not null and E.owner_name<>''" . $cond2.$cond;
 
     $result2=$this->db->query($sql);
 
@@ -575,7 +542,7 @@ function getPendingBankEntry($status='', $property_id='', $contact_id='') {
     }
  
     //for rent
-     $sql = "select * from 
+    $sql = "select * from 
             (select C.*, C.total_amount-C.paid_amount as bal_amount, D.contact_id, D.c_full_name as payer_name, D.tenant_name  from 
             (select A.*, B.unit_name,B.unit_type from 
             (select * from 
@@ -586,7 +553,7 @@ function getPendingBankEntry($status='', $property_id='', $contact_id='') {
                     case when D.paid_amount is null then 0 else D.paid_amount end as paid_amount from 
             (select A.* from 
             (select * from rent_txn where gp_id = '$gid' and txn_status='Approved' and 
-                    property_id in (select distinct purchase_id from purchase_ownership_details)) A ) C 
+                    property_id in (select distinct purchase_id from purchase_ownership_details) ".$cond4.") A ) C 
             left join 
             (select * from 
             (select A.rent_id, A.event_type, A.event_name, A.event_date, A.basic_cost, A.total_amount, A.tax_amount, 
@@ -662,6 +629,8 @@ function getPendingBankEntry($status='', $property_id='', $contact_id='') {
         }
     }
 
+
+
     return $dataarray;
 }
 
@@ -690,7 +659,7 @@ function getPendingOtherEntry($status='', $property_id='', $contact_id='', $acco
         }
     }
 
-    if($property_id!=""){
+   if($property_id!="" && $property_id!=0){
         $cond4=" and A.property_id='" . $property_id . "' ";
     } else {
         $cond4="";
@@ -745,7 +714,7 @@ function getPendingOtherEntry($status='', $property_id='', $contact_id='', $acco
         }
     }
 
-    if($property_id!=""){
+   if($property_id!="" && $property_id!=0){
         $cond4=" and A.property_id='" . $property_id . "' ";
     } else {
         $cond4="";
@@ -1018,12 +987,12 @@ function getBankEntryDetails($type='', $status='', $contact_id='', $transaction=
         }
     }
 
-    if($property_id!=""){
+   if($property_id!="" && $property_id!=0){
         $cond4=" and property_id='" . $property_id . "' ";
         $cond5=" and txn_id='" . $property_id . "'";
     }
 
-    if($property_id!=""){
+   if($property_id!="" && $property_id!=0){
         $cond4=" and property_id='" . $property_id . "' ";
     }
 
@@ -1546,11 +1515,11 @@ function getOtherScheduleDetail($type='', $status='', $contact_id='', $transacti
         }
     }
 
-    if($property_id!=""){
+   if($property_id!="" && $property_id!=0){
         $cond4=" and property_id='" . $property_id . "' ";
     }
 
-    if($property_id!=""){
+   if($property_id!="" && $property_id!=0){
         $cond4=" and property_id='" . $property_id . "' ";
     }
 
@@ -1777,13 +1746,13 @@ function tdsData($status='', $property_id='', $created_on='',$module_type=''){
         $cond3=" where E.txn_status='$status'";
     }
 
-    // if($property_id!=""){
+    //if($property_id!="" && $property_id!=0){
     //     $cond2=" and AA.property_id='" . $property_id . "'";
     // } else {
     //     $cond2="";
     // }
 
-    if($property_id!=""){
+   if($property_id!="" && $property_id!=0){
         $cond4=" and property_id='" . $property_id . "' ";
     } else {
         $cond4="";

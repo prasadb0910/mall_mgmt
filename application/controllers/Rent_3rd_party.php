@@ -31,7 +31,9 @@ class Rent_3rd_party extends CI_Controller
             $query=$this->db->query("SELECT * FROM tax_master WHERE txn_type like '%rent%' AND status = '1' AND tax_action='1'");
             $result=$query->result();
             $data['tax']=$result;
-            $data['property']=$this->db->query("SELECT unit_name,property_txn_id,property_txn_id from sales_txn st left join property_txn pt on st.property_id=pt.property_txn_id")->result(); 
+            $result = $this->db->query("call sp_getpropertynorent(1,'')")->result();
+            mysqli_next_result( $this->db->conn_id );
+            $data['property']=$result; 
             //$this->rent_model->getPropertyDetails();
             $gid=$this->session->userdata('groupid');
             $result = $this->db->query("call sp_getcontact('Approved','$gid','Tenants')")->result();
