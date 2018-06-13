@@ -1335,12 +1335,14 @@ class Rent_model Extends CI_Model{
         $landlord=$this->input->post('landlord');
         $tenant=$this->input->post('u_tenant');
         $na=$this->input->post('na');
+        $utility_owner=$this->input->post('utility_owner');
 
          $data = array(     'utility_id'=>$utility,
                             'rent_id' => $txn_id,
                             'landlord' => $landlord,
-                            'tenant' => $landlord,
-                            'na' => $na
+                            'tenant' => $tenant,
+                            'na' => $na,
+							'utility_owner' => $utility_owner,
                         );
 
 

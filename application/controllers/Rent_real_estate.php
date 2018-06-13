@@ -20,7 +20,7 @@ class Rent_real_estate extends CI_Controller
     }
 
     public function getConRent($status='', $contact_id=''){
-        $this->checkstatus($status, '', $contact_id);
+        $this->checkstatus($status, '1', $contact_id);
     }
 	public function add() {
         $gid=$this->session->userdata('groupid');
@@ -677,8 +677,8 @@ class Rent_real_estate extends CI_Controller
                                                     invoice_issuer, event_name FROM rent_other_amt_details 
                                                     WHERE rent_id = '$rid'");
 
-                                $this->db->query("Insert into rent_utility_details (rent_id, utility_id, landlord, tenant, na) 
-                                                 Select '$new_rid', utility_id, landlord, tenant, na FROM rent_utility_details 
+                                $this->db->query("Insert into rent_utility_details (rent_id, utility_id, landlord, tenant, na,utility_owner) 
+                                                 Select '$new_rid', utility_id, landlord, tenant, na,utility_owner FROM rent_utility_details 
                                                  WHERE rent_id = '$rid'");
 
                                 $this->db->query("Insert into rent_notification_details (rent_id, notification_id, owner, tenant) 

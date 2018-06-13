@@ -371,11 +371,11 @@
                       
 					  
 					  
-					     <p class="m-t-20">	 <div class="div_heading ">
-                          <h5>Client <div class="div_heading ">
-                          </h5><div></p>
-                        <div class="a m-b-20 client" id="client">
-                         
+					     
+                        <div class="a client" id="client">
+                         <p class="m-t-20">	 <div class="div_heading">
+                          <h5>Client 
+                          </h5></div></p>
                             <div class="row clearfix">
                             
                                 <div class="col-md-6">
@@ -399,13 +399,13 @@
                             </div>
 					  
                        
-					     <p class="m-t-20"> 
+					   
+                        <div class="a recurring" id="recurring">
+                           <p class="m-t-20"> 
 						 <div class="div_heading ">
                           <h5>Recurring & Transactions</h5>
                          </div>
 						 </p>
-                        <div class="a m-b-20 recurring" id="recurring">
-                         
                             <div class="row clearfix">
 							
 							
@@ -458,12 +458,12 @@
                                 
                                     
                                 </div>
-                           </div>
+                      
 						   
 						   
 						    <div class="a">
-                    
-                              <p class="m-t-20"> 
+                    <p class="m-t-20"> 
+                            
                                     <div class="div_heading ">
                                         <h5>Deposits</h5>
                                 
@@ -473,7 +473,7 @@
                             <div class="row clearfix">
 							
 							
-							  <div class="col-md-6" style="">
+							  <div class="col-md-6" style="display:none">
                                     <div class="form-group form-group-default required">
                                         <label class="">Category </label>
                                         <input type="text" class="form-control" name="deposit_category" id="deposit_category" placeholder="Enter Here" value="<?php if(isset($rent)) echo $rent[0]->deposit_category; else echo 'Deposit'; ?>" readonly />
