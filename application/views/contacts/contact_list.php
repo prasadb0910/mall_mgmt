@@ -332,20 +332,20 @@
                                                             <?php $style = ($contacts[$i]->c_type=='Owners' || $contacts[$i]->c_type=='Others'?"display:none":''); ?>
 
                                                               <div class="col-md-4 rent" style="<?=$style?>">
-                                                                <a href="<?php echo base_url() . 'index.php/Rent_real_estate/getConRent/All/' . $contacts[$i]->c_id; ?>">
+                                                                <a href="<?php echo base_url() . 'index.php/Rent_real_estate/checkstatus/All/1/0/0/' . $contacts[$i]->c_id; ?>">
                                                                 <i style="font-size:22px;" class="fa fa-file-text-o  "></i><br>
                                                             Rent(Real Estate)
 																	</a>
                                                             </div>
                                                             <div class="col-md-4 rent" style="<?=$style?>">
-                                                                <a href="<?php echo base_url() . 'index.php/Rent_non_real_estate/getConRent/All/' . $contacts[$i]->c_id; ?>">
+                                                                <a href="<?php echo base_url() . 'index.php/Rent_non_real_estate/checkstatus/All/2/0/0/' . $contacts[$i]->c_id; ?>">
                                                                 <i style="font-size:22px;" class="fa fa-file-text-o "></i><br>
                                                              Rent(Non real Estate)
 																	</a>
                                                             </div>
 															
 															   <div class="<?=$class?>  rent" style="<?=$stylerent?>">
-                                                                <a href="<?php echo base_url() . 'index.php/Accounting/getConAcc/All/' . $contacts[$i]->c_id; ?>">
+                                                                <a href="<?php echo base_url() . 'index.php/Accounting/checkstatus/All/0/' . $contacts[$i]->c_id; ?>">
                                                                 <i style="font-size:22px;" class="fa fa-inr "></i><br>
                                                                 Accounting
 																	</a>
