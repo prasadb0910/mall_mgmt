@@ -156,7 +156,9 @@ function ownerDetails($gid){
         $query=$this->db->query("select distinct owner_id from user_role_owners where user_id = '$session_id'");
         $result=$query->result();
         /*if (count($result)>0) {*/
-            $sql = "Select property_txn_id,unit_name from property_txn Where txn_status='Approved' and property_typ_id='1' ".$cond;
+            $sql = "Select property_txn_id,unit_name  from property_txn Where property_txn_id NOT IN((Select property_id from sales_txn)) and txn_status='Approved' and property_typ_id=1".$cond;
+
+
             $query=$this->db->query($sql);
             $result=$query->result();
             return $result;

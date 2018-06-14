@@ -113,7 +113,7 @@
 																	</a>
                                                             </div>
                                                             <div class=" col-md-4 leases">
-																 <a href="">
+																 <a href="<?php echo base_url().'index.php/accounting/checkstatus/All/' . $rent[$i]->property_id; ?>">
                                                                 <i style="font-size:22px;" class="fa fa-inr "></i><br>
                                                                 Accounting
 																	</a>
@@ -170,14 +170,11 @@
                                                                 <a href="<?php echo base_url() . 'index.php/contacts/checkstatus/All/Tenants/' . $rent[$i]->property_id; ?>" data-toggle="tooltip" data-placement="bottom" title="Tenants"><i style="font-size:22px;" class="fa fa-group"></i></a>
                                                             </div>
                                                             <div class="pull-left" style="margin-top: 40px;padding-left: 15px;">
-                                                                <a href="" data-toggle="tooltip" data-placement="bottom" title="Accounting"><i style="font-size:22px;" class="fa fa-inr"></i></a>
+                                                                <a href="<?php echo base_url().'index.php/accounting/checkstatus/All/' . $rent[$i]->property_id; ?>" data-toggle="tooltip" data-placement="bottom" title="Accounting"><i style="font-size:22px;" class="fa fa-inr"></i></a>
                                                             </div>
                                                            
                                                             <div class="pull-left" style="margin-top: 40px;padding-left: 15px;">
                                                                 <a href="<?php echo base_url().'index.php/task/checkstatus/'.$rent[$i]->property_id; ?>" data-toggle="tooltip" data-placement="bottom" title="Maintenance"><i style="font-size:22px;" class="fa fa-file-text-o"></i></a>
-                                                            </div>
-                                                            <div class="pull-left" style="margin-top: 40px;padding-left: 15px;">
-                                                                <a href="" data-toggle="tooltip" data-placement="bottom" title="Sub Property"><i style="font-size:22px;" class="fa fa-building-o"></i></a>
                                                             </div>
                                                         </div>
                                                         <a href="<?php echo base_url().'index.php/Rent_real_estate/view/'.$rent[$i]->txn_id; ?>" class=" pull-left invoice" style="color:#5cb85c;margin-top: 37px;padding-left: 30px;">View <i class="   fa fa-angle-right tab-icon"></i> </a>

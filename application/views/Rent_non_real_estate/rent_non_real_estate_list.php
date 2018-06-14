@@ -90,12 +90,13 @@
                                                                    <div class="building_name"><b></b></div>
                                                                     <div class="owner_name"><H4 class="m-t-0 m-b-0">
                                                                         <?php
-
-                                                                        foreach ($rent[$i]->owner_name as $key => $value) {
-                                                                            echo $value->owner_name.",";
-                                                                        }
-
-                                                                         ?>
+                                                                        $val = '';
+                                                                        foreach($rent[$i]->owner_name as $name)
+                                                                                {
+                                                                                 $val .=$name->owner_name.",";
+                                                                                }
+                                                                        echo rtrim($val, ',');
+                                                                      ?>
                                                                     </H4></div>
                                                                 </div>
                                                                 <div class="card-block">
@@ -141,12 +142,13 @@
                                                             <div class="building_name"><?php echo $rent[$i]->unit_name; ?></div>
                                                         <div class="owner_name">
                                                              <?php
-
-                                                                foreach ($rent[$i]->owner_name as $key => $value) {
-                                                                    echo $value->owner_name.",";
-                                                                }
-
-                                                                ?>  
+                                                                    $val = '';
+                                                                    foreach($rent[$i]->owner_name as $name)
+                                                                            {
+                                                                             $val .=$name->owner_name.",";
+                                                                            }
+                                                                    echo rtrim($val, ',');
+                                                                      ?>  
                                                              </div>
                                                               <?php foreach($rent[$i]->tenant_name as $name) { ?>
                                                                        <p class=" flat_info m-t-0 m-b-0"><b><?php echo $name->contact_name; ?></b></p> 
@@ -161,10 +163,6 @@
                                                             </div>
                                                             <div class="pull-left" style="margin-top: 40px;padding-left: 15px;">
                                                                 <a href="<?php echo base_url().'index.php/accounting/checkstatus/All/' . $rent[$i]->property_id; ?>" data-toggle="tooltip" data-placement="bottom" title="Accounting"><i style="font-size:22px;" class="fa fa-inr"></i></a>
-                                                            </div>
-                                                           
-                                                            <div class="pull-left" style="margin-top: 40px;padding-left: 15px;">
-                                                                <a href="" data-toggle="tooltip" data-placement="bottom" title="Sub Property"><i style="font-size:22px;" class="fa fa-building-o"></i></a>
                                                             </div>
                                                         </div>
                                                         <a href="<?php echo base_url().'index.php/Rent_non_real_estate/view/'.$rent[$i]->txn_id; ?>" class=" pull-left invoice" style="color:#5cb85c;margin-top: 37px;padding-left: 30px;">View <i class="   fa fa-angle-right tab-icon"></i> </a>

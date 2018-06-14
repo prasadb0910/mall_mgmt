@@ -373,11 +373,13 @@
 															
 															<div class="title-block">
 																<h4>Lease Period</h4>
-																<span class="period"> <?=$rent[0]->lease_period?></</span>
+																<span class="period">
+																<?php echo $rent[0]->lease_period; ?><?php if($rent[0]->lease_period >1) echo " months"; else echo " month" ?>
+																</span>
 															</div>
 															<div class="title-block">
 																<h4>Lockin Period</h4>
-																<span class="period"> <?=$rent[0]->locking_period?></</span>
+																<span class="period"> <?php echo $rent[0]->locking_period; ?><?php if($rent[0]->locking_period >1) echo " months"; else echo " month" ?></</span>
 															</div>
 															
 														</div>

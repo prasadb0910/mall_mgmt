@@ -9,18 +9,18 @@ class Rent_model Extends CI_Model{
         $this->load->model('purchase_model');
     }
 
-    public function rentData($status='',$property_type_id='',$property_id='',$rent_id="",$contact_id='')
+    public function rentData($status='',$property_type_id='',$property_id,$rent_id="")
     {   
         $status;
         $cond="";
         $gid=$this->session->userdata('groupid');
         if($status=='InProcess')
         {
-            $cond.=" And A.txn_status='In Process'";
+            $cond.=" And rt.txn_status='In Process'";
 
         }else if($status=='Pending')
         {
-            $cond.="And (A.txn_status='Pending' or A.txn_status='Delete')";
+            $cond.="And (rt.txn_status='Pending' or rt.txn_status='Delete')";
 
         }else if($status=='All' || $status=='ALL')
         {
@@ -28,29 +28,23 @@ class Rent_model Extends CI_Model{
 
         }else{
             
-            $cond.="And  A.txn_status='$status'";
+            $cond.="And  rt.txn_status='$status'";
         }
 
-        if($property_id!="" && $property_id!=0){
+        if($property_id!=""){
             
-            $cond.=" And A.txn_id=".$rent_id;   
+            $cond.=" And rt.txn_id=".$rent_id;   
         }
 
         if($property_type_id!=""){
 
-            $cond.=" And A.property_typ_id=".$property_type_id;    
+            $cond.=" And pt.property_typ_id=".$property_type_id;    
                    
         }
 
-        if($rent_id!="" && $rent_id!=0){
+        if($rent_id!=""){
 
-            $cond.=" And A.txn_id=".$rent_id;
-        }
-
-
-        if($contact_id!=""){
-
-            $cond.=" And B.contact_id=".$contact_id;
+            $cond.=" And rt.txn_id=".$rent_id;
         }
 
         /*
@@ -58,13 +52,11 @@ class Rent_model Extends CI_Model{
             left join contact_master C on pd.pr_client_id= C.c_id
         */
 
-        $sql = "Select * from (Select rt.*,pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_no,
+        $sql = "Select rt.*,pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_no,
                 pt.unit_type,pt.p_image,pt.property_typ_id
                 from rent_txn rt
                 left join property_txn pt on rt.property_id=pt.property_txn_id
-                Where rt.property_id NOT IN(Select property_id from sales_txn) and rt.txn_status <> 'Inactive'  ) A
-                left join
-                (select rent_id,contact_id FROM rent_tenant_details A where A.contact_id in (select min(contact_id) from rent_tenant_details Where rent_id=A.rent_id) ) B on A.txn_id=B.rent_id Where A.gp_id = '$gid'".$cond;
+                Where rt.property_id NOT IN(Select property_id from sales_txn) and rt. txn_status <> 'Inactive' and rt.gp_id = '$gid' ".$cond;
         $query=$this->db->query($sql); 
         return $query->result();       
     }
@@ -1590,12 +1582,12 @@ class Rent_model Extends CI_Model{
              $cond="And  rt.txn_status='$status'";
         }
 
-        if($property_id!="" && $property_id!=0){
+        if($property_id!=""){
 
             $cond =" And pt.property_txn_id=".$property_id;    
         }
 
-        if($rent_id!="" && $rent_id!=0){
+        if($rent_id!=""){
 
             $cond=" And rt.txn_id=".$rent_id;
         }
@@ -1650,7 +1642,7 @@ class Rent_model Extends CI_Model{
 
        
 
-        if($property_id!="" && $property_id!=0){
+        if($property_id!=""){
 
             if($cond=="")
                     $cond = " Where C.property_txn_id=".$property_id;
