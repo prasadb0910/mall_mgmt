@@ -161,7 +161,7 @@ class Sale extends CI_Controller
             $docs=$this->document_model->add_new_doc('', 'sale');
             $data=array_merge($data, $docs);
 
-            $result = $this->db->query("call sp_getcontact('Approved','$gid','Tenants')")->result();
+            $result = $this->db->query("call sp_getcontact('Approved','$gid','Owners')")->result();
             mysqli_next_result( $this->db->conn_id );
             $data['contact']=$result;
 
@@ -331,11 +331,41 @@ class Sale extends CI_Controller
                 $txn_status='In Process';
             }
 
+            $property_id = $this->input->post('property');
+
+
             $pid=$this->sales_model->insertRecord($sldt, $txn_status); // insert record in to table sales_txn
             $response_sales_consideration=$this->sales_model->insertSchedule($pid, $txn_status);//create Schedule
             $sales_ownership_details=$this->sales_model->insertBuyerDetails($pid);
             
             $this->sales_model->insertImage($pid);
+
+            $txn_status = $this->db->select("txn_status")->where("txn_id",$pid)->get('sales_txn')->result();
+
+            if($pid)
+            {
+                if($txn_status[0]->txn_status=='Approved')
+                {
+
+                    $result_txn = $this->db->select("property_id,txn_id,possession_date,termination_date")->where("property_id",$property_id)->where("txn_status","Approved")->get('rent_txn')->result();
+
+                    if(count($result_txn)>0)
+                    {  
+                        $d1 = $result_txn[0]->possession_date;//"2013-12-09";
+                        $d2 = $result_txn[0]->termination_date;//"2014-03-17";
+                        echo $locking_period =  (int)abs((strtotime($d1) - strtotime($d2))/(60*60*24*30)); // 3
+
+
+                        $rnt_terminatedate = date("Y-m-d" , strtotime($sldt . "-1 days"));
+                        $update_array = array("termination_date"=>$rnt_terminatedate,"locking_period"=>$locking_period);
+                        $Where = array("txn_id"=>$result_txn[0]->txn_id);
+                        $this->db->where($Where);
+                        $this->db->update("rent_txn",$update_array);
+
+                    }
+
+                }
+            }
 
             // $this->transaction_model->insertRPDetails($pid, 'sale');
             // $this->transaction_model->insertPendingActivity($pid, 'sale');

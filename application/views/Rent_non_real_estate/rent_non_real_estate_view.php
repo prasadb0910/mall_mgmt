@@ -381,8 +381,7 @@
 															<div class="title-block">
 																<h4>Lockin Period</h4>
 																<span class="period">
-																	<?php echo $rent[0]->locking_period; ?>
-																	<?php if($rent[0]->locking_period >1) echo " months"; else echo " month" ?>
+																	<?php echo $rent[0]->locking_period; ?><?php if($rent[0]->locking_period >1) echo " months"; else echo " month" ?>
 																</span>
 															</div>
 															

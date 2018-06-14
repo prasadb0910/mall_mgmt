@@ -33,8 +33,10 @@ class Rent_real_estate extends CI_Controller
             $result=$query->result();
             $data['tax']=$result;
             //$data['property']= $this->rent_model->getPropertyDetails('',1);
-            $result = $this->db->query("call sp_getpropertynorent(1,'')")->result();
-            mysqli_next_result( $this->db->conn_id );
+
+            $sql =  'Select * from property_txn Where property_typ_id="1" and txn_status="Approved" and  (property_txn_id NOT IN(Select property_id from sales_txn) OR property_txn_id NOT IN((Select property_id from rent_txn)) )';
+            $result = $this->db->query($sql)->result();
+           // mysqli_next_result( $this->db->conn_id );
             $data['property']=$result; 
             $gid=$this->session->userdata('groupid');
             $result = $this->db->query("call sp_getcontact('Approved','$gid','Tenants')")->result();

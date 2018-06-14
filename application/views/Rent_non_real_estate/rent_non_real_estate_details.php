@@ -419,17 +419,26 @@
                                         <div class="form-group form-group-default form-group-default-select2 input-group gst">
                                             <div class="form-input-group">
                                                 <label class="inline" style="float:left!important;">GST Rate</label>
-                                                            <select class="full-width select2" id="gst_rate" data-placeholder="Select" data-init-plugin="select2" <?php if(isset($other_amt_details)) { if($other_amt_details[$j]->gst==1) echo ''; else echo 'disabled'; } else echo 'disabled'; ?> onChange="set_gst_rate_val(this);"  data-error="#err_gst_rate">
-                                                            <option value="">Select</option>
-                                                            <?php 
-                                                                if(isset($tax)){
-                                                                    foreach($tax as $row){
-                                                                        echo '<option value="'.$row->tax_id.'" >'.$row->tax_name.'-'.$row->tax_percent.'</option>';
+                                                          
+															
+												<select class="full-width select2" name="gst_rate" id="gst_rate" <?php if(isset($rent)) { if($rent[0]->gst==1) echo ''; else echo 'disabled'; } else echo 'disabled'; ?> onchange="instchange(); opentable(); set_tax();" data-placeholder="Select" data-init-plugin="select2" data-minimum-results-for-search="Infinity"  data-error="#err_gst_rate" >
+                                                    <option value="">Select</option>
+                                                    <?php 
+                                                        $selected='';
+                                                        if(isset($tax)){
+                                                            foreach($tax as $row){
+                                                                if(isset($rent)) { 
+                                                                    if(count($rent)>=0) { 
+                                                                        if($rent[0]->gst_rate==$row->tax_id) $selected = "selected='selected'"; 
                                                                     }
-                                                                };?>
-                                                            </select>
-                                                             <div id="err_gst_rate"></div> 
-												 <div id="err_gst_rate"></div>
+                                                                }
+                                                                echo '<option value="'.$row->tax_id.'" '.$selected.'>'.$row->tax_name.'-'.$row->tax_percent.'</option>';
+                                                            }
+                                                        }
+                                                    ?>
+												</select>	
+                                                <div id="err_gst_rate"></div> 
+												
                                             </div>
                                             <div class="input-group-addon bg-transparent h-c-50">
                                                 <input type="checkbox" class ="toggle" name="gst" id="gst" value="yes" onchange="set_gst();"<?php if(isset($rent)) { if($rent[0]->gst==1) echo 'checked'; } ?> />

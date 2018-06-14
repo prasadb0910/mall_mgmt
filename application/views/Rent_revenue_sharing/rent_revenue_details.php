@@ -305,6 +305,7 @@
        property_selected();
       });
      var property_selected = function() {
+        $('#month').empty();
          $.ajax({
             url:BASE_URL+"index.php/Rent_revenue_sharing/get_month",
             data:{'property_id':$('#property').val(),'edit':$('#edit').val()},

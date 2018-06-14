@@ -146,17 +146,18 @@ function ownerDetails($gid){
         $roleid=$this->session->userdata('role_id');
         $session_id=$this->session->userdata('session_id');
 
-        if ($txn_id!='0') {
+        $cond ="";
+        /*if ($txn_id!='0') {
             $cond = "and property_txn_id<>'$txn_id' and (txn_fkid<>'$txn_id' || txn_fkid is null)";
          
         } else {
             $cond = "";
-        }
+        }*/
 
         $query=$this->db->query("select distinct owner_id from user_role_owners where user_id = '$session_id'");
         $result=$query->result();
         /*if (count($result)>0) {*/
-            $sql = "Select property_txn_id,unit_name  from property_txn Where property_txn_id NOT IN((Select property_id from sales_txn)) and txn_status='Approved' and property_typ_id=1".$cond;
+            $sql = "Select property_txn_id,unit_name  from property_txn Where property_txn_id NOT IN((Select property_id from sales_txn where txn_status='Approved')) and txn_status='Approved' and property_typ_id=1".$cond;
 
 
             $query=$this->db->query($sql);

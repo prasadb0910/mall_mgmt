@@ -62,7 +62,7 @@ class Rent_model Extends CI_Model{
                 pt.unit_type,pt.p_image,pt.property_typ_id
                 from rent_txn rt
                 left join property_txn pt on rt.property_id=pt.property_txn_id
-                Where rt.property_id NOT IN(Select property_id from sales_txn) and rt.txn_status <> 'Inactive'  ) A
+                Where rt.txn_status <> 'Inactive' and (rt.third_party IS NULL OR rt.third_party!=1 ) ) A
                 left join
                 (select rent_id,contact_id FROM rent_tenant_details A where A.contact_id in (select min(contact_id) from rent_tenant_details Where rent_id=A.rent_id) ) B on A.txn_id=B.rent_id Where A.gp_id = '$gid'".$cond;
         $query=$this->db->query($sql); 
@@ -76,7 +76,7 @@ class Rent_model Extends CI_Model{
                 pt.unit_type
                 from rent_txn rt
                 left join property_txn pt on rt.property_id=pt.property_txn_id
-                 Where rt.property_id NOT IN(Select property_id from sales_txn) and  rt. txn_status <> 'Inactive' and rt.gp_id = '$gid' and pt.property_typ_id=".$property_type_id;
+                 Where  rt. txn_status <> 'Inactive' and (rt.third_party IS NULL OR rt.third_party!=1 ) and rt.gp_id = '$gid' and pt.property_typ_id=".$property_type_id;
         $query=$this->db->query($sql); 
         return $query->result();       
     }
@@ -1604,7 +1604,7 @@ class Rent_model Extends CI_Model{
                 pt.unit_type,pt.p_image,pt.property_typ_id,rt.* from rent_txn rt
                 left join sales_txn st  on rt.property_id =st.property_id
                 left join property_txn pt  on rt.property_id =pt.property_txn_id
-                Where  st.property_id In(Select property_id from sales_txn) and rt.txn_status <> 'Inactive'".$cond;
+                Where  st.property_id In(Select property_id from sales_txn) and rt.txn_status <> 'Inactive' and (rt.third_party IS NOT NULL OR rt.third_party=1 )".$cond;
        $query = $this->db->query($sql);
        $result = $query->result();
        return $result;
@@ -1615,7 +1615,7 @@ class Rent_model Extends CI_Model{
         $sql = "Select pt.*,rt.* from rent_txn rt
                 left join sales_txn st  on rt.property_id =st.property_id
                 left join property_txn pt  on rt.property_id =pt.property_txn_id
-                Where  rt.txn_status<> 'Inactive' and st.property_id In(Select property_id from sales_txn)";
+                Where  rt.txn_status<> 'Inactive' and st.property_id In(Select property_id from sales_txn)  and (rt.third_party IS NOT NULL OR rt.third_party=1 )";
        $query = $this->db->query($sql);
        $result = $query->result();
        return $result;

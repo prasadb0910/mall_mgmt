@@ -145,8 +145,11 @@ class Rent_3rd_party extends CI_Controller
                 'revenue_percentage' => ($this->input->post('revenue_percentage')!=""?$this->input->post('revenue_percentage'):''),
                 'revenue_due_day' => ($this->input->post('revenue_due_day')!=""?$this->input->post('revenue_due_day'):NULL),
                 'advance_rent' => ($this->input->post('advance_rent')=='yes'?'1':'0'),
-                'advance_rent_amount' => ($this->input->post('advance_rent_amount')!=""?format_number($this->input->post('advance_rent_amount'),2):'')
+                'advance_rent_amount' => ($this->input->post('advance_rent_amount')!=""?format_number($this->input->post('advance_rent_amount'),2):''),
+                'third_party'=>1
                  );
+
+
             $this->db->insert('rent_txn', $data);
             $rid=$this->db->insert_id();    
             //$this->db->last_query();        
@@ -519,14 +522,14 @@ class Rent_3rd_party extends CI_Controller
                                                  modified_date, modified_by, approved_by, approved_date, remarks, txn_fkid, 
                                                  rejected_by, rejected_date, attorney_id, maker_remark, maintenance_by, property_tax_by, 
                                                  notice_period, category, schedule, invoice_date, gst, gst_rate, tds, tds_rate, 
-                                                 pdc, deposit_category, invoice_issuer,rent_type,revenue_percentage,revenue_due_day,advance_rent,advance_rent_amount,rent_module_type,locking_period) 
+                                                 pdc, deposit_category, invoice_issuer,rent_type,revenue_percentage,revenue_due_day,advance_rent,advance_rent_amount,rent_module_type,locking_period,third_party) 
                                                  Select '$gp_id', property_id, sub_property_id, tenant_id, rent_amount, 
                                                  free_rent_period, deposit_amount, deposit_paid_date, possession_date, lease_period, 
                                                  rent_due_day, termination_date, '$txn_status', '$create_date', '$created_by', 
                                                  '$modnow', '$curusr', approved_by, approved_date, '$txnremarks', '$rid', 
                                                  rejected_by, rejected_date, attorney_id, maker_remark, maintenance_by, property_tax_by, 
                                                  notice_period, category, schedule, invoice_date, gst, gst_rate, tds, tds_rate, 
-                                                 pdc, deposit_category, invoice_issuer,rent_type,revenue_percentage,revenue_due_day,advance_rent,advance_rent_amount,rent_module_type,locking_period 
+                                                 pdc, deposit_category, invoice_issuer,rent_type,revenue_percentage,revenue_due_day,advance_rent,advance_rent_amount,rent_module_type,locking_period,third_party
                                                  FROM rent_txn WHERE txn_id = '$rid'");
                                 $new_rid=$this->db->insert_id();
 
@@ -688,7 +691,8 @@ class Rent_3rd_party extends CI_Controller
                     'revenue_percentage' => ($this->input->post('revenue_percentage')!=""?$this->input->post('revenue_percentage'):''),
                     'revenue_due_day' => ($this->input->post('revenue_due_day')!=""?$this->input->post('revenue_due_day'):NULL),
                     'advance_rent' => ($this->input->post('advance_rent')=='yes'?'1':'0'),
-                    'advance_rent_amount' => ($this->input->post('advance_rent_amount')!=""?format_number($this->input->post('advance_rent_amount'),2):'')
+                    'advance_rent_amount' => ($this->input->post('advance_rent_amount')!=""?format_number($this->input->post('advance_rent_amount'),2):''),
+                     'third_party'=>1
                      );
                     
                     if ($rec_status=="Approved" && $maker_checker=='yes') {
@@ -829,7 +833,8 @@ class Rent_3rd_party extends CI_Controller
                                          A.notice_period=B.notice_period, A.category=B.category, A.schedule=B.schedule, A.invoice_date=B.invoice_date, 
                                          A.gst=B.gst, A.gst_rate=B.gst_rate, A.tds=B.tds, A.tds_rate=B.tds_rate, A.pdc=B.pdc, 
                                          A.deposit_category=B.deposit_category, A.invoice_issuer=B.invoice_issuer 
-                                         ,A.rent_type=B.rent_type,A.revenue_percentage=B.revenue_percentage,A.revenue_due_day=B.revenue_due_day,A.advance_rent=B.advance_rent,A.advance_rent_amount=B.advance_rent_amount,A.rent_module_type=B.rent_module_type,A.locking_period=B.locking_period
+                                         ,A.rent_type=B.rent_type,A.revenue_percentage=B.revenue_percentage,A.revenue_due_day=B.revenue_due_day,A.advance_rent=B.advance_rent,A.advance_rent_amount=B.advance_rent_amount,A.rent_module_type=B.rent_module_type,A.locking_period=B.locking_period,
+                                         A.third_party=B.third_party
                                          WHERE B.txn_id = '$rid' and A.txn_id=B.txn_fkid");
 
                         $this->db->where('doc_ref_id', $txn_fkid);
