@@ -88,7 +88,7 @@
         // if(!isset($_SESSION["name"])){
         //     session_start();
         // }
-
+		$_SESSION["otp"];
         if($_SESSION["otp"]==$_POST["otp"]) {
             $owner_name=$_SESSION["owner_name"];
 			$mall_name=$_SESSION["mall_name"];
@@ -107,7 +107,7 @@
             mysqli_query($conn, $sql);
             $group_id = mysqli_insert_id($conn);
 
-            $sql = "insert into contact_master (c_name,mall_name,no_of_units,c_gid, c_emailid1, c_mobile1, c_status, c_createdate, c_createdby, c_modifieddate, c_modifiedby) 
+            echo 'Sql'.$sql = "insert into contact_master (c_name,mall_name,no_of_units,c_gid, c_emailid1, c_mobile1, c_status, c_createdate, c_createdby, c_modifieddate, c_modifiedby) 
                     values ('".$owner_name."','".$mall_name."','".$no_of_units."','".$group_id."', '".$email."', '".$mobile."', 'Approved', '".$now."', '0', '".$now."', '0')";
             mysqli_query($conn, $sql);
             $contact_id = mysqli_insert_id($conn);
@@ -115,7 +115,7 @@
             $sql = "update group_master set created_by = '".$contact_id."' where g_id = '".$group_id."'";
             mysqli_query($conn, $sql);
 
-            $sql = "insert into group_users (gu_gid,name,gu_email,gu_mobile,gu_password,gu_role,add_date,gu_cid,assigned_status,assigned_role,created_at,created_by,updated_at,updated_by,user_type,isVerified,assure) 
+            echo 'Sql'.$sql = "insert into group_users (gu_gid,name,gu_email,gu_mobile,gu_password,gu_role,add_date,gu_cid,assigned_status,assigned_role,created_at,created_by,updated_at,updated_by,user_type,isVerified,assure) 
                     values ('".$group_id."','".$owner_name."','".$email."','".$mobile."','".$password."','Admin','".$now."','".$contact_id."','Approved','1','".$now."','0','".$now."','0','owner','0','1') ";
             if (mysqli_query($conn, $sql)) {
                 $user_id = mysqli_insert_id($conn);
@@ -231,7 +231,7 @@
                 $sql = "Insert into user_login_emails (user_id, email, token, isVerified) values ('$user_id','$email', '$token', '0')";
                 mysqli_query($conn, $sql);
 
-                $url =  $base_url.'/app/index.php/login/get_dashboard/'.$token;
+                $url =  $base_url.'/index.php/login/get_dashboard/'.$token;
 
                 // echo $url;
                 // echo '<br/>';
@@ -275,7 +275,8 @@
         $module=$_SESSION["module"];
 
         $otp = rand(100000,999999);
-
+		
+		
         $date = date("d M H:i");
         $sms = $date . "Dear%20".$owner_name."%2C%20your%20login%20OTP%20is%20".$otp."%2E%20Please%20treat%20this%20as%20confidential%2E%20Sharing%20it%20with%20anyone%20gives%20them%20full%20access%20to%20your%20Pecan%20Reams%20account%2E%20Pecan%20Reams%20never%20calls%20to%20verify%20your%20OTP%2E";
         $sms = str_replace(' ', '%20', $sms);
@@ -285,7 +286,7 @@
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $surl);
         curl_exec($ch);
-        curl_close($ch);
+        curl_close($ch); 
 
         $_SESSION["otp"] = $otp;
         $_SESSION["resent"] = 'true';

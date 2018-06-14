@@ -19,7 +19,12 @@ class Rent_revenue_sharing extends CI_Controller
     }
 
   	public function add() {
-         $data['property']= $this->rent_model->getPropertyDetails('',''); 
+        //$data['property']= $this->rent_model->getPropertyDetails('',''); 
+		 $query=$this->db->query(" Select p.property_txn_id,p.unit_name from property_txn p left join rent_txn rt on p.property_txn_id=rt.property_id 
+		Where rt.revenue_percentage!='' and p.property_typ_id=1");
+		    $result=$query->result();
+            $data['property']=$result;
+		 
          load_view('Rent_revenue_sharing/rent_revenue_details',$data);
     }
 
@@ -398,4 +403,7 @@ class Rent_revenue_sharing extends CI_Controller
    }
 
 }
+
+
+
 ?>

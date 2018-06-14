@@ -294,21 +294,33 @@
 							</div>
 							
 								<div class="card card-transparent container-fixed-lg bg-white contact_card m-t-30" id="pricing_box"style="background:rgba(0,0,0,0.2); <?php if (isset($editcontact)) { if($editcontact[0]->c_type=='Others')  echo 'display: none;'; } ?>">
-								<div class="row">
-								  <div class="col-md-6 rent">
-                                    <a href="<?php echo base_url(); ?>index.php/Accounting">
-                                      <i style="font-size:22px;" class="fa fa-inr "></i><br>
-                                         Accounting
-										</a>
-                                    </div>
-                                     <div class=" col-md-6 rent" style="border-right:none;">
-										<a href="<?php echo base_url(); ?>index.php/rent">
-                                         <i style="font-size:22px;" class="fa fa-file-text-o "></i><br>
-                                         Rent
-										 </a>
+									<div class="row">
+                                                            <?php $class = ($editcontact[0]->c_type=='Owners' || $editcontact[0]->c_type=='Others' ?"col-md-12":'col-md-4'); 
+																   $stylerent = ($editcontact[0]->c_type=='Owners' || $editcontact[0]->c_type=='Others' ?"border-right:none":''); 
+                                                            ?>
+                                                            <?php $style = ($editcontact[0]->c_type=='Owners' || $editcontact[0]->c_type=='Others'?"display:none":''); ?>
+
+                                                              <div class="col-md-4 rent" style="<?=$style?>">
+                                                                <a href="<?php echo base_url() . 'index.php/Rent_real_estate/checkstatus/All/1/0/0/' . $editcontact[0]->c_id; ?>">
+                                                                <i style="font-size:22px;" class="fa fa-file-text-o  "></i><br>
+                                                          RE Rent 
+																	</a>
+                                                            </div>
+                                                            <div class="col-md-4 rent" style="<?=$style?>">
+                                                                <a href="<?php echo base_url() . 'index.php/Rent_non_real_estate/checkstatus/All/2/0/0/' . $editcontact[0]->c_id; ?>">
+                                                                <i style="font-size:22px;" class="fa fa-file-text-o "></i><br>
+                                                           NRE Rent 
+																	</a>
+                                                            </div>
+															
+															   <div class="<?=$class?>  rent" style="<?=$stylerent?>">
+                                                                <a href="<?php echo base_url() . 'index.php/Accounting/checkstatus/All/0/' . $editcontact[0]->c_id; ?>">
+                                                                <i style="font-size:22px;" class="fa fa-inr "></i><br>
+                                                                Accounting
+																	</a>
+                                                            </div>
                                                            
-								  </div>
-								</div> 
+                                                        </div>
 							</div>
 					
 							
