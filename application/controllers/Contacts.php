@@ -469,9 +469,9 @@ class Contacts extends CI_Controller
             $result=$query->result();
             $data['editcontauth']=$result;
 
-            $query=$this->db->query("select A.property_id, B.p_property_name from 
-                                    (select distinct txn_id as property_id from purchase_txn where txn_status='Approved' and 
-                                        gp_id='$gid' and txn_id in (select distinct ref_id from related_party_details 
+            $query=$this->db->query("select A.property_id, B.unit_name as p_property_name from 
+                                    (select distinct property_txn_id as property_id from property_txn where txn_status='Approved' and 
+                                        gp_id='$gid' and property_txn_id in (select distinct ref_id from related_party_details 
                                             where contact_id='$cid' and type='purchase') 
                                     union all 
                                     select distinct property_id from sales_txn where txn_status='Approved' and gp_id='$gid' and 
@@ -482,8 +482,8 @@ class Contacts extends CI_Controller
                                     txn_id in (select distinct ref_id from related_party_details 
                                         where contact_id='$cid' and type='rent')) A 
                                     left join 
-                                    (select * from purchase_txn where txn_status='Approved' and gp_id='$gid') B 
-                                    on A.property_id = B.txn_id");
+                                    (select * from property_txn where txn_status='Approved' and gp_id='$gid') B 
+                                    on A.property_id = B.property_txn_id");
             $result=$query->result();
             $data['related_properties']=$result;
 

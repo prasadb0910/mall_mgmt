@@ -2,7 +2,7 @@
 $host = 'localhost';
 $user = 'root';
 //$pass = '';
-$pass = '';
+$pass = 'Pecan@12345';
 $database = 'mall_mgmt';
 // $database = 'prop_details';
 
@@ -28,6 +28,6 @@ if (!$conn) {
 //     exit;
 // }
 
-$base_url = 'localhost/Git/mall_mgmt/';
+$base_url = 'http://ec2-52-221-118-107.ap-southeast-1.compute.amazonaws.com/mall_mgmt/';
 
 ?>
