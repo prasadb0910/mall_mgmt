@@ -105,7 +105,7 @@
                                                                        <p class=" flat_info m-t-0 m-b-0"><b><?php echo $name->contact_name; ?></b></p> 
                                                                       <?php  }?>
                                                                       <p class=" flat_info m-t-0 m-b-0"><?php echo $rent[$i]->unit_name . ', ' . $rent[$i]->floor.' ' . 'Floor - ' . $rent[$i]->area.'  '.$rent[$i]->area_unit; ?></p>
-                                                                   
+                                                                    <p class="avaibility m-t-0 m-b-0">Expires On <?php echo date("d F Y " , strtotime($rent[$i]->termination_date)); ?></p>
                                                                 </div>
                                                             </div>
                                                         </div>

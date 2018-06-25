@@ -45,8 +45,8 @@
                         </div>
 
                         <div class="form-group">
-                            <a href="<?php echo base_url().'index.php/login'; ?>" class="btn-link btn-block pull-left">Log in</a>
-                            <a href="<?php echo base_url().'../register.php'; ?>" class="btn-link btn-block pull-left">Register a new membership</a>
+                            <a href="<?php echo base_url().'index.php'; ?>" class="btn-link btn-block pull-left">Log in</a>
+                            <a href="<?php echo base_url().'register2.php'; ?>" class="btn-link btn-block pull-left">Register a new membership</a>
                         </div>
                     </form>
                 </div>

@@ -36,9 +36,8 @@
 				
 		
 				<a href="<?php echo base_url().'index.php/City_master'; ?>" class="dropdown-item"><i class="fa fa-cog"></i> Settings</a>
-				<!--<a class="dropdown-item  mb-control" style="<?php// if ($userdata['groupid']=='0') echo 'display: none;';?>" 
-				data-box="#message-box-success" href="#"> <i class="fa fa-lock"></i> Change Password</a>-->
-		<a class="dropdown-item"  data-confirmmodal-bind="#confirm_content" data-topoffset="" href="#"> <i class="fa fa-lock"></i>
+			<!--<a class="dropdown-item  mb-control" data-box="#message-box-success" href="#"> <i class="fa fa-lock"></i> Change Password</a>-->
+			<a class="dropdown-item"  data-confirmmodal-bind="#confirm_content" data-topoffset="" href="#"> <i class="fa fa-lock"></i>
               Change Password</a>
 				<a href="#" class="clearfix bg-master-lighter dropdown-item"  id="confirmModal_ex2"  data-confirmmodal-bind="#confirm_content1">
 					<span class="pull-left">Logout</span>

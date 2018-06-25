@@ -260,7 +260,7 @@
 
         if(!isset($_SESSION["owner_name"])){
             // session_start();
-            header("Location: ".$base_url."/register.php");
+            header("Location: ".$base_url."/register2.php");
         }
 
         $owner_name=$_SESSION["owner_name"];
@@ -411,21 +411,21 @@
                     </form>
 					
 					    <form id="form_otp" class="form-horizontal" style="margin-bottom: 0px; padding-bottom: 0px; <?php if(!isset($_SESSION["otp"])) echo 'display: none;'; ?>" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
-        <div style="font-size:24px; text-align:center" ><b>Enter OTP </b><?php //echo $_SESSION["otp"]; ?><?php //echo $_SESSION["name"]; ?></div>
-        <?php if (isset($_POST["verify"]) ){echo $msg;}?>
-        <?php if (isset($_POST["resend"]) ){echo $msg;}?>
-        <div class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-phone"></i></span>
-                <input type="text" class="form-control" name="otp" placeholder="OTP" pattern="[0-9]{6}" required autofocus />
-            </div>
-        </div>
-        <div class="form-group" style="margin-top: 20px;">
-            <input style="padding: 10px 20px;" type="submit" id="verify" name="verify" class="btn btn-primary pull-left" value="Verify" />
-            <a href="<?php echo $_SERVER['PHP_SELF'];?>" class="btn btn-primary pull-right" style="padding: 10px 20px;">Cancel</a>
-        </div>
-        <br>
-    </form>
+							<div style="font-size:24px; text-align:center" ><b>Enter OTP </b><?php //echo $_SESSION["otp"]; ?><?php //echo $_SESSION["name"]; ?></div>
+							<?php if (isset($_POST["verify"]) ){echo $msg;}?>
+							<?php if (isset($_POST["resend"]) ){echo $msg;}?>
+							<div class="form-group">
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-phone"></i></span>
+									<input type="text" class="form-control" name="otp" placeholder="OTP" pattern="[0-9]{6}" required autofocus />
+								</div>
+							</div>
+							<div class="form-group" style="margin-top: 20px;">
+								<input style="padding: 10px 20px;" type="submit" id="verify" name="verify" class="btn btn-info btn-block pull-left" value="Verify" />
+								<a href="<?php echo $_SERVER['PHP_SELF'];?>" class="btn btn-info btn-block pull-right" style="padding: 10px 20px;">Cancel</a>
+							</div>
+							<br>
+						</form>
 
     <form id="form_resend_otp" class="form-horizontal" style="margin-top: 0px; <?php if(!isset($_SESSION["otp"])) echo 'display: none;'; ?>" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
         <div class="form-group" style="margin-bottom:0px; <?php if(isset($_SESSION["resent"])) echo 'display: none;'; ?>">

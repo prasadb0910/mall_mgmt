@@ -169,7 +169,7 @@ class Rent_revenue_sharing extends CI_Controller
                       mysqli_next_result( $this->db->conn_id );
                       $data['rent'][$key]->owner_name=$result; 
 
-                      $result = $this->db->query("call sp_GetTenant($rid,$gid)")->result();
+                      $result = $this->db->query("call sp_GetTenant('$rid','$gid')")->result();
                       mysqli_next_result( $this->db->conn_id );
                       $data['rent'][$key]->tenant_name=$result; 
                   }
@@ -234,8 +234,12 @@ class Rent_revenue_sharing extends CI_Controller
                       $gid=$result[0]->gp_id;
                       $property_typ_id=$result[0]->property_typ_id;
 
-                      $result = $this->db->query("Select * from property_txn Where property_txn_id  IN((Select property_id from rent_txn))")->result();
-                      $data['property']=$result; 
+                      // $result = $this->db->query("Select * from property_txn Where property_txn_id  IN((Select property_id from rent_txn))")->result();
+                      // $data['property']=$result; 
+					   $query=$this->db->query(" Select p.property_txn_id,p.unit_name from property_txn p left join rent_txn rt on p.property_txn_id=rt.property_id 
+										Where rt.revenue_percentage!='' and p.property_typ_id=1");
+						$result=$query->result();
+						$data['property']=$result;
 
                   } else {
                       $txn_status=3;
