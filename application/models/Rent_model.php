@@ -1652,7 +1652,6 @@ class Rent_model Extends CI_Model{
         }
 
        
-
         if($property_id!="" && $property_id!=0){
 
             if($cond=="")
