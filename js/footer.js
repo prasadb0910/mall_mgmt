@@ -306,15 +306,9 @@ $.validator.addMethod("checkValidPassword", function (value, element) {
     }
 }, 'Old Password does not match.');
 
-$('#form_change_password').submit(function() {
-    if (!$("#form_change_password").valid()) {
-        return false;
-    } else {
-        return true;
-    }
-});
 
-$('#btn_change_password').on('click', function (e) {
+
+$('#submit_form_change_password').on('click', function (e) {
 
     if (!$("#form_change_password").valid()) {
         return false;
@@ -348,86 +342,3 @@ $('#btn_change_password').on('click', function (e) {
     }
 });
 
-
-
-
-  $("#con_add_city,#pur_add_city").on("change",function()
-    {
-        
-        var cityid = $('option:selected', this).attr('data-id');
-        $.ajax({
-            url: BASE_URL + "index.php/Contacts/get_state_country",
-            data: 'cityid='+ cityid,
-            cache: false,
-            type: "POST",
-            dataType: 'html',
-            global: false,
-            async: false,
-            success: function (data) {
-                var detail = $.parseJSON(data);
-                //console.log(detail[0]['state_name']+detail[0]['country_name']);
-                $("#con_add_state,#pur_add_state").val(detail[0]['state_name']);
-                $("#con_add_country,#pur_add_country").val(detail[0]['country_name']);
-            },
-            error: function (xhr, status, error) {
-                    //alert(xhr.responseText);
-            }
-        });
-    });
-// $(document).ready(function() {
-// 	if($.cookie("menu")==="open") {
-// 		$('.vertical_nav').removeClass('vertical_nav__minify');
-// 		$('.wrapper').removeClass('wrapper__minify');
-// 		//alert('if');
-// 	} else {
-// 		$('.vertical_nav').removeClass('vertical_nav__minify');
-// 		$('.wrapper').removeClass('wrapper__minify');
-// 		// alert('else');
-// 	}
-// });
-
-
-
-// function submit_form_change_password(){
-// 	if (!$("#form_change_password").valid()) {
-//         return false;
-//     } else {
-
-//     	var result = 1;
-
-// 	    $.ajax({
-// 	        url: BASE_URL+'index.php/Login/change_password',
-// 	        data: 'password='+$("#new_password").val(),
-// 	        type: "POST",
-// 	        dataType: 'html',
-// 	        global: false,
-// 	        async: false,
-// 	        success: function (data) {
-// 	            result = parseInt(data);
-// 	        },
-// 	        error: function (xhr, ajaxOptions, thrownError) {
-// 	            alert(xhr.status);
-// 	            alert(thrownError);
-// 	        }
-// 	    });
-
-// 	    if(result==1) {
-// 	    	alert("Password changed successfully.")
-// 	    	$(this).parents(".message-box").removeClass("open");
-// 				return true;
-// 	    } else {
-// 	    	return false;
-// 	    }
-//     }
-// }
-
-// $('#submit_form_change_password').on("click", function() {
-// 	console.log('sfsdf');
-
-// 	// if (!$("#form_reset_password").valid()) {
-//  //        return false;
-//  //    } else {
-//  //        // return true;
-//  //        $('#confirm_content').toggle();
-//  //    }
-// });

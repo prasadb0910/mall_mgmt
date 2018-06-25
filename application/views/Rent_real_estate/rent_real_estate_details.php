@@ -473,7 +473,7 @@
 								  <div class="col-md-3">
                                     <div class="form-group form-group-default " id="noticep_error">
                                         <label>Lockin Period In Months</label>
-                                        <input type="text" class="form-control format_number" name="locking_period" id="locking_period" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo $rent[0]->locking_period; }} ?>" />
+                                        <input type="text" class="form-control format_number" name="locking_period" id="locking_period" placeholder="Enter Here" value="<?php if(isset($rent)) { if(count($rent)>0) { echo $rent[0]->locking_period; }} ?> " readonly />
                                       
                                     </div>
                                 </div>
