@@ -9,7 +9,15 @@ var get_details = function(elem) {
 	$('#bal_amount').html($('#bal_amount_'+index).val());
 	$('#net_amount').html($('#net_amount_'+index).val());
 	$('#due_date').html($('#due_date_'+index).val());
-	$('#type').attr('href', $('#link_'+index).val());
+	if($('#link_'+index).val()!=""){
+
+		$('#type').attr('href', $('#link_'+index).val());
+		$('#type').show();
+	}
+	else
+	{
+		$('#type').hide();
+	}
 	$('#property_name').html($('#property_name_'+index).val());
 	if($('#sub_property_name_'+index).val()!="")
 	{	

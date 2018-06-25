@@ -401,11 +401,11 @@ class Rent_non_real_estate extends CI_Controller
         }
     }
 
-    public function checkstatus($status='', $property_type_id='', $property_id=''){
+    public function checkstatus($status='', $property_type_id='', $property_id='',$rent_id='',$contact_id=''){
         $result=$this->rent_model->getAccess();
         if(count($result)>0) {
             $data['access']=$result;
-            $data['rent']=$this->rent_model->rentData($status, 2,'');
+            $data['rent']=$this->rent_model->rentData($status,$property_type_id, $property_id,$rent_id,$contact_id);
             $count_data=$this->rent_model->getallrentdatacount(2);
             $approved=0;
             $pending=0;

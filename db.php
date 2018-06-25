@@ -2,7 +2,7 @@
 $host = 'localhost';
 $user = 'root';
 //$pass = '';
-$pass = 'Pecan@12345';
+$pass = '';//Pecan@12345
 $database = 'mall_mgmt';
 // $database = 'prop_details';
 

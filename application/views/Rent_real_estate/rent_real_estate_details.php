@@ -1088,7 +1088,7 @@
                                                         <!-- <input type="checkbox" id="landlord<?php //echo $k+1; ?>" name="landlord" value="1" <?php //if(isset($utility[0]->landlord)) { if($utility[0]->landlord=='1') echo 'checked'; } ?> >
                                                         <label for="landlord"></label>-->
 														<div class="radio radio-success">
-														<input type="radio" value="landlord" name="utility_owner" id="landlord" <?php if(isset($utility[0]->utility_owner)) { if($utility[0]->utility_owner=='landlord') echo 'checked'; } ?>>
+														<input type="radio" value="Owner" name="utility_owner" id="landlord" <?php if(isset($utility[0]->utility_owner)) { if($utility[0]->utility_owner=='landlord') echo 'checked'; } ?>>
 														<label for="landlord"></label>
 														</div>
                                                 </td>
@@ -1097,7 +1097,7 @@
                                                         <!--<input type="checkbox" id="tenant<?php //echo $k+1; ?>" name="u_tenant" value="1" <?php// if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1') echo 'checked'; } ?> >
                                                         <label for="tenant"></label>-->
 													<div class="radio radio-success">
-														<input type="radio" value="u_tenant" name="utility_owner" id="u_tenant" <?php if(isset($utility[0]->utility_owner)) { if($utility[0]->utility_owner=='u_tenant') echo 'checked'; } ?>>
+														<input type="radio" value="Tenant" name="utility_owner" id="u_tenant" <?php if(isset($utility[0]->utility_owner)) { if($utility[0]->utility_owner=='u_tenant') echo 'checked'; } ?>>
 														<label for="u_tenant"></label>
                                                     </div>
                                                 </td>

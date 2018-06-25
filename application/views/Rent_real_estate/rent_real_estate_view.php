@@ -513,7 +513,7 @@
 											</div>
 										</section>
 									</article>
-									<article class="lease-utilities" <?php if (count($utility)==0) echo 'style="display: none;"'; else { if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1') echo 'Yre'; else echo 'style="display: none;"'; } else echo 'style="display: none;"'; } ?>>
+									<article class="lease-utilities" <?php if (count($utility)==0) echo 'style="display: none;"'; else { } ?>>
 										<h5 class="view-title">
 											<span>Utilities</span>
 											<span  class="icon-fo-ok"></span>
@@ -523,9 +523,7 @@
 												<div class="utilities-block">
 													<div class="utilities-tag">
 													<label>Property Tax</label> <br>
-													<?php if(isset($utility[0]->tenant)) { if($utility[0]->tenant=='1'){?> <span class="tag"> <?php echo 'Tenant </span>'; }else echo ''; } ?>
-
-													<?php if(isset($utility[0]->landlord)) { if($utility[0]->landlord=='1'){?> <span class="tag"> <?php echo 'Owners </span>'; }else echo ''; } ?>
+													<?php if(isset($utility[0]->utility_owner)) { ?> <span class="tag"> <?php echo $utility[0]->utility_owner;} ?>
 													</div>
 												</div>
 											</div>

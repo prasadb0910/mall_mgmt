@@ -11,6 +11,7 @@ class Rent_model Extends CI_Model{
 
     public function rentData($status='',$property_type_id='',$property_id='',$rent_id="",$contact_id='')
     {   
+       echo 'contact_id'.$contact_id;
         $status;
         $cond="";
         $gid=$this->session->userdata('groupid');
@@ -58,7 +59,7 @@ class Rent_model Extends CI_Model{
             left join contact_master C on pd.pr_client_id= C.c_id
         */
 
-        $sql = "Select * from (Select rt.*,pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_no,
+       echo $sql = "Select * from (Select rt.*,pt.unit_name,pt.area,pt.area_unit,pt.floor,pt.unit_no,
                 pt.unit_type,pt.p_image,pt.property_typ_id
                 from rent_txn rt
                 left join property_txn pt on rt.property_id=pt.property_txn_id
@@ -1342,12 +1343,14 @@ class Rent_model Extends CI_Model{
         $utility=$this->input->post('utility');
         $landlord=$this->input->post('landlord');
         $tenant=$this->input->post('u_tenant');
+        $utility_owner=$this->input->post('utility_owner');
         $na=$this->input->post('na');
 
          $data = array(     'utility_id'=>$utility,
                             'rent_id' => $txn_id,
                             'landlord' => $landlord,
                             'tenant' => $landlord,
+                            'utility_owner'=> $utility_owner,
                             'na' => $na
                         );
 
@@ -1666,8 +1669,8 @@ class Rent_model Extends CI_Model{
 
         $sql = "Select * from (Select  * from 
                 (Select property_id as property_id,rent_id as txn_id from revenue_schedule GROUP BY property_id,rent_id) A
-                left join  
-                (Select * from property_txn ) B 
+                join  
+                (Select * from property_txn Where txn_status='Approved') B 
                 on A.property_id=B.property_txn_id) C".$cond;
 
 

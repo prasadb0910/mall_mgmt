@@ -562,6 +562,8 @@
 <?php $this->load->view('templates/script');?>
 <?php $url_property_id = $this->uri->segment(4);?>
 <?php $url_contact_id = $this->uri->segment(5);?>
+<?php echo 'url_rent_id'.$url_rent_id = $this->uri->segment(6);?>
+
 
 <script>
 var header = document.getElementById("days_filter");
@@ -598,7 +600,7 @@ $(".daterange").datepicker();
 				"bProcessing": true,
 				"serverSide": true,
 				"ajax":{
-							url : BASE_URL + "index.php/accounting/checkstatus_receipt/<?=($checkstatus!=''?$checkstatus:'ALL')?><?=($url_property_id!=''?$url_property_id:'/'.$url_property_id)?>", // json datasource
+							url : BASE_URL + "index.php/accounting/checkstatus_receipt/<?=($checkstatus!=''?$checkstatus:'ALL')?><?=($url_property_id!=''?'/'.$url_property_id:'/'.$url_property_id)?><?=($url_rent_id!=''?'/'.$url_rent_id:'')?>", // json datasource
 							type: "post",  // type of method  ,GET/POST/DELETE
 							data: function(data) {
 													// data.notice_type_id = 1;
@@ -668,7 +670,7 @@ $(".daterange").datepicker();
 				"bProcessing": true,
 				"serverSide": true,
 				"ajax":{
-							url : BASE_URL + "index.php/accounting/checkstatus_receipt/<?=($checkstatus!=''?$checkstatus:'ALL')?><?=($url_property_id!=''?'/'.$url_property_id:'')?><?=($url_contact_id!=''?'/'.$url_contact_id:'')?>", // json datasource
+							url : BASE_URL + "index.php/accounting/checkstatus_receipt/<?=($checkstatus!=''?$checkstatus:'ALL')?><?=($url_property_id!=''?'/'.$url_property_id:'')?><?=($url_contact_id!=''?'/'.$url_contact_id:'')?><?=($url_rent_id!=''?'/'.$url_rent_id:'')?>", // json datasource
 							type: "post",  // type of method  ,GET/POST/DELETE
 							data: function(data) {
 													// data.notice_type_id = 1;
@@ -730,7 +732,7 @@ $(".daterange").datepicker();
 		"bProcessing": true,
 		"serverSide": true,
 		"ajax":{
-					url : BASE_URL + "index.php/accounting/checkstatus_receipt/<?=($checkstatus!=''?$checkstatus:'ALL')?><?=($url_property_id!=''?'/'.$url_property_id:'')?><?=($url_contact_id!=''?'/'.$url_contact_id:'')?>", // json datasource
+					url : BASE_URL + "index.php/accounting/checkstatus_receipt/<?=($checkstatus!=''?$checkstatus:'ALL')?><?=($url_property_id!=''?'/'.$url_property_id:'')?><?=($url_contact_id!=''?'/'.$url_contact_id:'')?><?=($url_rent_id!=''?'/'.$url_rent_id:'')?>", // json datasource
 					type: "post",  // type of method  ,GET/POST/DELETE
 					data: function(data) {
 											// data.notice_type_id = 1;
@@ -761,7 +763,7 @@ $(".daterange").datepicker();
 		"bProcessing": true,
 		"serverSide": true,
 		"ajax":{
-					url : BASE_URL + "index.php/accounting/checkstatus_payment/<?=($checkstatus!=''?$checkstatus:'ALL')?><?=($url_property_id!=''?'/'.$url_property_id:'')?><?=($url_contact_id!=''?'/'.$url_contact_id:'')?>", // json datasource
+					url : BASE_URL + "index.php/accounting/checkstatus_payment/<?=($checkstatus!=''?$checkstatus:'ALL')?><?=($url_property_id!=''?'/'.$url_property_id:'')?><?=($url_contact_id!=''?'/'.$url_contact_id:'')?><?=($url_rent_id!=''?'/'.$url_rent_id:'')?>", // json datasource
 					type: "post",  // type of method  ,GET/POST/DELETE
 					data: function(data) {
 											// data.notice_type_id = 1;

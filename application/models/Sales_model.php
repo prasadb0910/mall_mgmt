@@ -65,7 +65,7 @@ function salesData($status='' ,$property_id='', $s_id=''){
             (
             Select * from (
             Select C.*, D.sale_price from 
-            (Select s.*,p.unit_name,p.property_txn_id,p.floor,p.area,p.area_unit from sales_txn s left join property_txn p on s.property_id=p.property_txn_id   Where s.gp_id='64' 
+            (Select s.*,p.unit_name,p.property_txn_id,p.floor,p.area,p.area_unit from sales_txn s left join property_txn p on s.property_id=p.property_txn_id   Where s.gp_id='$gid' 
             and s.txn_id IN (select distinct sale_id from sales_buyer_details) )C
             left join 
             (Select sale_id, sum(net_amount) as sale_price from sales_schedule where status='1' or status='3' group by sale_id) D 
@@ -83,7 +83,7 @@ function salesData($status='' ,$property_id='', $s_id=''){
                 then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
                 else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
             from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-            where A.c_status='Approved' and A.c_gid='64') B 
+            where A.c_status='Approved' and A.c_gid='$gid') B 
             ON (A.buyer_id=B.c_id) )D on C.txn_id=D.sale_id )E
             where E.owner_name is not null and E.owner_name<>'' " . $cond;
 	
@@ -108,7 +108,7 @@ function getAllCountData(){
             (
             Select * from (
             Select C.*, D.sale_price from 
-            (Select s.*,p.unit_name,p.property_txn_id,p.floor,p.area,p.area_unit from sales_txn s left join property_txn p on s.property_id=p.property_txn_id   Where s.gp_id='64' 
+            (Select s.*,p.unit_name,p.property_txn_id,p.floor,p.area,p.area_unit from sales_txn s left join property_txn p on s.property_id=p.property_txn_id   Where s.gp_id='$gid' 
             and s.txn_id IN (select distinct sale_id from sales_buyer_details) )C
             left join 
             (Select sale_id, sum(net_amount) as sale_price from sales_schedule where status='1' or status='3' group by sale_id) D 
@@ -126,7 +126,7 @@ function getAllCountData(){
                 then concat(ifnull(A.c_name,''),' ',ifnull(A.c_last_name,'')) 
                 else concat(ifnull(A.c_company_name,''),' - ',ifnull(B.c_name,''),' ',ifnull(B.c_last_name,'')) end as owner_name 
             from contact_master A left join contact_master B on (A.c_contact_id=B.c_id) 
-            where A.c_status='Approved' and A.c_gid='64') B 
+            where A.c_status='Approved' and A.c_gid='$gid') B 
             ON (A.buyer_id=B.c_id) )D on C.txn_id=D.sale_id )E
             where E.owner_name is not null and E.owner_name<>'' ";
 	
@@ -147,19 +147,25 @@ function ownerDetails($gid){
         $session_id=$this->session->userdata('session_id');
 
         $cond ="";
-        /*if ($txn_id!='0') {
-            $cond = "and property_txn_id<>'$txn_id' and (txn_fkid<>'$txn_id' || txn_fkid is null)";
+        if ($txn_id!='0') {
+            $cond = " and property_txn_id<>'$txn_id' and (txn_fkid<>'$txn_id' || txn_fkid is null)";
          
         } else {
             $cond = "";
-        }*/
+        }
 
         $query=$this->db->query("select distinct owner_id from user_role_owners where user_id = '$session_id'");
         $result=$query->result();
         /*if (count($result)>0) {*/
             $sql = "Select property_txn_id,unit_name  from property_txn Where property_txn_id NOT IN((Select property_id from sales_txn where txn_status='Approved')) and txn_status='Approved' and property_typ_id=1".$cond;
 
-
+            if($cond)
+            {
+                $sql = "Select property_txn_id,unit_name  from property_txn Where  txn_status='Approved' and property_typ_id=1".$cond;     
+            }
+            else{
+                $sql = "Select property_txn_id,unit_name  from property_txn Where property_txn_id NOT IN((Select property_id from sales_txn where txn_status='Approved')) and txn_status='Approved' and property_typ_id=1".$cond;
+            }    
             $query=$this->db->query($sql);
             $result=$query->result();
             return $result;

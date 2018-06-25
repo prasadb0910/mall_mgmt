@@ -2491,7 +2491,7 @@ class Accounting extends CI_Controller
         $this->checkstatus($status, '', $contact_id);
     }
 
-    public function checkstatus_receipt($status='', $property_id='', $contact_id=''){
+    public function checkstatus_receipt($status='', $property_id='', $contact_id='', $rent_id=''){
         $result=$this->accounting_model->getAccess();
         if(count($result)>0) {
             $data['access']=$result;
@@ -2501,24 +2501,27 @@ class Accounting extends CI_Controller
             $data['pendingotherentry']=array();
 
             if(strtolower($status)!='unpaid'){
-                $data['bankentry']=$this->accounting_model->bankentryData($status, $property_id, $contact_id);
+                $data['bankentry']=$this->accounting_model->bankentryData($status, $property_id, $contact_id,$rent_id);
             }
 
             if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
-                $data['pendingbankentry']=$this->accounting_model->getPendingBankEntry($status, $property_id, $contact_id);
+                $data['pendingbankentry']=$this->accounting_model->getPendingBankEntry($status, $property_id, $contact_id,$rent_id);
             }
-            if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
+
+            if($rent_id=="")
+            {
+                 if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
                 $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry('Approved', $property_id, $contact_id);
-            } else {
-                $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry($status, $property_id, $contact_id);
+                } else {
+                    $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry($status, $property_id, $contact_id);
+                }
             }
-            
 
             $data['pendingbankentry']=array_merge($data['pendingbankentry'],$data['pendingotherentry']);
             
             // $count_data=$this->accounting_model->getAllCountData();
 
-            $count_data=$this->accounting_model->bankentryData('All', $property_id, $contact_id);
+            $count_data=$this->accounting_model->bankentryData('All', $property_id, $contact_id,$rent_id);
             $all=0;
             $unpaid=0;
             $approved=0;
@@ -2540,7 +2543,7 @@ class Accounting extends CI_Controller
                 }
             }
 
-            $count_data=$this->accounting_model->getPendingBankEntry('All', $property_id, $contact_id);
+            $count_data=$this->accounting_model->getPendingBankEntry('All', $property_id, $contact_id,$rent_id);
             if (count($result)>0){
                 for($i=0;$i<count($count_data);$i++){
                     $all=$all+1;
@@ -2593,10 +2596,10 @@ class Accounting extends CI_Controller
                                  <input type="hidden" id="bal_amount_'.$j.'" value="'.format_money($bankentry[$i]['bal_amount'],2).'" />
                                  <input type="hidden" id="net_amount_'.$j.'" value="'.format_money($bankentry[$i]['net_amount'],2).'" />
                                  <input type="hidden" id="due_date_'.$j.'" value="'.($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!=''?date('d/m/Y',strtotime($bankentry[$i]['due_date'])):'').'">
-                                 <input type="hidden" id="link_'.$j.'" value="'.base_url().'index.php/Accounting/view/receipt/'.$bankentry[$i]['txn_status'].'/'.$bankentry[$i]['contact_id'].'/'.$bankentry[$i]['transaction'].'/'.($bankentry[$i]['property_id']==''?'0':$bankentry[$i]['property_id']).'/'.($bankentry[$i]['sub_property_id']==''?'0':$bankentry[$i]['sub_property_id']).'/'.($bankentry[$i]['accounting_id']==''?'0':$bankentry[$i]['accounting_id']).'" />
+                                 <input type="hidden" id="link_'.$j.'" value="" />
                                  <input type="hidden" id="property_name_'.$j.'" value="'.(isset($bankentry[$i]['property'])?$bankentry[$i]['property']:'').'" />
                                  <input type="hidden" id="sub_property_name_'.$j.'" value="'.(isset($bankentry[$i]['sub_property'])?$bankentry[$i]['sub_property']:'').'" />
-                                 <input type="hidden" id="owner_name_'.$j.'" value='.(isset($bankentry[$i]['owner_name'])?$bankentry[$i]['owner_name']:'').'" />
+                                 <input type="hidden" id="owner_name_'.$j.'" value="'.(isset($bankentry[$i]['owner_name'])?$bankentry[$i]['owner_name']:'').'" />
                                  <input type="hidden" id="payer_name_'.$j.'" value="'.(isset($bankentry[$i]['payer_name'])?$bankentry[$i]['payer_name']:'').'" />
                                  <input type="hidden" id="address_'.$j.'" value="'.(isset($bankentry[$i]['p_address'])?$bankentry[$i]['p_address']:'').'" />
                                  <a  style="color: #41a541!important;cursor: pointer!important;"  id="details_'.$j.'" onclick="get_details(this);" data-target="#modalSlideLeft" data-toggle="modal">Details </a>',
@@ -2690,7 +2693,8 @@ class Accounting extends CI_Controller
         }
     }
 
-    public function checkstatus_payment($status='', $property_id='', $contact_id=''){
+    public function checkstatus_payment($status='', $property_id='', $contact_id='', $rent_id=''){
+
         $result=$this->accounting_model->getAccess();
         if(count($result)>0) {
             $data['access']=$result;
@@ -2706,11 +2710,15 @@ class Accounting extends CI_Controller
             if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
                 $data['pendingbankentry']=$this->accounting_model->getPendingBankEntry($status, $property_id, $contact_id);
             }
-            if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
-                $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry('Approved', $property_id, $contact_id);
-            } else {
-                $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry($status, $property_id, $contact_id);
+            if($rent_id=="")
+            {
+                if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
+                    $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry('Approved', $property_id, $contact_id);
+                } else {
+                    $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry($status, $property_id, $contact_id);
+                }
             }
+           
             
 
             $data['pendingbankentry']=array_merge($data['pendingbankentry'],$data['pendingotherentry']);
@@ -2777,7 +2785,7 @@ class Accounting extends CI_Controller
             $pendingbankentry=$data['pendingbankentry'];
             $accounting_data = array();
 
-            $j=0; 
+           $j=0; 
            for ($i=0; $i < count($bankentry) ; $i++) 
             { 
                if($bankentry[$i]['particulars']=='Purchase' || $bankentry[$i]['particulars']=='Loan' || $bankentry[$i]['particulars']=='Expense' || $bankentry[$i]['particulars']=='Maintenance' ||  $bankentry[$i]['particulars']=='Adhoc' && $bankentry[$i]['table_type']=='payment') {
@@ -2793,7 +2801,7 @@ class Accounting extends CI_Controller
                                  <input type="hidden" id="bal_amount_0'.$j.'" value="'.format_money($bankentry[$i]['bal_amount'],2).'" />
                                  <input type="hidden" id="net_amount_0'.$j.'" value="'.format_money($bankentry[$i]['net_amount'],2).'" />
                                  <input type="hidden" id="due_date_0'.$j.'" value="'.($bankentry[$i]['due_date']!=null && $bankentry[$i]['due_date']!=''?date('d/m/Y',strtotime($bankentry[$i]['due_date'])):'').'">
-                                 <input type="hidden" id="link_0'.$j.'" value='.base_url().'index.php/Accounting/view/payment/'.$bankentry[$i]['txn_status'].'/'.$bankentry[$i]['contact_id'].'/'.$bankentry[$i]['transaction'].'/'.($bankentry[$i]['property_id']==''?'0':$bankentry[$i]['property_id']).'/'.($bankentry[$i]['sub_property_id']==''?'0':$bankentry[$i]['sub_property_id']).'/'.($bankentry[$i]['accounting_id']==''?'0':$bankentry[$i]['accounting_id']).'" />
+                                 <input type="hidden" id="link_0'.$j.'" />
                                  <input type="hidden" id="link_0'.$j.'" value="'.base_url().'index.php/Accounting/view/payment/'.$bankentry[$i]['txn_status'].'/'.$bankentry[$i]['contact_id'].'/'.$bankentry[$i]['transaction'].'/'.($bankentry[$i]['property_id']==''?'0':$bankentry[$i]['property_id']).'/'.($bankentry[$i]['sub_property_id']==''?'0':$bankentry[$i]['sub_property_id']).'/'.($bankentry[$i]['accounting_id']==''?'0':$bankentry[$i]['accounting_id']).'" />
                                  <input type="hidden" id="property_name_0'.$j.'" value="'.(isset($bankentry[$i]['property'])?$bankentry[$i]['property']:'').'" />
                                  <input type="hidden" id="sub_property_name_0'.$j.'" value="'.(isset($bankentry[$i]['sub_property'])?$bankentry[$i]['sub_property']:'').'" />
@@ -2884,7 +2892,7 @@ class Accounting extends CI_Controller
         }
     }
 
-    public function checkstatus($status='', $property_id='', $contact_id=''){
+    public function checkstatus($status='', $property_id='', $contact_id='' , $rent_id=''){
         $result=$this->accounting_model->getAccess();
         if(count($result)>0) {
             $data['access']=$result;
@@ -2894,11 +2902,11 @@ class Accounting extends CI_Controller
             $data['pendingotherentry']=array();
 
             if(strtolower($status)!='unpaid'){
-                $data['bankentry']=$this->accounting_model->bankentryData($status, $property_id, $contact_id);
+                $data['bankentry']=$this->accounting_model->bankentryData($status, $property_id, $contact_id, $rent_id);
             }
 
             if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
-                $data['pendingbankentry']=$this->accounting_model->getPendingBankEntry($status, $property_id, $contact_id);
+                $data['pendingbankentry']=$this->accounting_model->getPendingBankEntry($status, $property_id, $contact_id , $rent_id);
             }
             if(strtolower($status)=='all' || strtolower($status)=='unpaid'){
                 $data['pendingotherentry']=$this->accounting_model->getPendingOtherEntry('Approved', $property_id, $contact_id);
@@ -2911,7 +2919,7 @@ class Accounting extends CI_Controller
             
             // $count_data=$this->accounting_model->getAllCountData();
 
-            $count_data=$this->accounting_model->bankentryData('All', $property_id, $contact_id);
+            $count_data=$this->accounting_model->bankentryData('All', $property_id, $contact_id, $rent_id);
             $all=0;
             $unpaid=0;
             $approved=0;

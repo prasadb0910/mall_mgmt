@@ -1297,6 +1297,7 @@ class Contacts extends CI_Controller
                         WHERE A.c_gid = '$gid' " . $cond2 . $cond4 . " and A.c_status!='Inactive' 
                         ORDER BY A.c_modifieddate DESC";
             }
+
             $query=$this->db->query($sql);
             $result=$query->result();
             $data['contacts']=$result;
